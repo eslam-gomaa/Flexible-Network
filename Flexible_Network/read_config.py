@@ -5,12 +5,12 @@ import os
 
 class Config():
     def __init__(self):
-        self.configuration_file = "flexible_network.cfg"
+        self.configuration_file = "/home/orange/work_dir/Flexible-Network/Flexible_Network/flexible_network.cfg"
+        if not os.path.isfile(self.configuration_file):
+            raise Exception("[ ERROR ] -- Configuration file '{}' is NOT found".format(self.configuration_file))
 
 
     def section_vault(self, section_name='vault'):
-        if not os.path.isfile(self.configuration_file):
-            raise Exception("[ ERROR ] -- Configuration file '{}' is NOT found".format(self.configuration_file))
         try:
             config = configparser.ConfigParser(comment_prefixes=('#',';'), inline_comment_prefixes=('#',';'))
             config.read(self.configuration_file)
@@ -24,8 +24,6 @@ class Config():
             raise Exception("ERROR .. Accessing the section '{}'".format(section_name))
 
     def section_rocket_chat(self, section_name='rocket_chat'):
-        if not os.path.isfile(self.configuration_file):
-            raise Exception("[ ERROR ] -- Configuration file '{}' is NOT found".format(self.configuration_file))
         try:
             config = configparser.ConfigParser(comment_prefixes=('#',';'), inline_comment_prefixes=('#',';'))
             config.read(self.configuration_file)
@@ -40,8 +38,6 @@ class Config():
 
 
     def section_s3(self, section_name='s3'):
-        if not os.path.isfile(self.configuration_file):
-            raise Exception("[ ERROR ] -- Configuration file '{}' is NOT found".format(self.configuration_file))
         try:
             config = configparser.ConfigParser(comment_prefixes=('#',';'), inline_comment_prefixes=('#',';'))
             config.read(self.configuration_file)
