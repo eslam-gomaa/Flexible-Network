@@ -1,13 +1,18 @@
 import configparser
 # https://docs.python.org/3/library/configparser.html
 import os
-# pip3 install configparser
 
 class Config():
     def __init__(self):
+        self.config_method = "FILE" # FILE || ENV
         self.configuration_file = "/home/orange/work_dir/Flexible-Network/Flexible_Network/flexible_network.cfg"
-        if not os.path.isfile(self.configuration_file):
-            raise Exception("[ ERROR ] -- Configuration file '{}' is NOT found".format(self.configuration_file))
+
+        if self.config_method not in ["FILE", "ENV"]:
+            raise ValueError("config_method: allowed options are {}".format(["FILE", "ENV"]))
+
+        if self.config_method == "File":
+            if not os.path.isfile(self.configuration_file):
+                raise ValueError("[ ERROR ] -- Configuration file '{}' is NOT found".format(self.configuration_file))
 
 
     def section_vault(self, section_name='vault'):
@@ -21,7 +26,7 @@ class Config():
             info['engine'] = config.get(section_name, 'engine').strip('"')
             return info
         except:
-            raise Exception("ERROR .. Accessing the section '{}'".format(section_name))
+            raise ValueError("ERROR .. Accessing the section '{}'".format(section_name))
 
     def section_rocket_chat(self, section_name='rocket_chat'):
         try:
@@ -34,7 +39,7 @@ class Config():
             info['password'] = config.get(section_name, 'password').strip('"')
             return info
         except:
-            raise Exception("ERROR .. Accessing the section '{}'".format(section_name))
+            raise ValueError("ERROR .. Accessing the section '{}'".format(section_name))
 
 
     def section_s3(self, section_name='s3'):
@@ -50,3 +55,7 @@ class Config():
             return info
         except:
             raise Exception("ERROR .. Accessing the section '{}'".format(section_name))
+
+    
+
+
