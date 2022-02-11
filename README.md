@@ -9,6 +9,14 @@ Our collaboration page: https://flexible-network.devops-caffe.com
 ---
 
 
+#### Install
+
+Install libraries dependencies
+```
+pip3 install -r Flexible_Network/requirements.txt
+```
+
+
 #### Run unit tests
 
 ```
