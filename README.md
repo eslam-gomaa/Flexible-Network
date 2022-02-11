@@ -11,9 +11,12 @@ Our collaboration page: https://flexible-network.devops-caffe.com
 
 #### Install
 
+> **NOTE** At least Python3.6 is needed
+
 Install libraries dependencies
+
 ```
-pip3 install -r Flexible_Network/requirements.txt
+pip3.6 install --user -r  Flexible_Network/requirements.txt
 ```
 
 
@@ -21,5 +24,6 @@ pip3 install -r Flexible_Network/requirements.txt
 #### Run unit tests
 
 ```
-python3 -m pytest tests/  -v
+export PYTHONPATH=Flexible_Network/
+python3.6 -m pytest tests/  -v
 ```
