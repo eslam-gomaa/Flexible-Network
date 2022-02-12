@@ -1,2 +1,5 @@
 configparser
 pytest
+rocketchat_API
+requests
+paramiko
