@@ -61,12 +61,29 @@ class SSH_Authentication():
         data['data'] = self.info
         return data
 
+    def close(self):
+        """
+        Close the ssh session, ssh session is opened at the initialization of the Class
+        """
+        data = {}
+        data['success'] = 'False'
+        if self.info['is_connected']:
+            try:
+                self.ssh.close()
+                data['success'] = 'True'
+            except:
+                pass
+        return data
 
 
 
-connection = SSH_Authentication()
-connect = connection.connect(host='90.84.41.239', user='orange', password='cisco', port='1113')
-print(connect)
-# import json
-# print(json.dumps(connect['data'], indent=4, sort_keys=True, ensure_ascii=False))
 
+# connection = SSH_Authentication()
+# connect = connection.connect(host='90.84.41.239', user='orange', password='cisco', port='1113')
+# print(connect)
+
+# # import json
+# # print(json.dumps(connect['data'], indent=4, sort_keys=True, ensure_ascii=False))
+
+# print()
+# print(connection.close())
