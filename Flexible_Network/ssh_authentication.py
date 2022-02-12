@@ -77,7 +77,6 @@ class SSH_Authentication():
 
 
 
-
 # connection = SSH_Authentication()
 # connect = connection.connect(host='90.84.41.239', user='orange', password='cisco', port='1113')
 # print(connect)
