@@ -56,8 +56,21 @@ class RocketChat_API():
 
     def send_message_by_member_name(self, member_name, message):
         id = self.return_member_id_by_name(member_name)
+        info = {}
+        info['success'] = None
+        info['output'] = None
+        info['reason'] = None
         if id is not None:
-           return self.send_message_by_member_id(id, message)
+            try:
+                msg = self.send_message_by_member_id(id, message)
+                info['success'] = True
+                info['output'] = msg
+            except:
+                pass
+        else:
+            info['success'] = False
+            info['reason'] = "Can NOT find the username"
+        return info
 
 
 rocket = RocketChat_API()
@@ -66,7 +79,7 @@ rocket = RocketChat_API()
 # print(rocket.member_info('DDdgQBy5KJnHBo64r'))
 # print(rocket.send_message('DDdgQBy5KJnHBo64r'))
 # print(rocket.return_member_id_by_name('eslam.gomaa'))
-print(rocket.send_message_by_member_name('eslam.gomaa', 'Hello World'))
+# print(rocket.send_message_by_member_name('eslam.gomaa1', 'Hello World'))
 
 
 # python3.6 Flexible_Network/RocketChat.py
