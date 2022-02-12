@@ -1,5 +1,5 @@
 import pytest
-from Flexible_Network.rocket_chat import RocketChat_API
+# from Flexible_Network.Integrations.rocket_chat import RocketChat_API
 
 # def test_RocketChat_API_authentication():
 #     """ Test case to validate that incorrect credentials will raise ConnectionError """

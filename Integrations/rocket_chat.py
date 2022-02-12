@@ -1,7 +1,12 @@
+# if __name__ == '__main__':
+#     from os import path
+#     import sys
+#     sys.path.append(path.join(path.dirname(__file__), '..'))
+
 from read_config import Config
 from requests import sessions
-from rocketchat_API.rocketchat import RocketChat
-# https://github.com/jadolg/rocketchat_API
+from rocketchat_API.rocketchat import RocketChat # https://github.com/jadolg/rocketchat_API
+
 
 class RocketChat_API():
     config = Config()
@@ -73,7 +78,7 @@ class RocketChat_API():
         return info
 
 
-rocket = RocketChat_API()
+# rocket = RocketChat_API()
 # print(rocket.list_members_channels())
 # print(rocket.list_members_in_channel('gS7Z8p3n7g6xJqfaB'))
 # print(rocket.member_info('DDdgQBy5KJnHBo64r'))
@@ -82,4 +87,5 @@ rocket = RocketChat_API()
 # print(rocket.send_message_by_member_name('eslam.gomaa1', 'Hello World'))
 
 
-# python3.6 Flexible_Network/RocketChat.py
+
+# python3.6 Integrations/rocket_chat.py

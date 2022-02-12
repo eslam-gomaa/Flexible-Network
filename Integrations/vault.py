@@ -1,5 +1,5 @@
 
-class Account:
+class Secrets:
     def __init__():
         pass
 
