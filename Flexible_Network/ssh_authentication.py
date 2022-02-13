@@ -7,11 +7,11 @@ import datetime
 class SSH_Authentication():
     def __init__(self):
         self.ssh = None
-        self.info = {}
-        self.info['is_connected'] = False
-        self.info['tries'] = 0
-        self.info['Fail_Reason'] = ""
-        self.info['time_to_connect_seconds'] = None
+        self.channel = None
+        self.is_connected = False
+        self.tries = 0
+        self.Fail_Reason = ""
+        self.time_to_connect_seconds = None
 
 
     def connect(self, host, user, password, port=22, ssh_timeout=15, allow_agent=True, max_tries=5):
@@ -20,13 +20,9 @@ class SSH_Authentication():
         self.password = password
         self.port = port
 
-        self.info['host'] = host
-        self.info['max_tries'] = max_tries
-        self.info['ssh_timeout'] = ssh_timeout
-
         time_start = datetime.datetime.now()
-        while  self.info['tries'] < max_tries:
-            self.info['tries'] += 1
+        while  self.tries < max_tries:
+            self.tries += 1
             try:
                 self.ssh = paramiko.SSHClient()
                 
@@ -41,38 +37,35 @@ class SSH_Authentication():
                 time.sleep(1)
                 break
             except paramiko.AuthenticationException as e:
-                self.info['Fail_Reason'] = "Authentication failed >> {}".format(e)
+                self.Fail_Reason = "Authentication failed >> {}".format(e)
                 break
             except socket.gaierror as e:
-                self.info['Fail_Reason'] = "Could not resolve hostname {} Name or service not known >> {}".format(host, e)
+                self.Fail_Reason = "Could not resolve hostname {} Name or service not known >> {}".format(host, e)
                 break
             except (ConnectionResetError, paramiko.ssh_exception.SSHException) as e:
-                self.info['Fail_Reason'] = "Connection reset by peer >> {}".format(host, e)
+                self.Fail_Reason = "Connection reset by peer >> {}".format(host, e)
                 # Do NOT work as expected
                 # https://github.com/napalm-automation/napalm/issues/963
                 # Raises Exceptions when setting the port to 111
                 break
             except (paramiko.ssh_exception.NoValidConnectionsError, paramiko.SSHException, socket.error)  as e:
                 time.sleep(0.4)
-                self.info['Fail_Reason'] = "NOT able to establish ssh connection with {} on port {} >> {}".format(host, port, e)
-                if self.info['tries'] == max_tries:
+                self.Fail_Reason = "NOT able to establish ssh connection with {} on port {} >> {}".format(host, port, e)
+                if self.tries == max_tries:
                     break
+        info = {}
+        info['is_connected'] = self.is_connected
+        info['host'] = host
+        info['max_tries'] = max_tries
+        info['ssh_timeout'] = ssh_timeout
+
         time_end = datetime.datetime.now()
         time_taken = time_end - time_start
-        self.info['time_to_connect_seconds'] = time_taken.seconds
-        self.info['is_connected'] = True
-        return self.info
+        info['time_to_connect_seconds'] = time_taken.seconds
 
-    def reconnect(self):
-        # reconnect = self.connect(self.host, self.user, self.password, port=22, ssh_timeout=15, allow_agent=True, max_tries=5)
-        # return reconnect
-
-        re1 = self.connect(host=self.host, user=self.user, password=self.password)
-        # self.channel = re1.channel
-        # self.ssh = re1.ssh
-        return re1
-
-
+        info['Fail_Reason'] = self.Fail_Reason
+        info['tries'] = self.tries
+        return info
 
     def close(self):
         """
@@ -80,7 +73,7 @@ class SSH_Authentication():
         """
         data = {}
         data['success'] = 'False'
-        if self.info['is_connected']:
+        if info['is_connected']:
             try:
                 self.ssh.close()
                 data['success'] = 'True'
