@@ -86,7 +86,3 @@ class RocketChat_API():
 # print(rocket.send_message('DDdgQBy5KJnHBo64r'))
 # print(rocket.return_member_id_by_name('eslam.gomaa'))
 # print(rocket.send_message_by_member_name('eslam.gomaa1', 'Hello World'))
-
-
-
-# python3.6 Integrations/rocket_chat.py
