@@ -14,7 +14,7 @@ class SSH_Authentication():
         self.time_to_connect_seconds = 0
 
 
-    def connect(self, host, user, password, port=22, ssh_timeout=15, allow_agent=True, max_tries=5):
+    def connect(self, host, user, password, port=22, ssh_timeout=5, allow_agent=True, max_tries=5):
         self.host = host
         self.user = user
         self.password = password
@@ -37,18 +37,21 @@ class SSH_Authentication():
                 time.sleep(1)
                 break
             except paramiko.AuthenticationException as e:
+                self.is_connected = False
                 self.Fail_Reason = "Authentication failed >> {}".format(e)
                 break
             except socket.gaierror as e:
                 self.Fail_Reason = "Could not resolve hostname {} Name or service not known >> {}".format(host, e)
                 break
             except (ConnectionResetError, paramiko.ssh_exception.SSHException) as e:
+                self.is_connected = False
                 self.Fail_Reason = "Connection reset by peer >> {}".format(host, e)
                 # Do NOT work as expected
                 # https://github.com/napalm-automation/napalm/issues/963
                 # Raises Exceptions when setting the port to 111
                 break
             except (paramiko.ssh_exception.NoValidConnectionsError, paramiko.SSHException, socket.error)  as e:
+                self.is_connected = False
                 time.sleep(0.4)
                 self.Fail_Reason = "NOT able to establish ssh connection with {} on port {} >> {}".format(host, port, e)
                 if self.tries == max_tries:
@@ -75,7 +78,7 @@ class SSH_Authentication():
         """
         data = {}
         data['success'] = 'False'
-        if info['is_connected']:
+        if self.is_connected:
             try:
                 self.ssh.close()
                 data['success'] = 'True'

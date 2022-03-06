@@ -9,7 +9,14 @@ class SSH_connection():
     def connection_report(lst=[]):
         pass
 
-    def auth(self, host='90.84.41.239', user='orange', password='cisco', port='1113'):
+    def authenticate_devices(self, hosts=[], user='orange', password='cisco', port='1113'):
+        out = {}
+
         self.authentication = SSH_Authentication()
-        self.connection = self.authentication.connect(host, user, password, port)
-        return self.connection
+        for host in hosts:
+            connection = self.authentication.connect(host, user, password, port)
+            out[host] = connection
+        return out
+
+        
+ 
