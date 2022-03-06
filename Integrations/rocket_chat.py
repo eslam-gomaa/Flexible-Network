@@ -3,7 +3,7 @@
 #     import sys
 #     sys.path.append(path.join(path.dirname(__file__), '..'))
 
-from read_config import Config
+from Flexible_Network.read_config import Config
 from requests import sessions
 from rocketchat_API.rocketchat import RocketChat # https://github.com/jadolg/rocketchat_API
 
@@ -30,6 +30,11 @@ class RocketChat_API():
         """ List members and Channels """
         return self.auth_session.channels_list().json()['channels']
 
+    def list_all_members(self):
+        """ Return a list of all users """
+        lst = self.auth_session.users_list(count=0).json()
+        return lst
+
     def channel_info(self, channel_id):
         pass
 
@@ -51,30 +56,26 @@ class RocketChat_API():
         return output
 
     def return_member_id_by_name(self, member_name):
-        for member in self.list_members_channels():
-            try:
-                if member['u']['username'] == member_name:
-                    return member['u']['_id']
-            except:
-                if not member['_id'] == 'GENERAL':
-                    return None
+        for member in self.list_all_members()['users']:
+            if member['username'] == member_name:
+                    return member['_id']
 
-    def send_message_by_member_name(self, member_name, message):
+    def send_message(self, member_name, message):
         id = self.return_member_id_by_name(member_name)
         info = {}
         info['success'] = None
-        info['output'] = None
-        info['reason'] = None
+        # info['output'] = None
+        info['fail_reason'] = None
         if id is not None:
             try:
                 msg = self.send_message_by_member_id(id, message)
                 info['success'] = True
-                info['output'] = msg
+                # info['output'] = msg
             except:
                 pass
         else:
             info['success'] = False
-            info['reason'] = "Can NOT find the username"
+            info['fail_reason'] = "Can NOT find the username"
         return info
 
 
