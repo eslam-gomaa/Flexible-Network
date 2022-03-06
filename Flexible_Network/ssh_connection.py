@@ -1,8 +1,8 @@
-from ssh_authentication import SSH_Authentication
+from Flexible_Network.ssh_authentication import SSH_Authentication
 import time
 import socket
 
-class SSH_connectionion():
+class SSH_connection():
     """
     Class to connection & execute commands on network devices over ssh
     """
@@ -40,11 +40,6 @@ class SSH_connectionion():
     def close(self):
         if self.authentication.is_connected:
             self.authentication.close()
-
-
-ssh = SSH_connectionion()
-print(ssh.connection)
-print(ssh.execute('sh ip int br'))
 
 
 

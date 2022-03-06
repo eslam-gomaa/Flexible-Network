@@ -11,7 +11,7 @@ class SSH_Authentication():
         self.is_connected = False
         self.tries = 0
         self.Fail_Reason = ""
-        self.time_to_connect_seconds = None
+        self.time_to_connect_seconds = 0
 
 
     def connect(self, host, user, password, port=22, ssh_timeout=15, allow_agent=True, max_tries=5):
@@ -58,6 +58,8 @@ class SSH_Authentication():
         info['host'] = host
         info['max_tries'] = max_tries
         info['ssh_timeout'] = ssh_timeout
+        info['ssh'] = self.ssh
+        info['channel'] = self.channel
 
         time_end = datetime.datetime.now()
         time_taken = time_end - time_start
