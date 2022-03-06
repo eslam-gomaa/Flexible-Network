@@ -3,3 +3,5 @@ pytest
 rocketchat_API
 requests
 paramiko
+tabulate
+tabulate[widechars]

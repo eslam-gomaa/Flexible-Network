@@ -1,5 +1,6 @@
 from cmath import inf
 import imp
+import re
 from Integrations.rocket_chat import RocketChat_API
 # from Flexible_Network.ssh_connection import SSH_connection
 from Flexible_Network.ssh_test import SSH_connection
@@ -25,7 +26,11 @@ import time
 cmd ='sh vlan br'
 
 print("* Authenticate")
-hosts_dct = ssh.authenticate_devices(hosts=['90.84.41.239', '90.84.41.2'], user='orange', password='cisco', port='1113')
+hosts_dct = ssh.authenticate_devices(hosts=['90.84.41.239', '90.84.41.29'], user='orange', password='cisco', port='1113')
+
+report = ssh.connection_report(hosts_dct)
+print(report)
+rocket.send_message('eslam.gomaa', "``` {} ```".format(report))
 
 # Store the only connected hosts to a dict.
 hosts_dct_connected = {}
@@ -40,9 +45,11 @@ for host in hosts_dct:
 #         print(info)
 
 
-for host, info in hosts_dct_connected.items():
-    info['channel'].send(cmd + '\n' + '\n')
-    time.sleep(0.5)
-    output = hosts_dct['90.84.41.239']['channel'].recv(9999).decode("utf-8")
-print(output)
+### Test -- Loop & Excute
+# for host, info in hosts_dct_connected.items():
+#     info['channel'].send(cmd + '\n' + '\n')
+#     time.sleep(0.5)
+#     output = hosts_dct['90.84.41.239']['channel'].recv(9999).decode("utf-8")
+# print(output)
+
 
