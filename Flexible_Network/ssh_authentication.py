@@ -9,7 +9,7 @@ class SSH_Authentication():
         self.ssh = None
         self.channel = None
         self.is_connected = False
-        self.tries = 0
+        self.tries = 1
         self.Fail_Reason = ""
         self.time_to_connect_seconds = 0
 
@@ -21,8 +21,7 @@ class SSH_Authentication():
         self.port = port
 
         time_start = datetime.datetime.now()
-        while  self.tries < max_tries:
-            self.tries += 1
+        while  self.tries <= max_tries:
             try:
                 self.ssh = paramiko.SSHClient()
                 
@@ -41,7 +40,8 @@ class SSH_Authentication():
                 self.Fail_Reason = "Authentication failed >> {}".format(e)
                 break
             except socket.gaierror as e:
-                self.Fail_Reason = "Could not resolve hostname {} Name or service not known >> {}".format(host, e)
+                self.is_connected = False
+                self.Fail_Reason = "Could NOT resolve hostname {} Name or service not known >> {}".format(host, e)
                 break
             except (ConnectionResetError, paramiko.ssh_exception.SSHException) as e:
                 self.is_connected = False
@@ -53,9 +53,10 @@ class SSH_Authentication():
             except (paramiko.ssh_exception.NoValidConnectionsError, paramiko.SSHException, socket.error)  as e:
                 self.is_connected = False
                 time.sleep(0.4)
-                self.Fail_Reason = "NOT able to establish ssh connection with {} on port {} >> {}".format(host, port, e)
+                self.Fail_Reason = "NOT able to establish an ssh connection with {} on port {} >> {}".format(host, port, e)
                 if self.tries == max_tries:
                     break
+            self.tries += 1
         info = {}
         info['is_connected'] = self.is_connected
         info['host'] = host
