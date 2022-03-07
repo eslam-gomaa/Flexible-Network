@@ -22,19 +22,20 @@ rocket = RocketChat_API()
 # print(msg)
 
 
-pa3_lst = ['90.84.41.239', '90.84.41.2', '90.84.41.2955', '90.84.41.1']
+pa3_lst = ['90.84.41.239']
 print("[ Testing ] Authenticating")
 
 
+##  1  ## Authenticate
+hosts_dct = ssh.authenticate(hosts=pa3_lst, user='orange', password='cisco', port='1113')
 
-hosts_dct = ssh.authenticate_devices(hosts=pa3_lst, user='orange', password='cisco', port='1113')
-
-print(hosts_dct)
-
+##  2  ## Get Connection Report
 report = ssh.connection_report_Table(hosts_dct)
 print(report)
-rocket_msg = rocket.send_message(['eslam.gomaa'], "``` {} ```".format(report))
-print(rocket_msg)
+# rocket_msg = rocket.send_message(['eslam.gomaa'], "``` {} ```".format(report))
+# print(rocket_msg)
+
+
 
 
 # Store the only connected hosts to a dict.
@@ -42,6 +43,7 @@ hosts_dct_connected = {}
 for host in hosts_dct:
     if hosts_dct[host]['is_connected']:
         hosts_dct_connected[host] = hosts_dct[host]
+
 
 
 ### Another way to iterate through the only connected hosts
@@ -56,11 +58,9 @@ for host in hosts_dct:
 import time
 cmd ='sh vlan br'
 
-### Test -- Loop & Excute
-for host, info in hosts_dct_connected.items():
-    info['channel'].send(cmd + '\n' + '\n')
-    time.sleep(0.5)
-    output = hosts_dct_connected['90.84.41.239']['channel'].recv(9999).decode("utf-8")
-print(output)
-
+for host, host_auth in hosts_dct_connected.items():
+    channel = host_auth['channel']
+    
+    command1 = ssh.execute(channel, cmd)
+    print(command1['stdout'])
 
