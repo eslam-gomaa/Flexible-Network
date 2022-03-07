@@ -5,7 +5,6 @@ import time
 import socket
 from tabulate import tabulate
 import textwrap
-import emoji
 
 class SSH_connection():
     def __init__(self):
@@ -23,7 +22,7 @@ class SSH_connection():
             out[host] = connection
         return out
 
-    def connection_report(self, dct={}):
+    def connection_report_Table(self, dct={}):
         """
         Takes an dict generated from the "authenticate_devices" Method
         And prints them in a an organized table
@@ -45,6 +44,27 @@ class SSH_connection():
             
         return tabulate(table, headers='firstrow', tablefmt='grid', showindex=False)
 
-       
+    
+    def connection_report_to_csv(self, dct={}):
+        """
+        Takes an dict generated from the "authenticate_devices" Method
+        And prints them in a an organized table
+        """
+        table = [['Host', 'Connection Status', 'Comment', 'N of tries', 'Max Retries', 'Time tring in seconds', 'Fail Reason']]
+        tabulate.WIDE_CHARS_MODE = False
+        for host, info in dct.items():
+            
+            if info['is_connected']:
+                connection_status = "🟢"
+                comment = "connected"
+            else:
+                connection_status = "🔴"
+                comment = "Fail to connect"
+            fail_reason = "\n".join(textwrap.wrap(info['Fail_Reason'], width=22, replace_whitespace=False))
+            
+            row = [host, connection_status, comment, info['tries'], info['max_tries'], info['time_to_connect_seconds'], fail_reason]
+            table.append(row)
+        output_data = tabulate(table, headers='firstrow', tablefmt='tsv', showindex=False)
+        # Need to Figure out how to write these these data to a csv or Excel file. 
         
  

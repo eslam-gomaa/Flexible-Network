@@ -25,12 +25,14 @@ import time
 
 cmd ='sh vlan br'
 
-print("* Authenticate")
+print("[ Testing ] Authenticating")
 hosts_dct = ssh.authenticate_devices(hosts=['90.84.41.239', '90.84.41.2', '90.84.41.2955', '90.84.41.1'], user='orange', password='cisco', port='1113')
 
-report = ssh.connection_report(hosts_dct)
+report = ssh.connection_report_Table(hosts_dct)
 print(report)
-rocket.send_message('eslam.gomaa', "``` {} ```".format(report))
+rocket_msg = rocket.send_message(['eslam.gomaa'], "``` {} ```".format(report))
+print(rocket_msg)
+
 
 # Store the only connected hosts to a dict.
 hosts_dct_connected = {}
