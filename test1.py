@@ -57,7 +57,7 @@ for host in hosts_dct:
 
 import time
 cmd ='''sh ip int br
-show vlan br1
+show vlan br
 '''
 
 for host, host_auth in hosts_dct_connected.items():

@@ -103,44 +103,14 @@ class SSH_connection():
         # Preserve of the original stdout (Before cleaning)
         stdout_original = out['stdout']
         out['stderr'] = get_stderr(stdout_original)
+        out['stderr'] = "\n".join(out['stderr']).strip()
         # Clean the "command" from the output & the white spaces.
         out['stdout'] = out['stdout'].replace(cmd, '').strip()
+        out['exit_code'] = 0
+        if len(out['stderr']) > 0:
+            out['exit_code'] = 1
 
         # Need to clean the output from the last 2 lines "mgmt_sw>"
-
-        def get_stderr_old(string=out['stdout'], stderr_search_keyword='\^'):
-            # Create a dictionary that has the line number as the Key & the line string as the Value.
-            line_number = 0
-            line_number_with_string_dct = {}
-            line_number_with_matched_lines_dct = {}
-
-            # Split the string into lines
-            string_list = string.split("\n")
-            for line in string_list:
-                line_number_with_string_dct[line_number] = line
-                line_number  +=1
-                # Search each line for syntax error
-                search_syntax_error = re.findall("{}.*$".format(stderr_search_keyword), line)
-                line_number_with_matched_lines_dct[line_number] = search_syntax_error
-            
-            # Put the error lines in the "error_lines" list
-            error_lines = []
-            for line_n, line in line_number_with_matched_lines_dct.items():
-                if line:
-                    error_lines.append(line_n)
-
-            result_lines_numbers = []
-            for line_n in range(error_lines[0] -1, 5):
-                result_lines_numbers.append(line_n)
-            
-            result_lines = []
-            for line_n in result_lines_numbers:
-                result_lines.append(line_number_with_string_dct[line_n])
-
-            return "\n".join(result_lines)  
-
-        
-
 
         return out
 
