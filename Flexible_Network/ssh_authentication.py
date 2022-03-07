@@ -9,7 +9,6 @@ class SSH_Authentication():
         self.ssh = None
         self.channel = None
         self.is_connected = False
-        self.tries = 1
         self.Fail_Reason = ""
         self.time_to_connect_seconds = 0
 
@@ -21,7 +20,8 @@ class SSH_Authentication():
         self.port = port
 
         time_start = datetime.datetime.now()
-        while  self.tries <= max_tries:
+        self.tries = 1
+        while  (self.tries <= max_tries):
             try:
                 self.ssh = paramiko.SSHClient()
                 

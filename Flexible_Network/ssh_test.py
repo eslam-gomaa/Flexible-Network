@@ -28,7 +28,7 @@ class SSH_connection():
         Takes an dict generated from the "authenticate_devices" Method
         And prints them in a an organized table
         """
-        table = [['Host', 'Connection Status', 'Comment', 'N of tries', 'Max Retries', 'Time to connect in seconds', 'Fail Reason']]
+        table = [['Host', 'Connection Status', 'Comment', 'N of tries', 'Max Retries', 'Time tring in seconds', 'Fail Reason']]
         tabulate.WIDE_CHARS_MODE = False
         for host, info in dct.items():
             
