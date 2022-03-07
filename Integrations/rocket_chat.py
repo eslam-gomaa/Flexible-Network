@@ -3,6 +3,7 @@
 #     import sys
 #     sys.path.append(path.join(path.dirname(__file__), '..'))
 
+from distutils.log import info
 from Flexible_Network.read_config import Config
 from requests import sessions
 from rocketchat_API.rocketchat import RocketChat # https://github.com/jadolg/rocketchat_API
@@ -60,23 +61,24 @@ class RocketChat_API():
             if member['username'] == member_name:
                     return member['_id']
 
-    def send_message(self, member_name, message):
-        id = self.return_member_id_by_name(member_name)
-        info = {}
-        info['success'] = None
-        # info['output'] = None
-        info['fail_reason'] = None
-        if id is not None:
-            try:
+    def send_message(self, member_name_lst, message):
+        """
+        Send a RocketChat message to a list of members
+        """
+        out = {}
+        for member_name in member_name_lst:
+            id = self.return_member_id_by_name(member_name)
+            member_out = {}
+            member_out['success'] = None
+            member_out['fail_reason'] = None
+            if id is not None:
                 msg = self.send_message_by_member_id(id, message)
-                info['success'] = True
-                # info['output'] = msg
-            except:
-                pass
-        else:
-            info['success'] = False
-            info['fail_reason'] = "Can NOT find the username"
-        return info
+                member_out['success'] = True
+            else:
+                member_out['success'] = False
+                member_out['fail_reason'] = "Can NOT find the username"
+            out[member_name] = member_out
+        return out
 
 
 # rocket = RocketChat_API()
