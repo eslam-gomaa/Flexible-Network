@@ -38,12 +38,12 @@ class SSH_connection():
             else:
                 connection_status = "🔴"
                 comment = "Fail to connect"
-            fail_reason = "\n".join(textwrap.wrap(info['Fail_Reason'], width=26, replace_whitespace=False))
+            fail_reason = "\n".join(textwrap.wrap(info['Fail_Reason'], width=22, replace_whitespace=False))
             
             row = [host, connection_status, comment, info['tries'], info['max_tries'], info['time_to_connect_seconds'], fail_reason]
             table.append(row)
             
-        return tabulate(table, headers='keys', tablefmt='grid', showindex=False)
+        return tabulate(table, headers='firstrow', tablefmt='grid', showindex=False)
 
        
         

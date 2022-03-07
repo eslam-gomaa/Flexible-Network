@@ -26,7 +26,7 @@ import time
 cmd ='sh vlan br'
 
 print("* Authenticate")
-hosts_dct = ssh.authenticate_devices(hosts=['90.84.41.239', '90.84.41.29'], user='orange', password='cisco', port='1113')
+hosts_dct = ssh.authenticate_devices(hosts=['90.84.41.239', '90.84.41.29', '90.84.41.29566'], user='orange', password='cisco', port='1113')
 
 report = ssh.connection_report(hosts_dct)
 print(report)

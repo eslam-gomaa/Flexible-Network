@@ -14,7 +14,7 @@ class SSH_Authentication():
         self.time_to_connect_seconds = 0
 
 
-    def connect(self, host, user, password, port=22, ssh_timeout=5, allow_agent=True, max_tries=5):
+    def connect(self, host, user, password, port=22, ssh_timeout=5, allow_agent=True, max_tries=3):
         self.host = host
         self.user = user
         self.password = password
