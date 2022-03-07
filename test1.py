@@ -56,11 +56,13 @@ for host in hosts_dct:
 ### Test exeuting a command.
 
 import time
-cmd ='sh vlan br'
+cmd ='''sh ip int br
+show vlan br1
+'''
 
 for host, host_auth in hosts_dct_connected.items():
     channel = host_auth['channel']
     
     command1 = ssh.execute(channel, cmd)
-    print(command1['stdout'])
+    print(command1)
 
