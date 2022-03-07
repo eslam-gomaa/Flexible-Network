@@ -21,12 +21,15 @@ rocket = RocketChat_API()
 # msg = rocket.send_message('eslam.gomaa', test_command['stdout'])
 # print(msg)
 
-import time
 
-cmd ='sh vlan br'
-
+pa3_lst = ['90.84.41.239', '90.84.41.2', '90.84.41.2955', '90.84.41.1']
 print("[ Testing ] Authenticating")
-hosts_dct = ssh.authenticate_devices(hosts=['90.84.41.239', '90.84.41.2', '90.84.41.2955', '90.84.41.1'], user='orange', password='cisco', port='1113')
+
+
+
+hosts_dct = ssh.authenticate_devices(hosts=pa3_lst, user='orange', password='cisco', port='1113')
+
+print(hosts_dct)
 
 report = ssh.connection_report_Table(hosts_dct)
 print(report)
@@ -47,11 +50,17 @@ for host in hosts_dct:
 #         print(info)
 
 
+
+### Test exeuting a command.
+
+import time
+cmd ='sh vlan br'
+
 ### Test -- Loop & Excute
-# for host, info in hosts_dct_connected.items():
-#     info['channel'].send(cmd + '\n' + '\n')
-#     time.sleep(0.5)
-#     output = hosts_dct['90.84.41.239']['channel'].recv(9999).decode("utf-8")
-# print(output)
+for host, info in hosts_dct_connected.items():
+    info['channel'].send(cmd + '\n' + '\n')
+    time.sleep(0.5)
+    output = hosts_dct_connected['90.84.41.239']['channel'].recv(9999).decode("utf-8")
+print(output)
 
 
