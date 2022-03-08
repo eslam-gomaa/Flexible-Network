@@ -7,7 +7,7 @@ ssh = SSH_connection()
 rocket = RocketChat_API()
 vendor = Cisco()
 
-print(vendor.clean_output_search_keyword())
+print(vendor.backup_command)
 exit(1)
 
 # Get ssh connection info from the "connection" class attribute.
@@ -34,7 +34,7 @@ hosts_dct = ssh.authenticate(hosts=pa3_lst, user='orange', password='cisco', por
 ##  2  ## Get Connection Report
 report = ssh.connection_report_Table(hosts_dct)
 print(report)
-# rocket_msg = rocket.send_message(['eslam.gomaa'], "``` {} ```".format(report))
+rocket_msg = rocket.send_message(['eslam.gomaa'], "``` {} ```".format(report))
 # print(rocket_msg)
 
 
@@ -58,7 +58,7 @@ for host in hosts_dct:
 ### Test exeuting a command.
 
 import time
-cmd ='''sh ip int br
+cmd ='''sh ip int br1
 show vlan br
 '''
 
