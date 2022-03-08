@@ -1,11 +1,3 @@
-# from base64 import encode
-# from cmath import inf
-# from select import kevent
-from distutils.log import error
-from stat import ST_INO
-from sys import stderr
-from tkinter import N
-from tkinter.messagebox import NO
 from Flexible_Network.ssh_authentication import SSH_Authentication
 import time
 from tabulate import tabulate
@@ -76,9 +68,22 @@ class SSH_connection():
         # Need to Figure out how to write these these data to a csv or Excel file. 
         
  
-    def execute(self, channel, cmd):
+    def exec(self, channel, cmd):
+        """
+        - Excutes a command on a remove network device
+        - Returns a dictionary:
+        {
+            "stdout": "The output of the command",
+            "stderr": "The error (Syntax error are detected.)",
+            "exit_code":  0 --> the command run successfully,  1 --> an error occurred
+        }
+        """
 
         def get_stderr(string, stderr_search_keyword='\^'):
+            """
+            - A Function to search the output of command for syntax errors
+            - Returns a list of lines (Starts with the command has the error including the error location)
+            """
             # Convert the stdout to list
             string_lst = string.split("\n")
             # Loop through the indexes of the list
@@ -103,16 +108,31 @@ class SSH_connection():
         # Preserve of the original stdout (Before cleaning)
         stdout_original = out['stdout']
         out['stderr'] = get_stderr(stdout_original)
+        if len(out['stderr']) > 0:
+            out['stderr'] = ""
         out['stderr'] = "\n".join(out['stderr']).strip()
         # Clean the "command" from the output & the white spaces.
         out['stdout'] = out['stdout'].replace(cmd, '').strip()
+        # Get the exit_code based on the stderr
         out['exit_code'] = 0
         if len(out['stderr']) > 0:
             out['exit_code'] = 1
 
         # Need to clean the output from the last 2 lines "mgmt_sw>"
+        
+        # Considerations (Will differ among vendors.)
+        # 1. 
 
         return out
 
-        # Considerations (Will differ among vendors.)
-        # 1. 
+    def execute(self, channel, cmd):
+        """
+        - Excutes a command on a remove network device
+        - Print
+        - Returns a dictionary:
+        {
+            "stdout": "The output of the command",
+            "stderr": "The error (Syntax error are detected.)",
+            "exit_code":  0 --> the command run successfully,  1 --> an error occurred
+        }
+        """
