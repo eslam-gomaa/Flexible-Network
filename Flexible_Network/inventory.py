@@ -3,7 +3,9 @@ class Inventory():
     def __init__():
         pass
 
-    def ini(file):
-        """ Read the hosts into groups 
-            Returns list of dicts (each dict is a group of hosts) """
+    def read_file(file):
+        """ 
+        Read the hosts into groups 
+        Returns list of dicts (each dict is a list of hosts)
+        """
         pass
