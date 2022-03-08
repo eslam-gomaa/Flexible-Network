@@ -1,12 +1,14 @@
-from cmath import inf
-import imp
-import re
 from Integrations.rocket_chat import RocketChat_API
 # from Flexible_Network.ssh_connection import SSH_connection
 from Flexible_Network.ssh_test import SSH_connection
+from Flexible_Network.vendors.cisco import Cisco
 
 ssh = SSH_connection()
 rocket = RocketChat_API()
+vendor = Cisco()
+
+print(vendor.clean_output_search_keyword())
+exit(1)
 
 # Get ssh connection info from the "connection" class attribute.
 # connection_info = ssh.connection
@@ -63,6 +65,6 @@ show vlan br
 for host, host_auth in hosts_dct_connected.items():
     channel = host_auth['channel']
     
-    command1 = ssh.execute(channel, cmd)
+    command1 = ssh.exec(channel, cmd)
     print(command1)
 
