@@ -1,13 +1,15 @@
 # from site import venv
-from http import server
-from tkinter.messagebox import NO
+# from http import server
+# from os import O_TEMPORARY
+# from sys import stderr
+# from tkinter.messagebox import NO
 from Flexible_Network.ssh_authentication import SSH_Authentication
 import time
 from tabulate import tabulate
 import textwrap
 import re
 import socket
-import paramiko
+# import paramiko
 
 
 class SSH_connection():
@@ -121,7 +123,7 @@ class SSH_connection():
             - Returns a list of lines (Starts with the command has the error including the error location)
             """
             # Convert the stdout to list
-            string_lst = string.split("\n")
+            string_lst = string.replace("\r", '').strip().split("\n")
             # Loop through the indexes of the list
             # If the search is found in one of the lines, then we know the line number that contains the error keyword
             # And since the the command should be directly in the line before the error keyword,
@@ -135,8 +137,9 @@ class SSH_connection():
         out = {}
         # What was I replacing !??
         out['cmd'] = cmd.replace("\r", '').split("\n")
-        out['stdout'] = ""
-        out['stderr'] = ""
+        out['cmd'] = [i for i in out['cmd'] if i]
+        out['stdout'] = []
+        out['stderr'] = []
         out['exit_code'] = -1
 
         ## Thining: How to reconnect if the socket is closed.
@@ -159,14 +162,13 @@ class SSH_connection():
             out['exit_code'] = 0
             if len(out['stderr']) > 0:
                 out['exit_code'] = 1
-            if len(out['stderr']) < 0:
-                out['stderr'] = ""
-            out['stderr'] = "\n".join(out['stderr']).strip()
+            # out['stderr'] = "\n".join(out['stderr']).strip()
             # Clean the "command" from the output & the white spaces.
             out['stdout'] = out['stdout'].replace(cmd, '').strip()
+            out['stdout'] = out['stdout'].replace("\r", '').split("\n")
             # Get the exit_code based on the stderr
         except (socket.error)  as e:
-            out['stderr'] = str(e)
+            out['stderr'] = [str(e)]
 
 
         # Need to clean the output from the last 2 lines "mgmt_sw>"
