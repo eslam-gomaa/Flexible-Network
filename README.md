@@ -43,8 +43,10 @@ python3.6 -m pytest tests/  -v
   <summary> <code>.exec()</code> </summary>
   Execute a command on a remote device.
 
+<br>
+<br>
 
-Returns a dictionary
+> Returns a dictionary
 
 |             | Type   | Description                                                  |
 | ----------- | ------ | ------------------------------------------------------------ |
