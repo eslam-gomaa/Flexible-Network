@@ -1,14 +1,20 @@
+from site import venv
 from Flexible_Network.ssh_authentication import SSH_Authentication
 import time
 from tabulate import tabulate
 import textwrap
 import re
+from Flexible_Network.vendors.cisco import Cisco
 
 
 
 class SSH_connection():
-    def __init__(self):
-        pass
+    def __init__(self, vendor):
+        supported_vendors = ['cisco', 'huawei']
+        if vendor not in supported_vendors:
+            print("[ ERROR ] Only supported vendors are {}".format(supported_vendors))
+
+        self.vendor = vendor
 
     def authenticate(self, hosts=[], user='orange', password='cisco', port='1113'):
         """
@@ -108,15 +114,16 @@ class SSH_connection():
         # Preserve of the original stdout (Before cleaning)
         stdout_original = out['stdout']
         out['stderr'] = get_stderr(stdout_original)
+        out['exit_code'] = 0
         if len(out['stderr']) > 0:
+            out['exit_code'] = 1
+        if len(out['stderr']) < 0:
             out['stderr'] = ""
         out['stderr'] = "\n".join(out['stderr']).strip()
         # Clean the "command" from the output & the white spaces.
         out['stdout'] = out['stdout'].replace(cmd, '').strip()
         # Get the exit_code based on the stderr
-        out['exit_code'] = 0
-        if len(out['stderr']) > 0:
-            out['exit_code'] = 1
+
 
         # Need to clean the output from the last 2 lines "mgmt_sw>"
         
@@ -125,10 +132,11 @@ class SSH_connection():
 
         return out
 
-    def execute(self, channel, cmd):
+    def execute(self, channel, cmd, print='default', ask_for_confirmation=False):
         """
         - Excutes a command on a remove network device
-        - Print
+        - Print [ default, json ]
+        - Ask for confirmation before executing the command on the remote device.
         - Returns a dictionary:
         {
             "stdout": "The output of the command",
@@ -136,3 +144,13 @@ class SSH_connection():
             "exit_code":  0 --> the command run successfully,  1 --> an error occurred
         }
         """
+        pass
+
+    def backup_config(self, channel, comment, target='local'):
+        """
+        Take a backup of the device configurations
+        Options: 'local' or 's3'
+        """
+        return self.vendor.backup_command
+        
+    
