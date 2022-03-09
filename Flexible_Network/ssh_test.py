@@ -1,9 +1,13 @@
 # from site import venv
+from http import server
+from tkinter.messagebox import NO
 from Flexible_Network.ssh_authentication import SSH_Authentication
 import time
 from tabulate import tabulate
 import textwrap
 import re
+import socket
+import paramiko
 
 
 class SSH_connection():
@@ -27,11 +31,15 @@ class SSH_connection():
         Autenticates a List of devices and returns a dictionary of dictionaries,
         * The key of each nested dict is the host IP and the value is the connection & authentication information.
         """
+        self.user = user
+        self.password = password
+        self.port = port
         out = {}
         self.authentication = SSH_Authentication()
         for host in hosts:
             connection = self.authentication.connect(host, user, password, port)
             out[host] = connection
+        self.authenticated_hosts_dct = out
         return out
 
     def close(self, authenticated_hosts_dct):
@@ -117,7 +125,7 @@ class SSH_connection():
             # Loop through the indexes of the list
             # If the search is found in one of the lines, then we know the line number that contains the error keyword
             # And since the the command should be directly in the line before the error keyword,
-            # we'll returnthe list starting from the index -1 till the end of the list.
+            # we'll return the list starting from the index -1 till the end of the list.
             for i in range(len(string_lst)):
                 search = re.findall("{}.*$".format(stderr_search_keyword), string_lst[i])
                 if search:
@@ -125,26 +133,40 @@ class SSH_connection():
             return []
 
         out = {}
-        # Run the command
-        channel.send(cmd + '\n' + '\n')
-        # Important to set wait time, if not set it might not be able to read full output.
-        time.sleep(0.5)
         # What was I replacing !??
         out['cmd'] = cmd.replace("\r", '').split("\n")
-        # Get the output of the command
-        out['stdout'] = channel.recv(9999).decode("utf-8")
-        # Preserve of the original stdout (Before cleaning)
-        stdout_original = out['stdout']
-        out['stderr'] = get_stderr(stdout_original)
-        out['exit_code'] = 0
-        if len(out['stderr']) > 0:
-            out['exit_code'] = 1
-        if len(out['stderr']) < 0:
-            out['stderr'] = ""
-        out['stderr'] = "\n".join(out['stderr']).strip()
-        # Clean the "command" from the output & the white spaces.
-        out['stdout'] = out['stdout'].replace(cmd, '').strip()
-        # Get the exit_code based on the stderr
+        out['stdout'] = ""
+        out['stderr'] = ""
+        out['exit_code'] = -1
+
+        ## Thining: How to reconnect if the socket is closed.
+        # try:
+        #     channel.send("")
+        # except (socket.error)  as e:
+        #     pass
+    
+        # Run the command
+        try:
+            channel.send(cmd + '\n' + '\n')
+            # Important to set wait time, if not set it might not be able to read full output.
+            time.sleep(0.5)
+        
+            # Get the output of the command
+            out['stdout'] = channel.recv(9999).decode("utf-8")
+            # Preserve of the original stdout (Before cleaning)
+            stdout_original = out['stdout']
+            out['stderr'] = get_stderr(stdout_original)
+            out['exit_code'] = 0
+            if len(out['stderr']) > 0:
+                out['exit_code'] = 1
+            if len(out['stderr']) < 0:
+                out['stderr'] = ""
+            out['stderr'] = "\n".join(out['stderr']).strip()
+            # Clean the "command" from the output & the white spaces.
+            out['stdout'] = out['stdout'].replace(cmd, '').strip()
+            # Get the exit_code based on the stderr
+        except (socket.error)  as e:
+            out['stderr'] = str(e)
 
 
         # Need to clean the output from the last 2 lines "mgmt_sw>"

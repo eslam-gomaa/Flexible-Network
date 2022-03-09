@@ -14,6 +14,9 @@ class SSH_Authentication():
 
 
     def connect(self, host, user, password, port=22, ssh_timeout=5, allow_agent=True, max_tries=3):
+        """
+        Need to document
+        """
         self.host = host
         self.user = user
         self.password = password
@@ -55,7 +58,7 @@ class SSH_Authentication():
                 time.sleep(0.4)
                 self.Fail_Reason = "NOT able to establish an ssh connection with {} on port {} >> {}".format(host, port, e)
                 if self.tries == max_tries:
-                    break
+                    break   
             self.tries += 1
         info = {}
         info['is_connected'] = self.is_connected
@@ -71,6 +74,7 @@ class SSH_Authentication():
 
         info['Fail_Reason'] = self.Fail_Reason
         info['tries'] = self.tries
+        self.hosts_dct = info
         return info
 
     # def close(self, ssh):

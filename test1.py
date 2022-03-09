@@ -66,16 +66,16 @@ cmd ='''sh ip int br
 for host in hosts_dct_connected:
     channel = hosts_dct_connected[host]['channel']
     
-    print(ssh.exec(channel, cmd)['stdout'])
-    print(ssh.backup_config(channel, 'comment'))
+    print(ssh.exec(channel, cmd))
+    # print(ssh.backup_config(channel, 'comment'))
 
 print(ssh.close(hosts_dct))
 
 for host in hosts_dct_connected:
     channel = hosts_dct_connected[host]['channel']
     
-    print(ssh.exec(channel, cmd)['stdout'])
-    print(ssh.backup_config(channel, 'comment'))
+    print(ssh.exec(channel, cmd))
+    # print(ssh.backup_config(channel, 'comment'))
 
 
 # pa3_lst = ['90.84.41.239']
