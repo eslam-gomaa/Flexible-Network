@@ -161,12 +161,20 @@ class SSH_connection():
             out['stderr'] = get_stderr(stdout_original)
             out['exit_code'] = 0
             if len(out['stderr']) > 0:
+                # Get the exit_code based on the stderr
                 out['exit_code'] = 1
-            # out['stderr'] = "\n".join(out['stderr']).strip()
+                # Remove empty lines in stdout
+                out['stderr'] = [i for i in out['stderr'] if i]
+
             # Clean the "command" from the output & the white spaces.
             out['stdout'] = out['stdout'].replace(cmd, '').strip()
+            # convert the stdout to a list of lines
             out['stdout'] = out['stdout'].replace("\r", '').split("\n")
-            # Get the exit_code based on the stderr
+            # Remove empty lines in stdout
+            if len(out['stdout']) > 0:
+                out['stdout'] = [i for i in out['stdout'] if i]
+        
+                # If the connection is interrupted during execution
         except (socket.error)  as e:
             out['stderr'] = [str(e)]
 

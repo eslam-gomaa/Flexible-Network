@@ -94,7 +94,6 @@ python3.6 -m pytest tests/  -v
       "sh ip int br Typo",
       "                      ^",
       "% Invalid input detected at '^' marker.",
-      "",
       "mgmt_sw>",
       "mgmt_sw>",
       "mgmt_sw>"
@@ -103,7 +102,6 @@ python3.6 -m pytest tests/  -v
       "sh ip int br Typo",
       "                      ^",
       "% Invalid input detected at '^' marker.",
-      "",
       "mgmt_sw>",
       "mgmt_sw>",
       "mgmt_sw>"
