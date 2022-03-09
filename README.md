@@ -40,16 +40,17 @@ python3.6 -m pytest tests/  -v
 ### Methods
 
 <details>
-  <summary>`.exec()`</summary>
+  <summary> <code>.exec()</code> </summary>
   Execute a command on a remote device.
 
-  Returns a dictionary
 
-|             | Type   |                                                              |
+Returns a dictionary
+
+|             | Type   | Description                                                  |
 | ----------- | ------ | ------------------------------------------------------------ |
-| `stdout`    | String |                                                              |
-| `stderr`    | String |                                                              |
-| `exit_code` | Int    | - `0` The command executed successfully<br />- `1` The command executed with an error <br />- `-1` If the ssh channel was interrupted while excution. |
+| `stdout`    | String | The output of the command (I f any )                         |
+| `stderr`    | String | The error of the command ( If any )                          |
+| `exit_code` | Int    | - `0` The command executed successfully<br />- `1` The command executed with an error <br />- `-1` If the ssh channel was interrupted while excution. 
 
 
 </details>
