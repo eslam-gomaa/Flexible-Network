@@ -158,6 +158,10 @@ class SSH_connection():
             out['stdout'] = channel.recv(9999).decode("utf-8")
             # Preserve of the original stdout (Before cleaning)
             stdout_original = out['stdout']
+            # Clean the "command" from the output & the white spaces.
+            out['stdout'] = out['stdout'].replace(cmd.strip(), '')
+
+            # Get the stderr
             out['stderr'] = get_stderr(stdout_original)
             out['exit_code'] = 0
             if len(out['stderr']) > 0:
@@ -166,8 +170,6 @@ class SSH_connection():
                 # Remove empty lines in stdout
                 out['stderr'] = [i for i in out['stderr'] if i]
 
-            # Clean the "command" from the output & the white spaces.
-            out['stdout'] = out['stdout'].replace(cmd, '').strip()
             # convert the stdout to a list of lines
             out['stdout'] = out['stdout'].replace("\r", '').split("\n")
             # Remove empty lines in stdout
