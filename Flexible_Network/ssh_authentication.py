@@ -73,19 +73,16 @@ class SSH_Authentication():
         info['tries'] = self.tries
         return info
 
-    def close(self):
-        """
-        Close the ssh session, ssh session is opened at the initialization of the Class
-        """
-        data = {}
-        data['success'] = 'False'
-        if self.is_connected:
-            try:
-                self.ssh.close()
-                data['success'] = 'True'
-            except:
-                pass
-        return data
+    # def close(self, ssh):
+    #     """
+    #     Close the ssh session, ssh session is opened at the initialization of the Class
+    #     """
+    #     data = {}
+    #     data['success'] = 'False'
+    #     if self.is_connected:
+    #         self.ssh.close()
+    #         data['success'] = 'True'
+    #     return data
 
 
 

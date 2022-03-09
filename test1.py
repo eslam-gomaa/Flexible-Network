@@ -35,7 +35,7 @@ hosts_dct = ssh.authenticate(hosts=pa3_lst, user='orange', password='cisco', por
 ##  2  ## Get Connection Report
 report = ssh.connection_report_Table(hosts_dct)
 print(report)
-rocket_msg = rocket.send_message(['eslam.gomaa'], "``` {} ```".format(report))
+# rocket_msg = rocket.send_message(['eslam.gomaa'], "``` {} ```".format(report))
 # print(rocket_msg)
 
 
@@ -59,31 +59,37 @@ for host in hosts_dct:
 ### Test exeuting a command.
 
 import time
-cmd ='''sh ip int br1
-show vlan br
+cmd ='''sh ip int br
 '''
 
 
-for host, host_auth in hosts_dct_connected.items():
-    channel = host_auth['channel']
+for host in hosts_dct_connected:
+    channel = hosts_dct_connected[host]['channel']
     
-    print(ssh.exec(channel, cmd))
+    print(ssh.exec(channel, cmd)['stdout'])
+    print(ssh.backup_config(channel, 'comment'))
+
+print(ssh.close(hosts_dct))
+
+for host in hosts_dct_connected:
+    channel = hosts_dct_connected[host]['channel']
+    
+    print(ssh.exec(channel, cmd)['stdout'])
     print(ssh.backup_config(channel, 'comment'))
 
 
+# pa3_lst = ['90.84.41.239']
+# print("[ Testing ] Authenticating On Huawei Devices")
 
-pa3_lst = ['90.84.41.239']
-print("[ Testing ] Authenticating On Huawei Devices")
 
+# ##  1  ## Authenticate
+# hosts_dct = ssh.authenticate(hosts=pa3_lst, user='orange', password='cisco', port='1113')
 
-##  1  ## Authenticate
-hosts_dct = ssh.authenticate(hosts=pa3_lst, user='orange', password='cisco', port='1113')
+# ssh.vendor = Huawei()
 
-ssh.vendor = Huawei()
-
-for host, host_auth in hosts_dct_connected.items():
-    channel = host_auth['channel']
+# for host, host_auth in hosts_dct_connected.items():
+#     channel = host_auth['channel']
     
-    print(ssh.exec(channel, cmd))
-    print(ssh.backup_config(channel, 'comment'))
+#     print(ssh.exec(channel, cmd))
+#     print(ssh.backup_config(channel, 'comment'))
 

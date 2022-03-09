@@ -1,16 +1,14 @@
-from site import venv
+# from site import venv
 from Flexible_Network.ssh_authentication import SSH_Authentication
 import time
 from tabulate import tabulate
 import textwrap
 import re
-# from Flexible_Network.Vendors import Cisco
-
 
 
 class SSH_connection():
     def __init__(self):
-        supported_vendors = ['cisco', 'huawei']
+        # self.supported_vendors = ['cisco', 'huawei']
         # if vendor not in supported_vendors:
         #     print("[ ERROR ] Only supported vendors are {}".format(supported_vendors))
 
@@ -35,6 +33,21 @@ class SSH_connection():
             connection = self.authentication.connect(host, user, password, port)
             out[host] = connection
         return out
+
+    def close(self, authenticated_hosts_dct):
+        """
+        Close the SSH connection for a list of hosts
+        Time Complexity -> O(n)
+        """
+        for host in authenticated_hosts_dct:
+            ssh = authenticated_hosts_dct[host]['ssh']
+            data = {}
+            data['success'] = 'False'
+            if authenticated_hosts_dct[host]['is_connected']:
+                ssh.close()
+                data['success'] = 'True'
+            return data
+
 
 
     def connection_report_Table(self, dct={}):
