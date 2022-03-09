@@ -1,4 +1,4 @@
-from Integrations.rocket_chat import RocketChat_API
+from Integrations import RocketChat_API
 from Flexible_Network.ssh_test import SSH_connection
 from Flexible_Network.Vendors import Cisco
 from Flexible_Network.Vendors import Huawei
