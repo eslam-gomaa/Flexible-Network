@@ -2,7 +2,7 @@
 class Cisco:
     def __init__(self):
         self._stderr_search_keyword = '\^'
-        self._clean_output_search_keyword = '.*#'
+        self._clean_output_search_keywords = ['.*#', '.*>']
         self._backup_command = """
             terminal length 0
             show run
@@ -27,12 +27,12 @@ class Cisco:
 
 
     @property
-    def clean_output_search_keyword(self):
-        return self._clean_output_search_keyword
+    def clean_output_search_keywords(self):
+        return self._clean_output_search_keywords
     
-    @clean_output_search_keyword.setter
-    def clean_output_search_keyword(self, keyword):
-        self._clean_output_search_keyword = keyword
+    @clean_output_search_keywords.setter
+    def clean_output_search_keywords(self, keyword):
+        self._clean_output_search_keywords = keyword
 
     @property
     def backup_command(self):

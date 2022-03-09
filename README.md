@@ -64,7 +64,6 @@ python3.6 -m pytest tests/  -v
       "sh ip int br"
    ],
    "stdout":[
-      "sh ip int br",
       "Interface              IP-Address      OK? Method Status                Protocol",
       "Ethernet0/0            unassigned      YES unset  up                    up      ",
       "Ethernet0/1            unassigned      YES unset  up                    up      ",
@@ -75,10 +74,7 @@ python3.6 -m pytest tests/  -v
       "Ethernet1/2            unassigned      YES unset  up                    up      ",
       "Ethernet1/3            unassigned      YES unset  up                    up      ",
       "Vlan1                  unassigned      YES unset  administratively down down    ",
-      "Vlan11                 192.168.11.2    YES NVRAM  up                    up      ",
-      "mgmt_sw>",
-      "mgmt_sw>",
-      "mgmt_sw>"
+      "Vlan11                 192.168.11.2    YES NVRAM  up                    up      "
    ],
    "stderr":[],
    "exit_code":0
@@ -91,12 +87,8 @@ python3.6 -m pytest tests/  -v
       "sh ip int br Typo"
    ],
    "stdout":[
-      "sh ip int br Typo",
       "                      ^",
-      "% Invalid input detected at '^' marker.",
-      "mgmt_sw>",
-      "mgmt_sw>",
-      "mgmt_sw>"
+      "% Invalid input detected at '^' marker."
    ],
    "stderr":[
       "sh ip int br Typo",

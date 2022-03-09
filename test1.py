@@ -59,7 +59,7 @@ for host in hosts_dct:
 ### Test exeuting a command.
 
 import time
-cmd ='''sh ip int br Typo
+cmd ='''sh ip int br
 '''
 
 

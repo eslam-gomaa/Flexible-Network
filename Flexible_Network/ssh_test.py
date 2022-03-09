@@ -160,6 +160,9 @@ class SSH_connection():
             stdout_original = out['stdout']
             # Clean the "command" from the output & the white spaces.
             out['stdout'] = out['stdout'].replace(cmd.strip(), '')
+            # Clean the stdout from unneeded lines.
+            for keyword in self.vendor.clean_output_search_keywords:
+                out['stdout'] = re.sub(keyword, '', out['stdout'])
 
             # Get the stderr
             out['stderr'] = get_stderr(stdout_original)
