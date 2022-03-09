@@ -1,14 +1,10 @@
-
-class Cisco:
+class Huawei:
     def __init__(self):
-        self._stderr_search_keyword = '\^'
+        self._stderr_search_keyword = '9999'
         self._clean_output_search_keyword = '.*#'
         self._backup_command = """
-            terminal length 0
-            show run
-            term no len 0
+            huawei
             """
-
 
     @property
     def stderr_search_keyword(self):
@@ -40,7 +36,7 @@ class Cisco:
 
     @backup_command.setter
     def backup_command(self, keyword):
-        self._stderr_search_keyword = keyword
+        self._backup_command = keyword
 
 
 

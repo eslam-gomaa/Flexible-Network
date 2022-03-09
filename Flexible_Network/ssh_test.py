@@ -4,17 +4,25 @@ import time
 from tabulate import tabulate
 import textwrap
 import re
-from Flexible_Network.vendors.cisco import Cisco
+# from Flexible_Network.Vendors import Cisco
 
 
 
 class SSH_connection():
-    def __init__(self, vendor):
+    def __init__(self):
         supported_vendors = ['cisco', 'huawei']
-        if vendor not in supported_vendors:
-            print("[ ERROR ] Only supported vendors are {}".format(supported_vendors))
+        # if vendor not in supported_vendors:
+        #     print("[ ERROR ] Only supported vendors are {}".format(supported_vendors))
 
-        self.vendor = vendor
+        self._vendor = None
+
+    @property
+    def vendor(self):
+        return self._vendor
+    
+    @vendor.setter
+    def vendor(self, vendor):
+        self._vendor = vendor
 
     def authenticate(self, hosts=[], user='orange', password='cisco', port='1113'):
         """
@@ -27,6 +35,7 @@ class SSH_connection():
             connection = self.authentication.connect(host, user, password, port)
             out[host] = connection
         return out
+
 
     def connection_report_Table(self, dct={}):
         """
@@ -85,7 +94,7 @@ class SSH_connection():
         }
         """
 
-        def get_stderr(string, stderr_search_keyword='\^'):
+        def get_stderr(string, stderr_search_keyword=self.vendor.stderr_search_keyword):
             """
             - A Function to search the output of command for syntax errors
             - Returns a list of lines (Starts with the command has the error including the error location)

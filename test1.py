@@ -1,14 +1,15 @@
 from Integrations.rocket_chat import RocketChat_API
-# from Flexible_Network.ssh_connection import SSH_connection
 from Flexible_Network.ssh_test import SSH_connection
-from Flexible_Network.vendors.cisco import Cisco
+from Flexible_Network.Vendors import Cisco
+from Flexible_Network.Vendors import Huawei
 
-ssh = SSH_connection()
 rocket = RocketChat_API()
-vendor = Cisco()
+ssh = SSH_connection()
+ssh.vendor = Cisco()
 
-print(vendor.backup_command)
-exit(1)
+
+# print(vendor.backup_command)
+# exit(1)
 
 # Get ssh connection info from the "connection" class attribute.
 # connection_info = ssh.connection
@@ -25,7 +26,7 @@ exit(1)
 
 
 pa3_lst = ['90.84.41.239']
-print("[ Testing ] Authenticating")
+print("[ Testing ] Authenticating On Cisco Devices")
 
 
 ##  1  ## Authenticate
@@ -62,9 +63,27 @@ cmd ='''sh ip int br1
 show vlan br
 '''
 
+
 for host, host_auth in hosts_dct_connected.items():
     channel = host_auth['channel']
     
-    command1 = ssh.exec(channel, cmd)
-    print(command1)
+    print(ssh.exec(channel, cmd))
+    print(ssh.backup_config(channel, 'comment'))
+
+
+
+pa3_lst = ['90.84.41.239']
+print("[ Testing ] Authenticating On Huawei Devices")
+
+
+##  1  ## Authenticate
+hosts_dct = ssh.authenticate(hosts=pa3_lst, user='orange', password='cisco', port='1113')
+
+ssh.vendor = Huawei()
+
+for host, host_auth in hosts_dct_connected.items():
+    channel = host_auth['channel']
+    
+    print(ssh.exec(channel, cmd))
+    print(ssh.backup_config(channel, 'comment'))
 
