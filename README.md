@@ -54,6 +54,30 @@ python3.6 -m pytest tests/  -v
 | `stderr`    | String | The error of the command ( If any )                          |
 | `exit_code` | Int    | - `0` The command executed successfully<br />- `1` The command executed with an error <br />- `-1` If the ssh channel was interrupted while excution. 
 
+**Sample Output**
+
+```json
+{
+   "cmd":[
+      "sh ip int br"
+   ],
+   "stdout":"",
+   "stderr":"Socket is closed",
+   "exit_code":-1
+}
+```
+
+```json
+{
+   "cmd":[
+      "sh ip int br",
+      ""
+   ],
+   "stdout":"sh ip int br\r\nInterface              IP-Address      OK? Method Status                Protocol\r\nEthernet0/0            unassigned      YES unset  up                    up      \r\nEthernet0/1            unassigned      YES unset  up                    up      \r\nEthernet0/2            unassigned      YES unset  up                    up      \r\nEthernet0/3            unassigned      YES unset  up                    up      \r\nEthernet1/0            unassigned      YES unset  up                    up      \r\nEthernet1/1            unassigned      YES unset  up                    up      \r\nEthernet1/2            unassigned      YES unset  up                    up      \r\nEthernet1/3            unassigned      YES unset  up                    up      \r\nVlan1                  unassigned      YES unset  administratively down down    \r\nVlan11                 192.168.11.2    YES NVRAM  up                    up      \r\nmgmt_sw>\r\nmgmt_sw>\r\nmgmt_sw>",
+   "stderr":"",
+   "exit_code":0
+}
+```
 
 </details>
 
