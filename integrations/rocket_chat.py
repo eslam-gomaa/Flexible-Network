@@ -1,10 +1,5 @@
-# if __name__ == '__main__':
-#     from os import path
-#     import sys
-#     sys.path.append(path.join(path.dirname(__file__), '..'))
 
-from distutils.log import info
-from Flexible_Network.read_config import Config
+from Flexible_Network import Config
 from requests import sessions
 from rocketchat_API.rocketchat import RocketChat # https://github.com/jadolg/rocketchat_API
 

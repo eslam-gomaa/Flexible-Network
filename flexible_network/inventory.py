@@ -1,6 +1,6 @@
-# from Flexible_Network.cli import CLI
-# cli = CLI()
-from Flexible_Network.read_config import ReadCliOptions
+# from Flexible_Network.read_config import ReadCliOptions
+# from Flexible_Network import ReadCliOptions
+from flexible_network.read_config import ReadCliOptions
 
 
 class Inventory():

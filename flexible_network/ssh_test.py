@@ -1,15 +1,9 @@
-# from site import venv
-# from http import server
-# from os import O_TEMPORARY
-# from sys import stderr
-# from tkinter.messagebox import NO
-from Flexible_Network.ssh_authentication import SSH_Authentication
+from flexible_network.ssh_authentication import SSH_Authentication
 import time
 from tabulate import tabulate
 import textwrap
 import re
 import socket
-# import paramiko
 
 
 class SSH_connection():
@@ -27,6 +21,7 @@ class SSH_connection():
     @vendor.setter
     def vendor(self, vendor):
         self._vendor = vendor
+
 
     def authenticate(self, hosts=[], user='orange', password='cisco', port='1113'):
         """

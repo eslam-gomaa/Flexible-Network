@@ -1,7 +1,7 @@
 class Huawei:
     def __init__(self):
         self._stderr_search_keyword = '9999'
-        self._clean_output_search_keyword = '.*#'
+        self.clean_output_search_keywords = ['.*#']
         self._backup_command = """
             huawei
             """

@@ -1,8 +1,8 @@
-from Flexible_Network.cli import CLI
-from Flexible_Network.Vendors import Cisco
-from Flexible_Network.read_config import ReadCliOptions
-from Flexible_Network.inventory import Inventory
-from Flexible_Network.ssh_authentication import SSH_Authentication
+from Flexible_Network import CLI
+from flexible_network.Vendors import Cisco
+from Flexible_Network import ReadCliOptions
+from Flexible_Network import Inventory
+from flexible_network.ssh_authentication import SSH_Authentication
 
 class Terminal_Task:
     task_name = None # Should be updated from a cli option. --task

@@ -1,9 +1,7 @@
-# import sys
-# import os
 import argparse
-from Flexible_Network.inventory import Inventory
-from Flexible_Network import Terminal_Task
-from Flexible_Network.read_config import ReadCliOptions
+from Flexible_Network import Inventory
+# from Flexible_Network import Terminal_Task
+from Flexible_Network import ReadCliOptions
 
 
 
