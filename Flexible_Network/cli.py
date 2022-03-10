@@ -15,6 +15,10 @@ class CLI:
         parser = argparse.ArgumentParser(description='A Python tool that to automate network devices with much flexibility & lots of integrations')
         parser.add_argument('-n', '--name', type=str, required=True, metavar='', help='The Task Name')
         parser.add_argument('-i', '--inventory', type=str, required=False, metavar='', help='The inventory file')
+        # parser.add_argument('-r', '--validate-RocketChat-api', action='store_true', help='Test RocketChat Integration')
+        # parser.add_argument('-c', '--validate-CyberArk-api', action='store_true', help='Test RocketChat Integration')
+        parser.add_argument('-V', '--validate-integration', nargs='+',choices=['cyberArk', 'rocketChat'] , required=False, metavar='', help='Test API Integrations')
+
 
         results = parser.parse_args()
         if results.inventory is not None:
@@ -22,3 +26,8 @@ class CLI:
             ReadCliOptions.inventory_file = results.inventory
         if results.name is not None:
             ReadCliOptions.task_name = results.name
+        
+        if results.validate_integration is not None:
+            print(results.validate_integration)
+        # need to remove duplicates
+        # loop over the list, ex. if rocket chat -> call method validate_rocket_chat.

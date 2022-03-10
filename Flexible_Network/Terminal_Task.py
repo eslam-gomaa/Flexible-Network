@@ -11,4 +11,4 @@ class Terminal_Task:
         self.vendor = Cisco() # Default vendor class should exist in the config
         self.task_name = ReadCliOptions.task_name
 
-    # 
+        # Generate a connection report as part of the initilization
