@@ -2,9 +2,23 @@ from Integrations import RocketChat_API
 from Flexible_Network.ssh_test import SSH_connection
 from Flexible_Network.Vendors import Cisco
 from Flexible_Network.Vendors import Huawei
+from Flexible_Network.inventory import Inventory
+from Flexible_Network.cli import CLI
 
+cli = CLI()
+cli.argparse()
+
+inventory = Inventory()
+print(inventory.inventory_file)
+# print(cli.inventory_file)
+
+exit(1)
+
+# Instanciate an instance from the SSH_connection class 
 rocket = RocketChat_API()
+# Instanciate an instance from the SSH_connection class 
 ssh = SSH_connection()
+# Specify the vendor as an attribute
 ssh.vendor = Cisco()
 
 
