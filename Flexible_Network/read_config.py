@@ -2,6 +2,12 @@
 import configparser
 import os
 
+class ReadCliOptions:
+    task_name = None
+
+    def __init(self):
+        self.task_name
+
 class Config():
 
     def __init__(self):

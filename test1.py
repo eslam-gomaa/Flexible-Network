@@ -3,6 +3,8 @@ from Flexible_Network.ssh_test import SSH_connection
 from Flexible_Network.Vendors import Cisco
 from Flexible_Network.Vendors import Huawei
 from Flexible_Network.inventory import Inventory
+from Flexible_Network.read_config import ReadCliOptions
+
 # from Flexible_Network.cli import CLI
 # cli = CLI()
 # cli.argparse()
@@ -13,7 +15,7 @@ task = Terminal_Task()
 
 inventory = Inventory()
 print(inventory.inventory_file)
-# print(cli.inventory_file)
+print(task.task_name)
 
 exit(1)
 

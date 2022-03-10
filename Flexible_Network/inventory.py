@@ -4,6 +4,8 @@
 class Inventory():
     # Define 'inventory_file' as a class level attribute, so that I can update it from the cli class 
     inventory_file = '/etc/...' # Need to specify the default value in the configuration file
+    
+    # @classmethod
     def __init__(self):
         self.inventory_file
 
