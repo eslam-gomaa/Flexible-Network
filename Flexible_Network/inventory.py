@@ -1,13 +1,19 @@
 # from Flexible_Network.cli import CLI
 # cli = CLI()
+from Flexible_Network.read_config import ReadCliOptions
+
 
 class Inventory():
     # Define 'inventory_file' as a class level attribute, so that I can update it from the cli class 
-    inventory_file = '/etc/...' # Need to specify the default value in the configuration file
-    
+    # Need to specify the default value in the configuration file
+
+
     # @classmethod
     def __init__(self):
-        self.inventory_file
+        if ReadCliOptions.inventory_file is None:
+            self.inventory_file = "From config file"
+        else:
+            self.inventory_file = ReadCliOptions.inventory_file
 
         # Check the input is file
 

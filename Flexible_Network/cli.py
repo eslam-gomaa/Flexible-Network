@@ -18,6 +18,7 @@ class CLI:
 
         results = parser.parse_args()
         if results.inventory is not None:
-            Inventory.inventory_file = results.inventory
+            # Inventory.inventory_file = results.inventory
+            ReadCliOptions.inventory_file = results.inventory
         if results.name is not None:
             ReadCliOptions.task_name = results.name

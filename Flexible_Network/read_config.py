@@ -4,9 +4,11 @@ import os
 
 class ReadCliOptions:
     task_name = None
+    inventory_file = None
 
     def __init(self):
         self.task_name
+        self.inventory_file
 
 class Config():
 
