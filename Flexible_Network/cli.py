@@ -13,7 +13,7 @@ class CLI:
 
     def argparse(self):
         parser = argparse.ArgumentParser(description='A Python tool that to automate network devices with much flexibility & lots of integrations')
-        parser.add_argument('-n', '--name')
+        parser.add_argument('-n', '--name', type=str, required=True, metavar='', help='The Task Name')
         parser.add_argument('-i', '--inventory', type=str, required=False, metavar='', help='The inventory file')
 
         results = parser.parse_args()
