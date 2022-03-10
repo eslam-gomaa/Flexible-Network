@@ -10,13 +10,13 @@ class Inventory():
 
     # @classmethod
     def __init__(self):
+        # Check the input is file
         if ReadCliOptions.inventory_file is None:
             self.inventory_file = "From config file"
         else:
             self.inventory_file = ReadCliOptions.inventory_file
 
-        # Check the input is file
-
+        self.inventory = {'group1': ['90.84.41.239']}
 
     def read_inventory(self):
         """ 

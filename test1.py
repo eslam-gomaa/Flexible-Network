@@ -12,19 +12,20 @@ from Flexible_Network.read_config import ReadCliOptions
 from Flexible_Network.Terminal_Task import Terminal_Task
 task = Terminal_Task()
 
-
-inventory = Inventory()
-print(inventory.inventory_file)
-print(task.task_name)
-
-exit(1)
-
 # Instanciate an instance from the SSH_connection class 
 rocket = RocketChat_API()
 # Instanciate an instance from the SSH_connection class 
 ssh = SSH_connection()
 # Specify the vendor as an attribute
 ssh.vendor = Cisco()
+
+
+# print(task.task_name)
+# print(task.inventory)
+
+# exit(1)
+
+
 
 
 # print(vendor.backup_command)
@@ -44,15 +45,15 @@ ssh.vendor = Cisco()
 # print(msg)
 
 
-pa3_lst = ['90.84.41.239']
-print("[ Testing ] Authenticating On Cisco Devices")
+# pa3_lst = ['90.84.41.239']
+# print("[ Testing ] Authenticating On Cisco Devices")
 
 
 ##  1  ## Authenticate
-hosts_dct = ssh.authenticate(hosts=pa3_lst, user='orange', password='cisco', port='1113')
+task.authenticate(hosts=task.inventory['group1'], user='orange', password='cisco', port='1113')
 
 ##  2  ## Get Connection Report
-report = ssh.connection_report_Table(hosts_dct)
+report = ssh.connection_report_Table(task.devices)
 print(report)
 # rocket_msg = rocket.send_message(['eslam.gomaa'], "``` {} ```".format(report))
 # print(rocket_msg)
@@ -61,10 +62,10 @@ print(report)
 
 
 # Store the only connected hosts to a dict.
-hosts_dct_connected = {}
-for host in hosts_dct:
-    if hosts_dct[host]['is_connected']:
-        hosts_dct_connected[host] = hosts_dct[host]
+# hosts_dct_connected = {}
+# for host in hosts_dct:
+#     if hosts_dct[host]['is_connected']:
+#         hosts_dct_connected[host] = hosts_dct[host]
 
 
 
@@ -82,18 +83,19 @@ cmd ='''sh ip int br
 '''
 
 
-for host in hosts_dct_connected:
-    channel = hosts_dct_connected[host]['channel']
+for host in task.connected_devices_dct:
+    channel = task.connected_devices_dct[host]['channel']
     
-    print(ssh.exec(channel, cmd))
-    # print(ssh.backup_config(channel, 'comment'))
+    print(ssh.exec(channel, cmd)['stdout'])
+    print(ssh.backup_config(channel, 'comment'))
 
-print(ssh.close(hosts_dct))
+# Close the ssh connection for a full group
+# ssh.close(hosts_dct)
 
-for host in hosts_dct_connected:
-    channel = hosts_dct_connected[host]['channel']
+# for host in hosts_dct_connected:
+#     channel = hosts_dct_connected[host]['channel']
     
-    print(ssh.exec(channel, cmd))
+#     print(ssh.exec(channel, cmd))
     # print(ssh.backup_config(channel, 'comment'))
 
 
