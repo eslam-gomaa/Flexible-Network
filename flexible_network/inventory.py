@@ -1,6 +1,7 @@
 # from Flexible_Network.read_config import ReadCliOptions
 # from Flexible_Network import ReadCliOptions
-from flexible_network.read_config import ReadCliOptions
+# from Flexible_Network import ReadCliOptions
+from flexible_network.read_cli_options import ReadCliOptions
 
 
 class Inventory():
@@ -16,7 +17,7 @@ class Inventory():
         else:
             self.inventory_file = ReadCliOptions.inventory_file
 
-        self.inventory = {'group1': ['90.84.41.239', '90.84.41.2', '192.168.1.241', '192.168.1.2452']}
+        self.inventory = {'group1': ['90.84.41.239']}
 
     def read_inventory(self):
         """ 

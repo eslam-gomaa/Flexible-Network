@@ -1,9 +1,10 @@
-from Integrations import RocketChat_API
+from Flexible_Network import Terminal_Task
 from Flexible_Network import Flexible_Network, SSH_connection
 from flexible_network.Vendors import Cisco
 from flexible_network.Vendors import Huawei
 from Flexible_Network import Inventory
 from Flexible_Network import ReadCliOptions
+from Integrations import RocketChat_API
 
 
 
@@ -11,15 +12,14 @@ from Flexible_Network import ReadCliOptions
 # cli = CLI()
 # cli.argparse()
 
-from Flexible_Network import Terminal_Task
 task = Terminal_Task()
 
 # Instanciate an instance from the SSH_connection class 
-rocket = RocketChat_API()
 # Instanciate an instance from the SSH_connection class 
 ssh = SSH_connection()
 # Specify the vendor as an attribute
 ssh.vendor = Cisco()
+rocket = RocketChat_API()
 
 
 # print(task.task_name)

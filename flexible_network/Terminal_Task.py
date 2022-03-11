@@ -3,14 +3,15 @@ from flexible_network.Vendors import Cisco
 from Flexible_Network import ReadCliOptions
 from Flexible_Network import Inventory
 from Flexible_Network import SSH_connection
-import sys
-import time
-import random
+# import sys
+# import time
+# import random
 
 class Terminal_Task:
     task_name = None # Should be updated from a cli option. --task
 
     def __init__(self):
+        print('from terminal task')
         cli = CLI()
         cli.argparse()
         inventory = Inventory()

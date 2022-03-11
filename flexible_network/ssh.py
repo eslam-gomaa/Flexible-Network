@@ -8,9 +8,6 @@ import socket
 
 class SSH_connection():
     def __init__(self):
-        # self.supported_vendors = ['cisco', 'huawei']
-        # if vendor not in supported_vendors:
-        #     print("[ ERROR ] Only supported vendors are {}".format(supported_vendors))
         self.devices_dct = {}
         self.connected_devices_dct = {}
         self.connected_devices_number = 0
@@ -85,7 +82,7 @@ class SSH_connection():
         decision = None
         while decision not in options:
             confirm = input(
-            "\n[ WARNING ] {}: \n".format(msg)
+            "\nWARNING -- {}: \n".format(msg)
             + "\n"
             + cmd  + "\n"
             + "\nyes || no \n\n"
