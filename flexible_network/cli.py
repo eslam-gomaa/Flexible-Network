@@ -1,7 +1,7 @@
 import argparse
-# from Flexible_Network import ReadCliOptions
-from flexible_network.read_cli_options import ReadCliOptions
-
+from Flexible_Network import ReadCliOptions
+# from Flexible_Network import Config
+# from flexible_network.read_cli_options import ReadCliOptions
 
 
 class CLI:
@@ -21,13 +21,17 @@ class CLI:
         if results.inventory is not None:
             # Inventory.inventory_file = results.inventory
             ReadCliOptions.inventory_file = results.inventory
+
         if results.name is not None:
             ReadCliOptions.task_name = results.name
         
         if results.validate_integration is not None:
-            print(results.validate_integration)
-        # need to remove duplicates
+            ReadCliOptions.to_validate_lst = set(results.validate_integration)
+
+        # need to remove duplicates 👍
         # loop over the list, ex. if rocket chat -> call method validate_rocket_chat.
+
+        # Or return an error if duplicate is found.
 
         if results.no_confirm_auth:
             ReadCliOptions.no_confirm_auth = True

@@ -20,6 +20,7 @@ ssh = SSH_connection()
 # Specify the vendor as an attribute
 ssh.vendor = Cisco()
 rocket = RocketChat_API()
+rocket.authenticate()
 
 
 # print(task.task_name)

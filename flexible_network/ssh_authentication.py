@@ -11,7 +11,6 @@ class SSH_Authentication():
         self.is_connected = False
         self.Fail_Reason = ""
         self.time_to_connect_seconds = 0
-        print('from ssh authentication')
 
 
     def connect(self, host, user, password, port=22, ssh_timeout=5, allow_agent=True, max_tries=3):

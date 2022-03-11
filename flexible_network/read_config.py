@@ -18,19 +18,10 @@ class Config():
                 exit(1)
                 # raise ValueError("ERROR -- Configuration file '{}' is NOT found".format(self.configuration_file))
 
-    def set_configuration_type(self, type):
-        self.config_type = type
-        if self.config_type not in ["FILE", "ENV"]:
-            raise ValueError("configuration_type supported options are: {}".format(["FILE", "ENV"]))
-
-    def Check_configuration_file(self, file):
-        if self.config_type == "File":
-            if not os.path.isfile(file):
-                raise ValueError("ERROR -- Configuration file '{}' is NOT found".format(file))
-     
-    def set_configuration_file(self, file):
-        self.configuration_file = file
-        self.Check_configuration_file(file)
+    # def Check_configuration_file(self, file):
+    #     if self.config_type == "File":
+    #         if not os.path.isfile(file):
+    #             raise ValueError("ERROR -- Configuration file '{}' is NOT found".format(file))
 
     def section_general(self, section_name='vault'):
         try:
@@ -58,8 +49,6 @@ class Config():
             raise ValueError("ERROR -- Accessing the section '{}'".format(section_name))
 
     def section_rocket_chat(self, section_name='rocket_chat'):
-        if self.config_type == 'FILE':
-            self.Check_configuration_file(self.configuration_file)
         try:
             config = configparser.ConfigParser(comment_prefixes=('#',';'), inline_comment_prefixes=('#',';'))
             config.read(self.configuration_file)

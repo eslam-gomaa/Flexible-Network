@@ -1,7 +1,9 @@
 
 from requests import sessions
 from rocketchat_API.rocketchat import RocketChat # https://github.com/jadolg/rocketchat_API
-from Flexible_Network import Config
+ 
+# from Flexible_Network import Config
+from flexible_network.read_config import Config
 
 
 class RocketChat_API():
@@ -9,25 +11,46 @@ class RocketChat_API():
     def __init__(self):
         """ Authenticate with RocketChat Server """
         self.auth_session = None
-        self.authenticate()
+        # self.authenticate()
+
+    def auth_raw(self):
+        """ Authenticate with RocketChat Server [ Without Exception handeling ] """
+        config = Config()
+        config_data = config.section_rocket_chat()
+        with sessions.Session() as session:
+            rocket = RocketChat(config_data["username"], 
+                                config_data["password"],
+                                server_url=config_data["url"],
+                                session=session)
+        self.auth_session = rocket
+
 
     def authenticate(self):
         """ Authenticate with RocketChat Server """
-        config = Config()
-        config_data = config.section_rocket_chat()
-        
-        self.auth_session = None
-        print('from rocketchat')
         try:
-            with sessions.Session() as session:
-                rocket = RocketChat(config_data["username"], 
-                                    config_data["password"],
-                                    server_url=config_data["url"],
-                                    session=session)
-            self.auth_session = rocket
+            self.auth_raw()
         except:
-            raise ConnectionError("Failed to authenticate to RocketChat Server {} with {}".format(config_data["url"], config_data["username"]))
+            print("ERROR -- Failed to authenticate RocketChat")
+            exit(1)
+        # config = Config()
+        # config_data = config.section_rocket_chat()
+        
+        # self.auth_session = None
+        # out = {}
+        # out['success'] = False
+        # out['fail_reason'] = ""
+        # try:
+        #     with sessions.Session() as session:
+        #         rocket = RocketChat(config_data["username"], 
+        #                             config_data["password"],
+        #                             server_url=config_data["url"],
+        #                             session=session)
+        #     self.auth_session = rocket
+        #     out['success'] = True
+        # except:
+        #     out['fail_reason'] = "Failed to authenticate"
 
+            # raise ConnectionError("Failed to authenticate to RocketChat Server {} with {}".format(config_data["url"], config_data["username"]))
 
     def list_members_channels(self):
         """ List members and Channels """

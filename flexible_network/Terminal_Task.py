@@ -1,8 +1,12 @@
-from Flexible_Network import CLI
 from flexible_network.Vendors import Cisco
 from Flexible_Network import ReadCliOptions
+from Flexible_Network import CLI
 from Flexible_Network import Inventory
 from Flexible_Network import SSH_connection
+from Integrations import RocketChat_API
+from tabulate import tabulate
+
+
 # import sys
 # import time
 # import random
@@ -11,11 +15,11 @@ class Terminal_Task:
     task_name = None # Should be updated from a cli option. --task
 
     def __init__(self):
-        print('from terminal task')
         cli = CLI()
         cli.argparse()
         inventory = Inventory()
         self.ssh = SSH_connection()
+        self.validate_integrations()
 
         ## Attributes ##
         self.vendor = Cisco() # Default vendor class should exist in the config
@@ -25,6 +29,38 @@ class Terminal_Task:
         self.connected_devices_dct = {}
         self.connected_devices_number = 0
         self.connection_failed_devices_number = 0
+
+    def validate_integrations(self):
+        if ReadCliOptions.to_validate_lst is not None:
+            """
+            Validate RocketChat Authentication.
+            """
+            print("\n> Integration Validation Report")
+            table = [['Integration', 'Status', 'Comment']]
+            tabulate.WIDE_CHARS_MODE = False
+
+
+            if 'rocketChat' in ReadCliOptions.to_validate_lst:
+                rocket = RocketChat_API() 
+                out = {}
+                out['success'] = False
+                out['comment'] = ""
+                try:
+                    rocket.auth_raw()
+                    out['success'] = True
+                    out['comment'] = "Works !"
+
+                except:
+                    out['comment'] = 'Authentication Failed'
+                if out['success']:
+                    status = '🟢'
+                else:
+                    status = '🔴'
+                row = ['rocketChat', status, out['comment']]
+                table.append(row)
+            out = tabulate(table, headers='firstrow', tablefmt='grid', showindex=False)
+            print(out)
+            exit(1)
 
     def authenticate(self, hosts=[], user='orange', password='cisco', port='1113', terminal_print=True):
         self.ssh.authenticate(hosts=hosts, user=user, password=password, port=port, terminal_print=terminal_print)

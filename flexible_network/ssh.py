@@ -119,6 +119,7 @@ class SSH_connection():
             table.append(row)
         out = tabulate(table, headers='firstrow', tablefmt='grid', showindex=False)
         if terminal_print:
+            print()
             print("> Connection Report   ")
             print(out)
             if (ask_when_hosts_fail and self.connection_failed_devices_number > 0) :
