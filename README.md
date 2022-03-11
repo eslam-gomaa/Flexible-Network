@@ -1,5 +1,8 @@
 # Flexible-Network
 
+A Python library / tool to achieve advanced network automation scenarios with few lines of code
+* Required: Basic python knowledge
+
 Building on https://github.com/eslam-gomaa/Flexible_Network
 
 Our collaboration page: https://flexible-network.devops-caffe.com

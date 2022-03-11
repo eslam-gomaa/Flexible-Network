@@ -19,7 +19,7 @@ rocket = RocketChat_API()
 # Instanciate an instance from the SSH_connection class 
 ssh = SSH_connection()
 # Specify the vendor as an attribute
-ssh.vendor = Huawei()
+ssh.vendor = Cisco()
 
 
 # print(task.task_name)
@@ -55,11 +55,10 @@ ssh.vendor = Huawei()
 task.authenticate(hosts=task.inventory['group1'], user='orange', password='cisco', port='1113')
 
 ##  2  ## Get Connection Report
-# report = task.connection_report_Table(task.devices_dct)
+report = task.connection_report_Table(task.devices_dct)
 # print(report)
-# rocket_msg = rocket.send_message(['eslam.gomaa'], "``` {} ```".format(report))
+rocket_msg = rocket.send_message(['eslam.gomaa'], "``` {} ```".format(report))
 # print(rocket_msg)
-
 
 
 
@@ -81,15 +80,15 @@ task.authenticate(hosts=task.inventory['group1'], user='orange', password='cisco
 ### Test exeuting a command.
 
 import time
-cmd ='''sh ip int br
+cmd ='''sh vlan bt
 '''
 
 
 for host in task.connected_devices_dct:
     channel = task.connected_devices_dct[host]['channel']
     
-    print(ssh.exec(channel, cmd)['stdout'])
-    print(ssh.backup_config(channel, 'comment'))
+    print(ssh.exec(channel, cmd))
+    # print(ssh.backup_config(channel, 'comment'))
 
 # Close the ssh connection for a full group
 # ssh.close(hosts_dct)
