@@ -16,7 +16,7 @@ class Inventory():
         else:
             self.inventory_file = ReadCliOptions.inventory_file
 
-        self.inventory = {'group1': ['90.84.41.239']}
+        self.inventory = {'group1': ['90.84.41.239', '90.84.41.239', '90.84.41.2']}
 
     def read_inventory(self):
         """ 

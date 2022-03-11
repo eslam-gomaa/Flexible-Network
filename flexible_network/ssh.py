@@ -11,8 +11,11 @@ class SSH_connection():
         # self.supported_vendors = ['cisco', 'huawei']
         # if vendor not in supported_vendors:
         #     print("[ ERROR ] Only supported vendors are {}".format(supported_vendors))
-
-        self._vendor = None
+        self.devices_dct = {}
+        self.connected_devices_dct = {}
+        self.connected_devices_number = 0
+        self.connection_failed_devices_number = 0
+        
 
     @property
     def vendor(self):
@@ -23,20 +26,36 @@ class SSH_connection():
         self._vendor = vendor
 
 
-    def authenticate(self, hosts=[], user='orange', password='cisco', port='1113'):
+    def authenticate(self, hosts=[], user='orange', password='cisco', port='1113', terminal_print=False):
         """
         Autenticates a List of devices and returns a dictionary of dictionaries,
         * The key of each nested dict is the host IP and the value is the connection & authentication information.
+        # Modified copy of .. (for terminal printing.)
         """
+        if terminal_print:
+            print()
+            print("> Authenticating selected devices")         
+        
         self.user = user
         self.password = password
         self.port = port
         out = {}
         self.authentication = SSH_Authentication()
+        cnt = 0
         for host in hosts:
+            cnt +=1
+            if terminal_print:
+                print("   {}  [ {} out of {} ]            Connected [ {} ]     Failed [ {} ]    ".format(host, cnt , len(hosts), self.connected_devices_number, self.connection_failed_devices_number), end="\r")
             connection = self.authentication.connect(host, user, password, port)
+            if connection['is_connected']:
+                self.connected_devices_number +=1
+            else:
+                self.connection_failed_devices_number  +=1
             out[host] = connection
-        self.authenticated_hosts_dct = out
+        self.devices_dct = out
+        for host in self.devices_dct:
+            if self.devices_dct[host]['is_connected']:
+                self.connected_devices_dct[host] = self.devices_dct[host]
         return out
 
     def close(self, authenticated_hosts_dct):

@@ -1,5 +1,5 @@
 from cmath import cos
-from flexible_network.ssh_test import SSH_connection
+from flexible_network.ssh import SSH_connection
 from flexible_network.inventory import Inventory
 from flexible_network.read_config import ReadCliOptions
 from flexible_network.read_config import Config

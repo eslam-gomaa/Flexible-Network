@@ -55,7 +55,7 @@ ssh.vendor = Huawei()
 task.authenticate(hosts=task.inventory['group1'], user='orange', password='cisco', port='1113')
 
 ##  2  ## Get Connection Report
-report = ssh.connection_report_Table(task.devices)
+report = ssh.connection_report_Table(task.devices_dct)
 print(report)
 # rocket_msg = rocket.send_message(['eslam.gomaa'], "``` {} ```".format(report))
 # print(rocket_msg)
