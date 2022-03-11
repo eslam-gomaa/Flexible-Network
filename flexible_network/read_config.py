@@ -5,10 +5,12 @@ import os
 class ReadCliOptions:
     task_name = None
     inventory_file = None
+    no_confirm_auth = False
 
     def __init(self):
         self.task_name
         self.inventory_file
+        self.no_confirm_auth
 
 class Config():
 

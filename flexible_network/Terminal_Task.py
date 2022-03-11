@@ -32,7 +32,11 @@ class Terminal_Task:
         self.connected_devices_number = self.ssh.connected_devices_number
         self.connection_failed_devices_number = self.ssh.connection_failed_devices_number
         if terminal_print:
-            table = self.ssh.connection_report_Table(dct=self.devices_dct, terminal_print=True, ask_when_hosts_fail=True)
+            if ReadCliOptions.no_confirm_auth:
+                ask_when_hosts_fail_ = False
+            else:
+                ask_when_hosts_fail_ = True
+            self.ssh.connection_report_Table(dct=self.devices_dct, terminal_print=True, ask_when_hosts_fail=ask_when_hosts_fail_)
 
     def connection_report_Table(self, dct_={}, terminal_print=False, ask_when_hosts_fail=False):
         table = self.ssh.connection_report_Table(dct=dct_, terminal_print=terminal_print, ask_when_hosts_fail=ask_when_hosts_fail)
