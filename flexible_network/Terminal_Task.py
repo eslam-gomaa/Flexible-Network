@@ -25,9 +25,16 @@ class Terminal_Task:
         self.connected_devices_number = 0
         self.connection_failed_devices_number = 0
 
-    def authenticate(self, hosts=[], user='orange', password='cisco', port='1113', terminal_print=False):
-        self.ssh.authenticate(hosts=hosts, user=user, password=password, port=port, terminal_print=True)
+    def authenticate(self, hosts=[], user='orange', password='cisco', port='1113', terminal_print=True):
+        self.ssh.authenticate(hosts=hosts, user=user, password=password, port=port, terminal_print=terminal_print)
         self.devices_dct = self.ssh.devices_dct
         self.connected_devices_dct = self.ssh.connected_devices_dct
         self.connected_devices_number = self.ssh.connected_devices_number
         self.connection_failed_devices_number = self.ssh.connection_failed_devices_number
+        if terminal_print:
+            table = self.ssh.connection_report_Table(dct=self.devices_dct, terminal_print=True, ask_when_hosts_fail=True)
+
+    def connection_report_Table(self, dct_={}, terminal_print=False, ask_when_hosts_fail=False):
+        table = self.ssh.connection_report_Table(dct=dct_, terminal_print=terminal_print, ask_when_hosts_fail=ask_when_hosts_fail)
+        return table
+

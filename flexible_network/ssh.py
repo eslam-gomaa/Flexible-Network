@@ -45,13 +45,14 @@ class SSH_connection():
         for host in hosts:
             cnt +=1
             if terminal_print:
-                print("   {}  [ {} out of {} ]            Connected [ {} ]     Failed [ {} ]    ".format(host, cnt , len(hosts), self.connected_devices_number, self.connection_failed_devices_number), end="\r")
+                print("   {}  [ {} / {} ]          Connected [ {} ]     Failed [ {} ]    ".format(host, cnt , len(hosts), self.connected_devices_number, self.connection_failed_devices_number), end="\r")
             connection = self.authentication.connect(host, user, password, port)
             if connection['is_connected']:
                 self.connected_devices_number +=1
             else:
                 self.connection_failed_devices_number  +=1
             out[host] = connection
+        print("                                                                                              ", end='\r')
         self.devices_dct = out
         for host in self.devices_dct:
             if self.devices_dct[host]['is_connected']:
@@ -73,8 +74,28 @@ class SSH_connection():
             return data
 
 
+    def ask_for_confirmation(self, msg="Confirm before running the following command", cmd=""):
+        options = ['yes', 'no']
+        decision = None
+        while decision not in options:
+            confirm = input(
+            "\n[ WARNING ] {}: \n".format(msg)
+            + "\n"
+            + cmd  + "\n"
+            + "\nyes || no \n\n"
+            + "yes: Run & continue\n"
+            + "no:  Abort\n"
+            + "YOUR Decision: ")
+            if confirm == 'yes':
+                print("> Ok .. Let\'s continue ...\n")
+                break
+            elif confirm == 'no':
+                print("> See you \n")
+                exit(1)
 
-    def connection_report_Table(self, dct={}):
+
+
+    def connection_report_Table(self, dct={}, terminal_print=False, ask_when_hosts_fail=False):
         """
         Takes an dict generated from the "authenticate_devices" Method
         And prints them in a an organized table
@@ -93,7 +114,14 @@ class SSH_connection():
             
             row = [host, connection_status, comment, info['tries'], info['max_tries'], info['time_to_connect_seconds'], fail_reason]
             table.append(row)
-            
+        out = tabulate(table, headers='firstrow', tablefmt='grid', showindex=False)
+        if terminal_print:
+            print("> Connection Report   ")
+            print(out)
+            if (ask_when_hosts_fail and self.connection_failed_devices_number > 0) :
+                self.ask_for_confirmation(msg="Failed to connect to some devices, Please confirm to continue")
+            print()
+
         return tabulate(table, headers='firstrow', tablefmt='grid', showindex=False)
 
     
