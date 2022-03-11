@@ -1,7 +1,6 @@
 import argparse
-from Flexible_Network import Inventory
-# from Flexible_Network import Terminal_Task
-from Flexible_Network import ReadCliOptions
+# from Flexible_Network import ReadCliOptions
+from flexible_network.read_cli_options import ReadCliOptions
 
 
 
@@ -13,10 +12,9 @@ class CLI:
         parser = argparse.ArgumentParser(description='A Python tool that to automate network devices with much flexibility & lots of integrations')
         parser.add_argument('-n', '--name', type=str, required=True, metavar='', help='The Task Name')
         parser.add_argument('-i', '--inventory', type=str, required=False, metavar='', help='The inventory file')
-        # parser.add_argument('-r', '--validate-RocketChat-api', action='store_true', help='Test RocketChat Integration')
-        # parser.add_argument('-c', '--validate-CyberArk-api', action='store_true', help='Test RocketChat Integration')
         parser.add_argument('-V', '--validate-integration', nargs='+',choices=['cyberArk', 'rocketChat'] , required=False, metavar='', help='Test API Integrations')
-        parser.add_argument('-o', '--no-confirm-auth', action='store_true', help='Skip Asking for confirmation if failed to connect to some deivces')
+        parser.add_argument('-x', '--no-confirm-auth', action='store_true', help='Skip Asking for confirmation if failed to connect to some deivces')
+        parser.add_argument('-c', '--config', type=str, required=False, metavar='', help='The path of configuration file')
 
 
         results = parser.parse_args()
@@ -33,3 +31,7 @@ class CLI:
 
         if results.no_confirm_auth:
             ReadCliOptions.no_confirm_auth = True
+        
+        if results.config is not None:
+            ReadCliOptions.config_file = results.config
+

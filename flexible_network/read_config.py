@@ -1,23 +1,22 @@
 # https://docs.python.org/3/library/configparser.html
 import configparser
 import os
+from Flexible_Network import ReadCliOptions
+# from flexible_network.read_cli_options import ReadCliOptions
 
-class ReadCliOptions:
-    task_name = None
-    inventory_file = None
-    no_confirm_auth = False
-
-    def __init(self):
-        self.task_name
-        self.inventory_file
-        self.no_confirm_auth
 
 class Config():
-
     def __init__(self):
         self.config_type = "FILE" # FILE || ENV
-        # self.configuration_file = "/home/orange/work_dir/Flexible-Network/user/flexible_network.cfg" # Path to configuration file
-        self.configuration_file = "user/flexible_network.cfg" # Path to configuration file
+        # Path to configuration file
+        self.configuration_file = "/etc/flexible_network/flexible_network.cfg"
+        if ReadCliOptions.config_file is not None:
+            self.configuration_file = ReadCliOptions.config_file
+        if self.config_type == "FILE":
+            if not os.path.isfile(self.configuration_file):
+                print("ERROR -- Configuration file '{}' is NOT found".format(self.configuration_file))
+                exit(1)
+                # raise ValueError("ERROR -- Configuration file '{}' is NOT found".format(self.configuration_file))
 
     def set_configuration_type(self, type):
         self.config_type = type
@@ -32,6 +31,17 @@ class Config():
     def set_configuration_file(self, file):
         self.configuration_file = file
         self.Check_configuration_file(file)
+
+    def section_general(self, section_name='vault'):
+        try:
+            config = configparser.ConfigParser(comment_prefixes=('#',';'), inline_comment_prefixes=('#',';'))
+            config.read(self.configuration_file)
+            # section = dict(config.items(section_name))
+            info = {}
+            info['default_vendor'] = config.get(section_name, 'default_vendor').strip('"')
+            return info
+        except:
+            raise ValueError("ERROR -- Accessing the section '{}'".format(section_name))
 
     def section_vault(self, section_name='vault'):
         try:
