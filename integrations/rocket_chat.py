@@ -1,25 +1,32 @@
 
-from Flexible_Network import Config
 from requests import sessions
 from rocketchat_API.rocketchat import RocketChat # https://github.com/jadolg/rocketchat_API
+from Flexible_Network import Config
 
 
 class RocketChat_API():
-    config = Config()
-    config_data = config.section_rocket_chat()
 
-    def __init__(self, username=config_data["username"], password=config_data["password"], url=config_data["url"]):
+    def __init__(self):
         """ Authenticate with RocketChat Server """
         self.auth_session = None
+        self.authenticate()
+
+    def authenticate(self):
+        """ Authenticate with RocketChat Server """
+        config = Config()
+        config_data = config.section_rocket_chat()
+        
+        self.auth_session = None
+        print('from rocketchat')
         try:
             with sessions.Session() as session:
-                rocket = RocketChat(username, 
-                                    password,
-                                    server_url=url,
+                rocket = RocketChat(config_data["username"], 
+                                    config_data["password"],
+                                    server_url=config_data["url"],
                                     session=session)
             self.auth_session = rocket
         except:
-            raise ConnectionError("Failed to authenticate to RocketChat Server {} with {}".format(url, username))
+            raise ConnectionError("Failed to authenticate to RocketChat Server {} with {}".format(config_data["url"], config_data["username"]))
 
 
     def list_members_channels(self):
