@@ -80,14 +80,15 @@ rocket_msg = rocket.send_message(['eslam.gomaa'], "``` {} ```".format(report))
 ### Test exeuting a command.
 
 import time
-cmd ='''sh vlan bt
+cmd ='''sh vlan br
 '''
 
 
 for host in task.connected_devices_dct:
     channel = task.connected_devices_dct[host]['channel']
     
-    print(ssh.exec(channel, cmd))
+    c = ssh.exec(channel, cmd)
+    print('\n'.join(c['stdout']))
     # print(ssh.backup_config(channel, 'comment'))
 
 # Close the ssh connection for a full group

@@ -32,32 +32,38 @@ class SSH_connection():
         * The key of each nested dict is the host IP and the value is the connection & authentication information.
         # Modified copy of .. (for terminal printing.)
         """
-        if terminal_print:
-            print()
-            print("> Authenticating selected devices")         
-        
-        self.user = user
-        self.password = password
-        self.port = port
-        out = {}
-        self.authentication = SSH_Authentication()
-        cnt = 0
-        for host in hosts:
-            cnt +=1
+        try:
             if terminal_print:
-                print("   {}  [ {} / {} ]          Connected [ {} ]     Failed [ {} ]    ".format(host, cnt , len(hosts), self.connected_devices_number, self.connection_failed_devices_number), end="\r")
-            connection = self.authentication.connect(host, user, password, port)
-            if connection['is_connected']:
-                self.connected_devices_number +=1
-            else:
-                self.connection_failed_devices_number  +=1
-            out[host] = connection
-        print("                                                                                              ", end='\r')
-        self.devices_dct = out
-        for host in self.devices_dct:
-            if self.devices_dct[host]['is_connected']:
-                self.connected_devices_dct[host] = self.devices_dct[host]
-        return out
+                print()
+                print("> Authenticating selected devices")         
+            
+            self.user = user
+            self.password = password
+            self.port = port
+            out = {}
+            self.authentication = SSH_Authentication()
+            cnt = 0
+            for host in hosts:
+                connection = self.authentication.connect(host, user, password, port)
+                if connection['is_connected']:
+                    self.connected_devices_number +=1
+                else:
+                    self.connection_failed_devices_number  +=1
+                out[host] = connection
+                cnt +=1
+                if terminal_print:
+                    print("   {}  [ {} / {} ]          Connected [ {} ]     Failed [ {} ]    ".format(host, cnt , len(hosts), self.connected_devices_number, self.connection_failed_devices_number), end="\r")
+            # print("                                                                                              ", end='\r')
+            print()
+            self.devices_dct = out
+            for host in self.devices_dct:
+                if self.devices_dct[host]['is_connected']:
+                    self.connected_devices_dct[host] = self.devices_dct[host]
+            return out
+        except KeyboardInterrupt:
+            print()
+            print("> Stopped.  See you \n")
+            exit(1)
 
     def close(self, authenticated_hosts_dct):
         """
