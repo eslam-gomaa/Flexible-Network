@@ -40,6 +40,27 @@ python3.6 -m pytest tests/  -v
 
 ## Documentation
 
+
+### Cli Options
+
+* `--name`
+The task name
+> Each script run represents a task, Tasks state are stored.
+
+* `--inventory`
+file that contains the devices to automate
+
+* `--validate-integration`
+Validate the integration with any of the supported API Integrations eg. test to authenticate (And validate permissions if needed).
+
+* `--no-confirm-auth`
+Skip asking for confirmation if failed to authenticate to some devices.
+
+
+
+
+
+
 ### Methods
 
 <details>
