@@ -110,8 +110,13 @@ Skip asking for confirmation if failed to authenticate to some devices.
 
 <br>
 
-### Methods
+### `Terminal_Task` class Methods
 
+```python
+from Flexible_Network import Terminal_Task
+```
+
+##### `.exec()`
 <details>
 <a id=exec></a>
   <summary> 
@@ -121,7 +126,7 @@ Skip asking for confirmation if failed to authenticate to some devices.
 
 <br>
 <br>
-# 
+ 
 > Returns a dictionary
 
 |             | Type   | Description                                                  |
