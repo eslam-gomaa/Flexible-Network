@@ -203,6 +203,7 @@ from Flexible_Network import Terminal_Task
 
 
 </details>
+
 <a id=exec></a>
 
 
@@ -213,7 +214,25 @@ from Flexible_Network import Terminal_Task
   <summary> 
   <b style="font-size:20px"> <code>connection_report_Table()</code></b>
   </summary>
-  Execute a command on a remote device.
+  Return a structured table describes the authentication status of the selected devices
+
+* 
+
+> **Note:** the mthod does NOT print the output to the terminal, but you're able to print the variable as the following example.
+
+```python
+report = task.connection_report_Table(task.devices_dct)
+# print(report)
+```
+
+> You can also send it as a message
+
+> Check out the RocketChat Integration
+
+```python
+rocket_msg = rocket.send_message(['eslam.gomaa'], "``` {} ```".format(report))
+# print(rocket_msg)
+```
 
 <br>
 <br>
@@ -251,6 +270,7 @@ from Flexible_Network import Terminal_Task
 
 
 </details>
+
 <a id=connection_report_Table></a>
 
 
