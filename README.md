@@ -116,7 +116,7 @@ Skip asking for confirmation if failed to authenticate to some devices.
 from Flexible_Network import Terminal_Task
 ```
 
-##### `.exec()`
+##### `.1`
 <details>
 <a id=exec></a>
   <summary> 
@@ -126,7 +126,7 @@ from Flexible_Network import Terminal_Task
 
 <br>
 <br>
- 
+
 > Returns a dictionary
 
 |             | Type   | Description                                                  |
