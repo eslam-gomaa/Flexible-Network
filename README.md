@@ -119,6 +119,8 @@ Skip asking for confirmation if failed to authenticate to some devices.
 from Flexible_Network import Terminal_Task
 ```
 
+
+<a id=exec></a>
 <details>
 <a id=exec></a>
   <summary> 
@@ -204,30 +206,28 @@ from Flexible_Network import Terminal_Task
 
 </details>
 
-<a id=exec></a>
-
 
 <br>
 
-
+<a id=connection_report_Table></a>
 <details>
   <summary> 
   <b style="font-size:20px"> <code>connection_report_Table()</code></b>
   </summary>
-  Return a structured table describes the authentication status of the selected devices
+   Return a structured table describes the authentication status of the selected devices
 
-* 
+* Input
+   1. Is the `devices_dct` attribute (Which is a dictionary that is populated when you called the `authenticate()` methd and contains the authentication info of each device) 
 
-> **Note:** the mthod does NOT print the output to the terminal, but you're able to print the variable as the following example.
+> **Note:** the method does NOT print the output to the terminal by default, but you're able to print the variable as the following example.
 
 ```python
 report = task.connection_report_Table(task.devices_dct)
-# print(report)
+print(report)
 ```
 
 > You can also send it as a message
-
-> Check out the RocketChat Integration
+> * Check out the RocketChat Integration
 
 ```python
 rocket_msg = rocket.send_message(['eslam.gomaa'], "``` {} ```".format(report))
@@ -237,8 +237,6 @@ rocket_msg = rocket.send_message(['eslam.gomaa'], "``` {} ```".format(report))
 <br>
 <br>
 
-
-> Returns a Table shows ...
 
 
 **Sample Output**
@@ -270,8 +268,6 @@ rocket_msg = rocket.send_message(['eslam.gomaa'], "``` {} ```".format(report))
 
 
 </details>
-
-<a id=connection_report_Table></a>
 
 
 
