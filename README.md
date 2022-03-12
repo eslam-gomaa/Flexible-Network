@@ -200,6 +200,49 @@ from Flexible_Network import Terminal_Task
 </details>
 
 
+<br>
+
+###### 2
+<details>
+<a id=exec></a>
+  <summary> 
+  <b style="font-size:20px"> <code>exec()</code></b>
+  </summary>
+  Execute a command on a remote device.
+
+<br>
+<br>
+
+* **Input**
+   1. The ssh channel of the device
+   2. The command to execute
+
+> Returns a dictionary
+
+|             | Type   | Description                                                  |
+| ----------- | ------ | ------------------------------------------------------------ |
+| `stdout`    | List   | List of lines [ The output of the command ( If any ) ]           |
+| `stderr`    | List   | List of lines [ The error of the command ( If any ) ]                  |
+| `exit_code` | Int    | - `0` The command executed successfully<br />- `1` The command executed with an error <br />- `-1` If the ssh channel was interrupted while excution. 
+
+**Sample Output**
+
+```json
+
+```
+
+
+
+</details>
+
+
+
+
+<br>
+<br>
+<br>
+<br>
+<br>
 
 
 
