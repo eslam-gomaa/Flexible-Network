@@ -8,20 +8,17 @@ from Flexible_Network import ReadCliOptions
 class Config():
     def __init__(self):
         self.config_type = "FILE" # FILE || ENV
-        # Path to configuration file
+        # Default configuration file path
         self.configuration_file = "/etc/flexible_network/flexible_network.cfg"
+        # Update the configuration file path if given as a cli option.
         if ReadCliOptions.config_file is not None:
             self.configuration_file = ReadCliOptions.config_file
+        # Validate that the configuration file exists
         if self.config_type == "FILE":
             if not os.path.isfile(self.configuration_file):
                 print("ERROR -- Configuration file '{}' is NOT found".format(self.configuration_file))
                 exit(1)
-                # raise ValueError("ERROR -- Configuration file '{}' is NOT found".format(self.configuration_file))
-
-    # def Check_configuration_file(self, file):
-    #     if self.config_type == "File":
-    #         if not os.path.isfile(file):
-    #             raise ValueError("ERROR -- Configuration file '{}' is NOT found".format(file))
+        # Maybe need to check if the config file is valid before start parsing it.
 
     def section_general(self, section_name='vault'):
         try:
@@ -36,7 +33,6 @@ class Config():
 
     def section_vault(self, section_name='vault'):
         try:
-    
             config = configparser.ConfigParser(comment_prefixes=('#',';'), inline_comment_prefixes=('#',';'))
             config.read(self.configuration_file)
             # section = dict(config.items(section_name))

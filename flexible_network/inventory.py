@@ -1,5 +1,3 @@
-# from Flexible_Network.read_config import ReadCliOptions
-# from Flexible_Network import ReadCliOptions
 # from Flexible_Network import ReadCliOptions
 from flexible_network.read_cli_options import ReadCliOptions
 

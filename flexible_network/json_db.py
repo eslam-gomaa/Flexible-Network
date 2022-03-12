@@ -1,6 +1,6 @@
 class JsonDB:
     def __init__(self):
-        json_db_file = '.state.json'
+        json_db_file = '.state.json' # Read from config
 
     def create_new_task_state(self):
         """

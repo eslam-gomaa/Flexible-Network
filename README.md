@@ -1,9 +1,15 @@
 # Flexible-Network
 
+<br>
+
+#### [Under development]
+
+<br>
+
 A Python library / tool to achieve advanced network automation scenarios with few lines of code
 * Required: Basic python knowledge
 
-Building on https://github.com/eslam-gomaa/Flexible_Network
+A Refactored Version of [Flexible_Network < Proof of concept > ](https://github.com/eslam-gomaa/Flexible_Network)
 
 Our collaboration page: https://flexible-network.devops-caffe.com
 
@@ -11,10 +17,33 @@ Our collaboration page: https://flexible-network.devops-caffe.com
 
 ---
 
+<br>
 
-#### Install
+# Features
+* Ability to detect errors when executing commands on network devices
+* When executing commands your get a dict of output similar to what you get when executing commands on network devices [exec method](#exec)
 
-> **NOTE** At least Python3.6 is needed
+
+
+<br>
+
+---
+
+<br>
+
+# Install
+
+#### Will be available to install as a Python Library
+
+> **NOTE** At least Python3.6 is needed (_Dependencies constrains_)
+
+```bash
+pip3.6 install ... # Soon
+```
+
+<br>
+
+#### Build
 
 Install libraries dependencies
 
@@ -22,14 +51,31 @@ Install libraries dependencies
 pip3.6 install --user -r  Flexible_Network/requirements.txt
 ```
 
-
-
-#### Run unit tests
-
-```
-# Do NOT use it, deprecated
+```bash
+# Do NOT use it, deprecated  (Will be updated)
 export PYTHONPATH=Flexible_Network/
 python3.6 -m pytest tests/  -v
+```
+
+```
+# Soon
+```
+
+
+<br>
+
+---
+
+<br>
+
+# Usage
+
+* This project is designed as Python Library that you import to your Python script that gives you a lot of features and integrations
+* After importing the library you can treat your script as a cli tool
+* 
+
+```bash
+python <your-script.py> -h
 ```
 
 <br>
@@ -38,7 +84,7 @@ python3.6 -m pytest tests/  -v
 
 <br>
 
-## Documentation
+# Documentation
 
 
 ### Cli Options
@@ -67,6 +113,7 @@ Skip asking for confirmation if failed to authenticate to some devices.
 ### Methods
 
 <details>
+   <a id=exec></a>
   <summary> 
   <b style="font-size:20px"> <code>exec()</code></b>
   </summary>

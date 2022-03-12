@@ -11,14 +11,11 @@ from flexible_network.read_config import Config
 
 class Flexible_Network(
     Terminal_Task,
+    ReadCliOptions,
     CLI,
     SSH_connection,
     Inventory,
     Config,
-    ReadCliOptions,
     JsonDB
 ):
     pass
-
-# from flexible_network.vendors.cisco import Cisco
-# from flexible_network.vendors.huawei import Huawei
