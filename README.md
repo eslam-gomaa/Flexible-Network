@@ -4,6 +4,8 @@
 
 #### [Under development]
 
+[click here to jump to my anchor](#test2)
+
 <br>
 
 A Python library / tool to achieve advanced network automation scenarios with few lines of code
@@ -136,6 +138,10 @@ from Flexible_Network import Terminal_Task
 | `stderr`    | List   | List of lines [ The error of the command ( If any ) ]                  |
 | `exit_code` | Int    | - `0` The command executed successfully<br />- `1` The command executed with an error <br />- `-1` If the ssh channel was interrupted while excution. 
 
+* **Input**
+   1. The ssh channel of the device
+   2. The command to execute
+
 **Sample Output**
 
 ```json
@@ -202,9 +208,8 @@ from Flexible_Network import Terminal_Task
 
 <br>
 
-###### 2
 <details>
-<a id=exec></a>
+<a name="test2"></a>
   <summary> 
   <b style="font-size:20px"> <code>exec()</code></b>
   </summary>
@@ -213,9 +218,6 @@ from Flexible_Network import Terminal_Task
 <br>
 <br>
 
-* **Input**
-   1. The ssh channel of the device
-   2. The command to execute
 
 > Returns a dictionary
 
