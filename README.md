@@ -4,6 +4,8 @@
 
 #### [Under development]
 
+<mark style="background-color: #fffccd">How to disable browser cache</mark>
+
 <br>
 
 A Python library / tool to achieve advanced network automation scenarios with few lines of code
