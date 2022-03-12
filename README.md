@@ -11,7 +11,7 @@
 A Python library / tool to achieve advanced network automation scenarios with few lines of code
 * Required: Basic python knowledge
 
-A Refactored Version of [Flexible_Network < Proof of concept > ](https://github.com/eslam-gomaa/Flexible_Network)
+This is a Refactored Version of [Flexible_Network  ((Proof of concept))  ](https://github.com/eslam-gomaa/Flexible_Network)
 
 Our collaboration page: https://flexible-network.devops-caffe.com
 
@@ -23,7 +23,7 @@ Our collaboration page: https://flexible-network.devops-caffe.com
 
 # Features
 * Ability to detect errors when executing commands on network devices
-* When executing commands you get a `dict` of output similar to what you get when executing commands on Linux machines [exec method](https://github.com/eslam-gomaa/Flexible-Network#1)
+* When executing commands you get a `dict` of output similar to what you get when executing commands on Linux machines [check the `exec` method](#exec)
    * Which gives you the power to use ***Python conditionals*** when automating network devices. 
 
 
@@ -119,7 +119,7 @@ Skip asking for confirmation if failed to authenticate to some devices.
 from Flexible_Network import Terminal_Task
 ```
 
-###### 1
+<a id=exec></a>
 <details>
 <a id=exec></a>
   <summary> 
@@ -207,9 +207,6 @@ from Flexible_Network import Terminal_Task
 
 
 <br>
-
-<a name="test2"></a>
-
 
 <details>
   <summary> 
