@@ -113,7 +113,7 @@ Skip asking for confirmation if failed to authenticate to some devices.
 ### Methods
 
 <details>
-   <a id=exec></a>
+<a id=exec></a>
   <summary> 
   <b style="font-size:20px"> <code>exec()</code></b>
   </summary>
@@ -121,7 +121,7 @@ Skip asking for confirmation if failed to authenticate to some devices.
 
 <br>
 <br>
-
+# 
 > Returns a dictionary
 
 |             | Type   | Description                                                  |
