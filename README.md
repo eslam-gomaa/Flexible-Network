@@ -21,7 +21,7 @@ Our collaboration page: https://flexible-network.devops-caffe.com
 
 # Features
 * Ability to detect errors when executing commands on network devices
-* When executing commands your get a dict of output similar to what you get when executing commands on network devices [exec method](#exec)
+* When executing commands your get a dict of output similar to what you get when executing commands on network devices [exec method](https://github.com/eslam-gomaa/Flexible-Network#1)
 
 
 
