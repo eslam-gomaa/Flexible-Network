@@ -119,7 +119,6 @@ Skip asking for confirmation if failed to authenticate to some devices.
 from Flexible_Network import Terminal_Task
 ```
 
-<a id=exec></a>
 <details>
 <a id=exec></a>
   <summary> 
@@ -204,13 +203,15 @@ from Flexible_Network import Terminal_Task
 
 
 </details>
+<a id=exec></a>
 
 
 <br>
 
+
 <details>
   <summary> 
-  <b style="font-size:20px"> <code>exec()</code></b>
+  <b style="font-size:20px"> <code>connection_report_Table()</code></b>
   </summary>
   Execute a command on a remote device.
 
@@ -218,23 +219,39 @@ from Flexible_Network import Terminal_Task
 <br>
 
 
-> Returns a dictionary
+> Returns a Table shows ...
 
-|             | Type   | Description                                                  |
-| ----------- | ------ | ------------------------------------------------------------ |
-| `stdout`    | List   | List of lines [ The output of the command ( If any ) ]           |
-| `stderr`    | List   | List of lines [ The error of the command ( If any ) ]                  |
-| `exit_code` | Int    | - `0` The command executed successfully<br />- `1` The command executed with an error <br />- `-1` If the ssh channel was interrupted while excution. 
 
 **Sample Output**
 
-```json
-
+```
++----------------+---------------------+-----------------+--------------+---------------+-------------------------+------------------------+
+| Host           | Connection Status   | Comment         |   N of tries |   Max Retries |   Time tring in seconds | Fail Reason            |
++================+=====================+=================+==============+===============+=========================+========================+
+| 90.84.41.239   | 🟢                  | connected       |            1 |             3 |                       1 |                        |
++----------------+---------------------+-----------------+--------------+---------------+-------------------------+------------------------+
+| 90.84.41.2     | 🔴                  | Fail to connect |            3 |             3 |                      16 | NOT able to establish  |
+|                |                     |                 |              |               |                         | an ssh connection with |
+|                |                     |                 |              |               |                         | 90.84.41.2 on port     |
+|                |                     |                 |              |               |                         | 1113 >> timed out      |
++----------------+---------------------+-----------------+--------------+---------------+-------------------------+------------------------+
+| 192.168.1.241  | 🔴                  | Fail to connect |            3 |             3 |                      16 | NOT able to establish  |
+|                |                     |                 |              |               |                         | an ssh connection with |
+|                |                     |                 |              |               |                         | 192.168.1.241 on port  |
+|                |                     |                 |              |               |                         | 1113 >> timed out      |
++----------------+---------------------+-----------------+--------------+---------------+-------------------------+------------------------+
+| 192.168.1.2452 | 🔴                  | Fail to connect |            1 |             3 |                       0 | Could NOT resolve      |
+|                |                     |                 |              |               |                         | hostname               |
+|                |                     |                 |              |               |                         | 192.168.1.2452 Name or |
+|                |                     |                 |              |               |                         | service not known >>   |
+|                |                     |                 |              |               |                         | [Errno -2] Name or     |
+|                |                     |                 |              |               |                         | service not known      |
++----------------+---------------------+-----------------+--------------+---------------+-------------------------+------------------------+
 ```
 
 
-
 </details>
+<a id=connection_report_Table></a>
 
 
 
