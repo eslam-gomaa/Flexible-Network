@@ -24,6 +24,7 @@ Our collaboration page: https://flexible-network.devops-caffe.com
 * Ability to detect errors when executing commands on network devices
 * When executing commands you get a `dict` of output similar to what you get when executing commands on Linux machines [check the `exec` method](#exec)
    * Which gives you the power to use ***Python conditionals*** when automating network devices. 
+* ... To be documented
 
 
 
@@ -268,6 +269,7 @@ rocket_msg = rocket.send_message(['eslam.gomaa'], "``` {} ```".format(report))
 
 </details>
 
+ Others To be documented
 
 
 
