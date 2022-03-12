@@ -2,9 +2,8 @@
 
 <br>
 
-#### [Under development]
+#### [ Under development ]
 
-[click here to jump to my anchor](#test2)
 
 <br>
 
