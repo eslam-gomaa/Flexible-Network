@@ -92,7 +92,6 @@ python <your-script.py> -h
 
 ### Cli Options
 
-[test](#--authenticate-group)
 
 <a id=--name></a>
 <details>
@@ -187,6 +186,54 @@ task.devices_dct
 ```
 
 </details>
+
+
+<a id=--user></a>
+<details>
+  <summary> 
+  <b style="font-size:20px"> <code>--user</code></b>
+  </summary>
+  <br>
+  The user to authenticate the group with
+
+</details>
+
+
+<a id=--password></a>
+<details>
+  <summary> 
+  <b style="font-size:20px"> <code>--password</code></b>
+  </summary>
+  <br>
+  The password to authenticate the group with
+
+</details>
+
+
+<a id=--port></a>
+<details>
+  <summary> 
+  <b style="font-size:20px"> <code>--port</code></b>
+  </summary>
+  <br>
+  The port to use to connect to the group.
+
+  > default port is `22`
+
+</details>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
