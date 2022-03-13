@@ -29,12 +29,11 @@ class Terminal_Task:
         self.connection_failed_devices_number = 0
         if ReadCliOptions.authenticate_group:
             self.inventory = inventory.get_section(ReadCliOptions.authenticate_group)
-            self.authenticate(hosts=self.inventory, user='orange', password='cisco', port='1113')
-
-        # print(ReadCliOptions.authenticate_group)
-        # print(inventory.inventory_file)
-        print(self.inventory)
-
+            self.user = ReadCliOptions.auth_user
+            self.password = ReadCliOptions.auth_password
+            self.port = ReadCliOptions.auth_port
+            self.authenticate(hosts=self.inventory, user=self.user, password=self.password, port=self.port)
+            
     def validate_integrations(self):
         if ReadCliOptions.to_validate_lst is not None:
             """

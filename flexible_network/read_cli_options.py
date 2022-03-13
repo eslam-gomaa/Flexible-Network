@@ -6,6 +6,9 @@ class ReadCliOptions:
     config_file = None
     to_validate_lst = None
     authenticate_group = None
+    auth_user = None
+    auth_password = None
+    auth_port = None
 
     def __init__(self):
         self.task_name

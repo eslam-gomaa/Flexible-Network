@@ -15,6 +15,9 @@ class CLI:
         parser.add_argument('-x', '--no-confirm-auth', action='store_true', help='Skip Asking for confirmation if failed to connect to some deivces')
         parser.add_argument('-c', '--config', type=str, required=False, metavar='', help='The path of configuration file')
         parser.add_argument('-g', '--authenticate-group', type=str, required=False, metavar='', help='Authenticate an inventory group')
+        parser.add_argument('-u', '--user', type=str, required=False, metavar='', help='The user to authenticate the group')
+        parser.add_argument('-p', '--password', type=str, required=False, metavar='', help='The password to authenticate the group')
+        parser.add_argument('-P', '--port', type=int, required=False, default=22, metavar='', help='The port to connect to the group')
 
 
         results = parser.parse_args()
@@ -35,5 +38,15 @@ class CLI:
             ReadCliOptions.config_file = results.config
 
         if results.authenticate_group is not None:
+            if (results.user is None) or (results.password is None):
+                print("ERROR -- Required for --authenticate-group")
+                print("> --user and --password should be provided")
+                exit(1)
             ReadCliOptions.authenticate_group = results.authenticate_group
+            ReadCliOptions.auth_user = results.user
+            ReadCliOptions.auth_password = results.password
+            ReadCliOptions.auth_port = results.port
+            
+            
+
 
