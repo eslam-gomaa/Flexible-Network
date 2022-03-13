@@ -120,8 +120,7 @@ python <your-script.py> -h
    > *Optional*
    
    > This argument overrides the following option in the config file.
-
-   ```ini
+   >```ini
    [general]
    default_inventory = /etc/flexible-network/hosts
    ```
