@@ -160,7 +160,7 @@ python <your-script.py> -h
 > **Note:** this option requires to specify the `--user` & `--password` arguments 
 
 > Example
-```bash
+```ruby
 python3.6 test1.py -n task1 \
    --config user/flexible_network.cfg \
    --inventory user/hosts \
