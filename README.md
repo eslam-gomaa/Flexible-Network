@@ -110,11 +110,11 @@ Skip asking for confirmation if failed to authenticate to some devices.
 
 
 <a id=--authenticate-group></a>
-<br>
 <details>
   <summary> 
   <b style="font-size:20px"> <code>--authenticate-group</code></b>
   </summary>
+  <br>
    Privide an inventory group to authenticate
 
 
