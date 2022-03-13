@@ -11,7 +11,8 @@ class Inventory():
         if ReadCliOptions.inventory_file is None:
             pass
             config = Config()
-            self.inventory_file = config.section_general['default_inventory']
+            config_data = config.section_general()
+            self.inventory_file = config_data['default_inventory']
         else:
             self.inventory_file = ReadCliOptions.inventory_file
 

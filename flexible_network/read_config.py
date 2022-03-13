@@ -20,16 +20,19 @@ class Config():
                 exit(1)
         # Maybe need to check if the config file is valid before start parsing it.
 
-    def section_general(self, section_name='vault'):
+    def section_general(self, section_name='general'):
         try:
             config = configparser.ConfigParser(comment_prefixes=('#',';'), inline_comment_prefixes=('#',';'))
             config.read(self.configuration_file)
             # section = dict(config.items(section_name))
             info = {}
             info['default_vendor'] = config.get(section_name, 'default_vendor').strip('"')
+            info['default_inventory'] = config.get(section_name, 'default_vendor').strip('"')
             return info
-        except:
-            raise ValueError("ERROR -- Accessing the section '{}'".format(section_name))
+        except configparser.NoOptionError as e:
+            print("ERROR -- Accessing the section '{}'\n> {}".format(section_name, e))
+            exit(1)
+            # raise ValueError("ERROR -- Accessing the section '{}'".format(section_name))
 
     def section_vault(self, section_name='vault'):
         try:
@@ -41,8 +44,10 @@ class Config():
             info['token'] = config.get(section_name, 'token').strip('"')
             info['engine'] = config.get(section_name, 'engine').strip('"')
             return info
-        except:
-            raise ValueError("ERROR -- Accessing the section '{}'".format(section_name))
+        except configparser.NoOptionError as e:
+            print("ERROR -- Accessing the section '{}'\n> {}".format(section_name, e))
+            exit(1)
+            # raise ValueError("ERROR -- Accessing the section '{}'".format(section_name))
 
     def section_rocket_chat(self, section_name='rocket_chat'):
         try:
@@ -54,8 +59,10 @@ class Config():
             info['username'] = config.get(section_name, 'username').strip('"')
             info['password'] = config.get(section_name, 'password').strip('"')
             return info
-        except:
-            raise ValueError("ERROR -- Accessing the section '{}'".format(section_name))
+        except configparser.NoOptionError as e:
+            print("ERROR -- Accessing the section '{}'\n> {}".format(section_name, e))
+            exit(1)
+            # raise ValueError("ERROR -- Accessing the section '{}'".format(section_name))
 
 
     def section_s3(self, section_name='s3'):
@@ -69,8 +76,10 @@ class Config():
             info['sk'] = config.get(section_name, 'sk').strip('"')
             info['bucket'] = config.get(section_name, 'bucket').strip('"')
             return info
-        except:
-            raise ValueError("ERROR -- Accessing the section '{}'".format(section_name))
+        except configparser.NoOptionError as e:
+            print("ERROR -- Accessing the section '{}'\n> {}".format(section_name, e))
+            exit(1)
+            # raise ValueError("ERROR -- Accessing the section '{}'".format(section_name))
 
     
 
