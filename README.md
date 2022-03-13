@@ -116,6 +116,7 @@ Skip asking for confirmation if failed to authenticate to some devices.
   </summary>
   <br>
    Privide an inventory group to authenticate
+   
    > *Optional*
 
 
