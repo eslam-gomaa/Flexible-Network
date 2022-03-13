@@ -2,8 +2,8 @@
 from requests import sessions
 from rocketchat_API.rocketchat import RocketChat # https://github.com/jadolg/rocketchat_API
  
-# from Flexible_Network import Config
-from flexible_network.read_config import Config
+from Flexible_Network import Config
+# from flexible_network.read_config import Config
 
 
 class RocketChat_API():
@@ -104,12 +104,3 @@ class RocketChat_API():
                 member_out['fail_reason'] = "Can NOT find the username"
             out[member_name] = member_out
         return out
-
-
-# rocket = RocketChat_API()
-# print(rocket.list_members_channels())
-# print(rocket.list_members_in_channel('gS7Z8p3n7g6xJqfaB'))
-# print(rocket.member_info('DDdgQBy5KJnHBo64r'))
-# print(rocket.send_message('DDdgQBy5KJnHBo64r'))
-# print(rocket.return_member_id_by_name('eslam.gomaa'))
-# print(rocket.send_message_by_member_name('eslam.gomaa1', 'Hello World'))
