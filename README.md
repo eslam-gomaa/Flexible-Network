@@ -153,7 +153,7 @@ python <your-script.py> -h
 
 
 
-> **Note:** this option requires to specify the `--user` & `--password` arguments 
+> **Note:** this option requires to specify the [`--user`](#--user) & [`--password`](#--password)  arguments 
 
 > Example
 ```java
@@ -246,13 +246,6 @@ task.devices_dct
 
   > Default configuration file path is `/etc/flexible_network/flexible_network.cfg`
 </details>
-
-
-
-
-
-
-
 
 
 
