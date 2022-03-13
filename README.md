@@ -104,8 +104,6 @@ python <your-script.py> -h
    > *Required*
    
    > Each script run represents a task, Tasks state are stored.
-
-
 </details>
 
 <a id=--inventory></a>
@@ -123,7 +121,6 @@ python <your-script.py> -h
    >[general]
    >default_inventory = /etc/flexible-network/hosts
    >```
-
 </details>
 
 
@@ -141,7 +138,6 @@ python <your-script.py> -h
         * `cyberArk`
         * `rocketChat`
         * more to be added soon.
-
 </details>
 
 
@@ -184,7 +180,20 @@ task.connected_devices_dct
 # A dict that contails ALL the devices (including ones that failed to authenticate)
 task.devices_dct
 ```
+</details>
 
+
+<a id=--no-confirm-auth></a>
+<details>
+  <summary> 
+  <b style="font-size:20px"> <code>--no-confirm-auth</code></b>
+  </summary>
+  <br>
+  Skip Asking for confirmation if failed to connect to some deivces
+  
+  > *Optional*
+
+  > The dfault Behavior is to ask you for confirmation before proceeding if failed to authenticate to some devices.
 </details>
 
 
@@ -196,6 +205,7 @@ task.devices_dct
   <br>
   The user to authenticate the group with
 
+  > *Optional*
 </details>
 
 
@@ -207,6 +217,7 @@ task.devices_dct
   <br>
   The password to authenticate the group with
 
+  > *Optional*
 </details>
 
 
@@ -218,8 +229,9 @@ task.devices_dct
   <br>
   The port to use to connect to the group.
 
-  > default port is `22`
+  > *Optional*
 
+  > default port is `22`
 </details>
 
 
