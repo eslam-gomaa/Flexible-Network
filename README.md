@@ -94,19 +94,57 @@ python <your-script.py> -h
 
 [test](#--authenticate-group)
 
-* `--name`
-The task name
-> Each script run represents a task, Tasks state are stored.
+<a id=--name></a>
+<details>
+  <summary> 
+  <b style="font-size:20px"> <code>--name</code></b>
+  </summary>
+  <br>
+   The task name
+   
+   > *Required*
+   
+   > Each script run represents a task, Tasks state are stored.
 
-* `--inventory`
-file that contains the devices to automate
 
-* `--validate-integration`
-Validate the integration with any of the supported API Integrations eg. test to authenticate (And validate permissions if needed).
+</details>
 
-* `--no-confirm-auth`
-Skip asking for confirmation if failed to authenticate to some devices.
+<a id=--inventory></a>
+<details>
+  <summary> 
+  <b style="font-size:20px"> <code>--inventory</code></b>
+  </summary>
+  <br>
+   file that contains the devices to automate
+   
+   > *Optional*
+   
+   > This argument overrides the following option in the config file.
 
+   ```ini
+   [general]
+   default_inventory = /etc/flexible-network/hosts
+   ```
+
+</details>
+
+
+<a id=--validate-integration></a>
+<details>
+  <summary> 
+  <b style="font-size:20px"> <code>--validate-integration</code></b>
+  </summary>
+  <br>
+   Validate the communication with any of the supported API Integrations eg. test to authenticate (And validate permissions if needed).
+   
+   > *Optional*
+
+   * ***Supported Options***'
+        * `cyberArk`
+        * `rocketChat`
+        * more to be added soon.
+
+</details>
 
 
 <a id=--authenticate-group></a>
@@ -150,9 +188,6 @@ task.devices_dct
 ```
 
 </details>
-
-
-
 
 
 
