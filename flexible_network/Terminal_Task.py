@@ -1,6 +1,8 @@
+from distutils.command.config import config
 from flexible_network.Vendors import Cisco
 from Flexible_Network import ReadCliOptions
 from Flexible_Network import CLI
+from Flexible_Network import Config
 from Flexible_Network import Inventory
 from Flexible_Network import SSH_connection
 from Integrations import RocketChat_API
@@ -11,8 +13,12 @@ class Terminal_Task:
     task_name = None # Should be updated from a cli option. --task
 
     def __init__(self):
+        # Initialize the "CLI" class so that it read the cli options 
         cli = CLI()
         cli.argparse()
+        # Initialize the "Config" class so that it checks the config file at the begining. 
+        config = Config()
+        # 
         inventory = Inventory()
         self.ssh = SSH_connection()
         self.validate_integrations()
@@ -21,8 +27,8 @@ class Terminal_Task:
         self.vendor = Cisco() # Default vendor class should exist in the config
         self.task_name = ReadCliOptions.task_name
         # Read all inventory sections
-        self.inventory = inventory.read_inventory
-        self.inventory_groups = inventory.read_inventory
+        # self.inventory = inventory.read_inventory()
+        self.inventory_groups = inventory.read_inventory()
         self.devices_dct = {}
         self.connected_devices_dct = {}
         self.connected_devices_number = 0

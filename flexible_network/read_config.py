@@ -16,7 +16,7 @@ class Config():
         # Validate that the configuration file exists
         if self.config_type == "FILE":
             if not os.path.isfile(self.configuration_file):
-                print("ERROR -- Configuration file '{}' is NOT found".format(self.configuration_file))
+                print("\nERROR -- Configuration file '{}' is NOT found".format(self.configuration_file))
                 exit(1)
         # Maybe need to check if the config file is valid before start parsing it.
 
