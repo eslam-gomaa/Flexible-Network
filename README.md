@@ -234,6 +234,19 @@ task.devices_dct
   > default port is `22`
 </details>
 
+<a id=--config></a>
+<details>
+  <summary> 
+  <b style="font-size:20px"> <code>--config</code></b>
+  </summary>
+  <br>
+  Specify a custom configuration file path (Overrides the default configuration file path)
+  
+  > *Optional*
+
+  > Default configuration file path is `/etc/flexible_network/flexible_network.cfg`
+</details>
+
 
 
 
