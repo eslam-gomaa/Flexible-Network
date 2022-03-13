@@ -14,6 +14,7 @@ class CLI:
         parser.add_argument('-V', '--validate-integration', nargs='+',choices=['cyberArk', 'rocketChat'] , required=False, metavar='', help='Test API Integrations')
         parser.add_argument('-x', '--no-confirm-auth', action='store_true', help='Skip Asking for confirmation if failed to connect to some deivces')
         parser.add_argument('-c', '--config', type=str, required=False, metavar='', help='The path of configuration file')
+        parser.add_argument('-g', '--authenticate-group', type=str, required=False, metavar='', help='Authenticate an inventory group')
 
 
         results = parser.parse_args()
@@ -32,4 +33,7 @@ class CLI:
         
         if results.config is not None:
             ReadCliOptions.config_file = results.config
+
+        if results.authenticate_group is not None:
+            ReadCliOptions.authenticate_group = results.authenticate_group
 

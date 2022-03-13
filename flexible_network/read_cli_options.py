@@ -5,6 +5,7 @@ class ReadCliOptions:
     no_confirm_auth = False
     config_file = None
     to_validate_lst = None
+    authenticate_group = None
 
     def __init__(self):
         self.task_name
@@ -12,3 +13,4 @@ class ReadCliOptions:
         self.no_confirm_auth
         self.config_file
         self.to_validate_lst
+        self.authenticate_group

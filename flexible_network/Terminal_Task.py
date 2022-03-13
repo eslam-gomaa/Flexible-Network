@@ -7,10 +7,6 @@ from Integrations import RocketChat_API
 from tabulate import tabulate
 
 
-# import sys
-# import time
-# import random
-
 class Terminal_Task:
     task_name = None # Should be updated from a cli option. --task
 
@@ -29,13 +25,14 @@ class Terminal_Task:
         self.connected_devices_dct = {}
         self.connected_devices_number = 0
         self.connection_failed_devices_number = 0
+        print(ReadCliOptions.authenticate_group)
 
     def validate_integrations(self):
         if ReadCliOptions.to_validate_lst is not None:
             """
             Validate RocketChat Authentication.
             """
-            print("\n> Integration Validation Report")
+            print("\n> Validating Integration")
             table = [['Integration', 'Status', 'Comment']]
             tabulate.WIDE_CHARS_MODE = False
 
