@@ -105,7 +105,32 @@ Validate the integration with any of the supported API Integrations eg. test to 
 * `--no-confirm-auth`
 Skip asking for confirmation if failed to authenticate to some devices.
 
+* `--authenticate-group`
+Privide an inventory group to authenticate
 
+> **Note:** this option required to specify the --user & --password arguments 
+
+> Example
+```bash
+python3.6 test1.py -n task1 \
+   --config user/flexible_network.cfg \
+   --inventory user/hosts \
+   --authenticate-group works \
+   --user orange --password cisco1 --port 1113
+```
+<br>
+
+-> This will update the `devices_dct` & `connected_devices_dct` attributes in the `Terminal_Task` class (Which you can access after you instanciate an instance of the class)
+
+```python
+task = Terminal_Task()
+
+# A dict that contains ONLY the connected devices
+task.connected_devices_dct
+
+# A dict that contails ALL the devices (including ones that failed to authenticate)
+task.devices_dct
+```
 
 <br>
 
