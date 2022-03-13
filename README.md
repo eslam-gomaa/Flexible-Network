@@ -92,6 +92,8 @@ python <your-script.py> -h
 
 ### Cli Options
 
+[test](#--authenticate-group)
+
 * `--name`
 The task name
 > Each script run represents a task, Tasks state are stored.
@@ -108,6 +110,7 @@ Skip asking for confirmation if failed to authenticate to some devices.
 
 
 <a id=--authenticate-group></a>
+<br>
 <details>
   <summary> 
   <b style="font-size:20px"> <code>--authenticate-group</code></b>
