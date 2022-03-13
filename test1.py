@@ -1,9 +1,6 @@
 from Flexible_Network import Terminal_Task
 from Flexible_Network import Flexible_Network, SSH_connection
 from flexible_network.Vendors import Cisco
-from flexible_network.Vendors import Huawei
-from Flexible_Network import Inventory
-from Flexible_Network import ReadCliOptions
 from Integrations import RocketChat_API
 
 
@@ -53,7 +50,7 @@ rocket.authenticate()
 
 
 ##  1  ## Authenticate
-task.authenticate(hosts=task.inventory['group1'], user='orange', password='cisco', port='1113')
+# task.authenticate(hosts=task.inventory, user='orange', password='cisco', port='1113')
 
 ##  2  ## Get Connection Report
 report = task.connection_report_Table(task.devices_dct)

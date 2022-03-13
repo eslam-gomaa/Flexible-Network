@@ -73,7 +73,7 @@ python3.6 -m pytest tests/  -v
 
 # Usage
 
-* This project is designed as Python Library that you import to your Python script that gives you a lot of features and integrations
+* This project is designed as Python Library that you import to your Python script that gives you a lot of features and integrations out of the box
 * After importing the library you can treat your script as a cli tool
 * 
 
@@ -133,7 +133,7 @@ from Flexible_Network import Terminal_Task
 
 > Returns a dictionary
 
-|             | Type   | Description                                                  |
+|  Key           | Type   | Description                                                  |
 | ----------- | ------ | ------------------------------------------------------------ |
 | `stdout`    | List   | List of lines [ The output of the command ( If any ) ]           |
 | `stderr`    | List   | List of lines [ The error of the command ( If any ) ]                  |

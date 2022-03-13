@@ -27,7 +27,7 @@ class Config():
             # section = dict(config.items(section_name))
             info = {}
             info['default_vendor'] = config.get(section_name, 'default_vendor').strip('"')
-            info['default_inventory'] = config.get(section_name, 'default_vendor').strip('"')
+            info['default_inventory'] = config.get(section_name, 'default_inventory').strip('"')
             return info
         except configparser.NoOptionError as e:
             print("ERROR -- Accessing the section '{}'\n> {}".format(section_name, e))

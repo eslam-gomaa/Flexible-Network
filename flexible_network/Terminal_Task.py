@@ -20,12 +20,20 @@ class Terminal_Task:
         ## Attributes ##
         self.vendor = Cisco() # Default vendor class should exist in the config
         self.task_name = ReadCliOptions.task_name
-        self.inventory = inventory.inventory
+        # Read all inventory sections
+        self.inventory = inventory.read_inventory
+        self.inventory_groups = inventory.read_inventory
         self.devices_dct = {}
         self.connected_devices_dct = {}
         self.connected_devices_number = 0
         self.connection_failed_devices_number = 0
-        print(ReadCliOptions.authenticate_group)
+        if ReadCliOptions.authenticate_group:
+            self.inventory = inventory.get_section(ReadCliOptions.authenticate_group)
+            self.authenticate(hosts=self.inventory, user='orange', password='cisco', port='1113')
+
+        # print(ReadCliOptions.authenticate_group)
+        # print(inventory.inventory_file)
+        print(self.inventory)
 
     def validate_integrations(self):
         if ReadCliOptions.to_validate_lst is not None:

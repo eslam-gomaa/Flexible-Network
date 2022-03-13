@@ -32,28 +32,9 @@ class RocketChat_API():
         except:
             print("ERROR -- Failed to authenticate RocketChat")
             exit(1)
-        # config = Config()
-        # config_data = config.section_rocket_chat()
-        
-        # self.auth_session = None
-        # out = {}
-        # out['success'] = False
-        # out['fail_reason'] = ""
-        # try:
-        #     with sessions.Session() as session:
-        #         rocket = RocketChat(config_data["username"], 
-        #                             config_data["password"],
-        #                             server_url=config_data["url"],
-        #                             session=session)
-        #     self.auth_session = rocket
-        #     out['success'] = True
-        # except:
-        #     out['fail_reason'] = "Failed to authenticate"
 
-            # raise ConnectionError("Failed to authenticate to RocketChat Server {} with {}".format(config_data["url"], config_data["username"]))
-
-    def list_members_channels(self):
-        """ List members and Channels """
+    def list_channels(self):
+        """ Returns a list of all channels """
         return self.auth_session.channels_list().json()['channels']
 
     def list_all_members(self):
@@ -71,17 +52,22 @@ class RocketChat_API():
 
     def member_info(self, member_id):
         """
-        returns user info (Apply rate limiting !)
+        returns user info (Apply rate limiting in my case !)
         """
         output = self.auth_session.users_info(member_id).json()
         return output
 
     def send_message_by_member_id(self, member_id, message):
-        """ Send message to a member or Channel """
+        """ 
+        Send message to a member or Channel 
+        """
         output = self.auth_session.chat_post_message(message, channel=member_id).json()
         return output
 
     def return_member_id_by_name(self, member_name):
+        """
+        Search for the id of the user using the name
+        """
         for member in self.list_all_members()['users']:
             if member['username'] == member_name:
                     return member['_id']
@@ -104,3 +90,6 @@ class RocketChat_API():
                 member_out['fail_reason'] = "Can NOT find the username"
             out[member_name] = member_out
         return out
+
+    def send_as_attachment(self):
+        pass
