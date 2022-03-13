@@ -359,8 +359,6 @@ from Flexible_Network import Terminal_Task
 </details>
 
 
-<br>
-
 <a id=connection_report_Table></a>
 <details>
   <summary> 
