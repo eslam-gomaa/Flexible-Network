@@ -34,10 +34,19 @@ class Terminal_Task:
         self.connected_devices_number = 0
         self.connection_failed_devices_number = 0
         if ReadCliOptions.authenticate_group:
+            # Get the IPs of the section to the 'self.inventory' attribute
             self.inventory = inventory.get_section(ReadCliOptions.authenticate_group)
+            # If the section not found the 'get_section' method will return None
+            # Hence the script will exit with code 1
+            if self.inventory is None:
+                print("\nERROR -- Inventory section [ {} ] does NOT exist !".format(ReadCliOptions.authenticate_group))
+                exit(1)
+            # Read the user, password, port 
             self.user = ReadCliOptions.auth_user
             self.password = ReadCliOptions.auth_password
+            # Default port is 22 if not specified in the CLI
             self.port = ReadCliOptions.auth_port
+            # Authenticate the choosen group
             self.authenticate(hosts=self.inventory, user=self.user, password=self.password, port=self.port)
             
     def validate_integrations(self):
