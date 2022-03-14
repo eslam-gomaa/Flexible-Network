@@ -36,16 +36,15 @@ class Terminal_Task:
         if ReadCliOptions.authenticate_group:
             # Get the IPs of the section to the 'self.inventory' attribute
             self.inventory = inventory.get_section(ReadCliOptions.authenticate_group)
-            # Stop if the choosen group is empty
-            if not self.inventory:
-                print("\n> The choosen group [ {} ] has no hosts .. No need to continue.".format(ReadCliOptions.authenticate_group))
-                exit(0)
-
             # If the section not found the 'get_section' method will return None
             # Hence the script will exit with code 1
             if self.inventory is None:
                 print("\nERROR -- Inventory section [ {} ] does NOT exist !".format(ReadCliOptions.authenticate_group))
                 exit(1)
+            # Stop if the choosen group is empty
+            if not self.inventory:
+                print("\n> The choosen group [ {} ] has no hosts .. No need to continue.".format(ReadCliOptions.authenticate_group))
+                exit(0)
             # Read the user, password, port 
             self.user = ReadCliOptions.auth_user
             self.password = ReadCliOptions.auth_password
