@@ -39,7 +39,7 @@ class Terminal_Task:
             # Stop if the choosen group is empty
             if not self.inventory:
                 print("\n> The choosen group [ {} ] has no hosts .. No need to continue.".format(ReadCliOptions.authenticate_group))
-                exit(1)
+                exit(0)
 
             # If the section not found the 'get_section' method will return None
             # Hence the script will exit with code 1
