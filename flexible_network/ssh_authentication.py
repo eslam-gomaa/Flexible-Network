@@ -6,11 +6,7 @@ import datetime
 
 class SSH_Authentication():
     def __init__(self):
-        self.ssh = None
-        self.channel = None
-        self.is_connected = False
-        self.Fail_Reason = ""
-        self.time_to_connect_seconds = 0
+        pass
 
 
     def connect(self, host, user, password, port=22, ssh_timeout=5, allow_agent=True, max_tries=3):
@@ -21,6 +17,12 @@ class SSH_Authentication():
         self.user = user
         self.password = password
         self.port = port
+        self.Fail_Reason = ""
+        self.ssh = None
+        self.channel = None
+        self.is_connected = False
+        self.time_to_connect_seconds = 0
+
 
         time_start = datetime.datetime.now()
         self.tries = 1
@@ -76,28 +78,3 @@ class SSH_Authentication():
         info['tries'] = self.tries
         self.hosts_dct = info
         return info
-
-    # def close(self, ssh):
-    #     """
-    #     Close the ssh session, ssh session is opened at the initialization of the Class
-    #     """
-    #     data = {}
-    #     data['success'] = 'False'
-    #     if self.is_connected:
-    #         self.ssh.close()
-    #         data['success'] = 'True'
-    #     return data
-
-
-
-### To Clean ### 
-
-# connection = SSH_Authentication()
-# connect = connection.connect(host='90.84.41.239', user='orange', password='cisco', port='1113')
-# print(connect)
-
-# # import json
-# # print(json.dumps(connect['data'], indent=4, sort_keys=True, ensure_ascii=False))
-
-# print()
-# print(connection.close())
