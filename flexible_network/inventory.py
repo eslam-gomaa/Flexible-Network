@@ -55,5 +55,8 @@ class Inventory():
             sections = self.read_inventory()
             if section in sections:
                 return sections[section]
+            else:
+                return None
         except:
-            print("ERROR -- Inventory section {} does NOT exist !".format(section))
+            print("ERROR -- could NOT read section [ {} ] !".format(section))
+            exit(1)
