@@ -41,7 +41,7 @@ class Terminal_Task:
         # create a row in the tasks table & add the id & name
         date = datetime.today().strftime('%d-%m-%Y')
         time = datetime.today().strftime('%H-%M-%S')
-        self.db.insert_task_table({'id': self.task_id, 
+        self.db.insert_tasks_table({'id': self.task_id, 
                                    'name': self.task_name,
                                    'comment': 'to be done >> as a cli option.',
                                    'n_of_backups': 0, 
@@ -121,8 +121,8 @@ class Terminal_Task:
         self.full_devices_number = len(hosts)
         self.connected_devices_number = self.ssh.connected_devices_number
         self.connection_failed_devices_number = self.ssh.connection_failed_devices_number
-        self.db.update_task_table({'full_devices_n': self.full_devices_number}, self.task_id)
-        self.db.update_task_table({'authenticated_devices_n': self.connected_devices_number}, self.task_id)
+        self.db.update_tasks_table({'full_devices_n': self.full_devices_number}, self.task_id)
+        self.db.update_tasks_table({'authenticated_devices_n': self.connected_devices_number}, self.task_id)
         if terminal_print:
             if ReadCliOptions.no_confirm_auth:
                 ask_when_hosts_fail_ = False
@@ -195,19 +195,30 @@ class Terminal_Task:
         result = self.ssh.backup_config(host_dct['channel'], comment, target)
         # Generate a backup ID
         self.backup_id = str(uuid.uuid4())
+        date = datetime.today().strftime('%d-%m-%Y')
+        time = datetime.today().strftime('%H-%M-%S')
+        self.db.insert_backups_table({'id': self.backup_id, 
+                                   'comment': comment,
+                                   'task': self.task_id,
+                                   'host': host_dct['host'],
+                                   'target': target,
+                                   'location': '',
+                                   'date': date, 
+                                   'time': time,
+                                   'success': False,
+                                   'failed_reason': ''
+                                   })
         # Update the backup to the task table .. Add the backup ID to the 
-        self.db.append_backups_ids_task_table('backups_ids', self.backup_id, self.task_id)
-        # self.db.update_task_table({'backups_ids': self.backup_id}, self.task_id)
+        self.db.append_backups_ids_tasks_table('backups_ids', self.backup_id, self.task_id)
         # Increament the backups number in the task by 1
-        self.db.increment_key_task_table('n_of_backups', self.task_id)
+        self.db.increment_key_tasks_table('n_of_backups', self.task_id)
         print("\n@ {}".format(host_dct['host']))
         if result['exit_code'] == 0:
-            print("backup taken successfully")
-            print("At this point need to create / update 🤔 the backup table.")
+            print("> backup taken successfully")
+            self.db.update_backups_table({'success': True}, self.backup_id)
         else:
             print("ERROR -- Failed to backup config > [ {} ]".format(comment))
+            self.db.update_backups_table({'success': True}, self.backup_id)
+            self.db.update_backups_table({'failed_reason': result['stderr']}, self.backup_id)
             print(self.bcolors.FAIL + '\n'.join(result['stderr']) + self.bcolors.ENDC)
-
-
-
 
