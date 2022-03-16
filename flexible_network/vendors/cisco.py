@@ -1,7 +1,7 @@
 
 class Cisco:
     def __init__(self):
-        self._stderr_search_keyword = '\^'
+        self._stderr_search_keyword = ['\^', '% Ambiguous command']
         self._clean_output_search_keywords = ['.*#', '.*>']
         self._backup_command = """
             terminal length 0
