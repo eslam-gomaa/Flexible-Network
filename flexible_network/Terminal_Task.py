@@ -7,7 +7,9 @@ from Flexible_Network import Inventory
 from Flexible_Network import SSH_connection
 from Integrations import RocketChat_API
 from tabulate import tabulate
-
+import uuid
+from Flexible_Network import TinyDB_db
+from Flexible_Network import Bcolors
 
 class Terminal_Task:
     task_name = None # Should be updated from a cli option. --task
@@ -18,14 +20,24 @@ class Terminal_Task:
         cli.argparse()
         # Initialize the "Config" class so that it checks the config file at the begining. 
         config = Config()
-        # 
         inventory = Inventory()
         self.ssh = SSH_connection()
         self.validate_integrations()
+        self.db = TinyDB_db()
+        self.bcolors = Bcolors()
 
-        ## Attributes ##
+        # Gernate the task id
+        self.task_id = str(uuid.uuid4())
+        # Get the task name
+        self.task_name = str(ReadCliOptions.task_name)
+        # create a row in the tasks table & add the id & name
+        self.db.insert_task({'id': self.task_id, 'name': self.task_name})
+
+        # print(self.db.get_tasks_table_items())
+
+
+        # Should get the vendor based on conditions
         self.vendor = Cisco() # Default vendor class should exist in the config
-        self.task_name = ReadCliOptions.task_name
         # Read all inventory sections
         # self.inventory = inventory.read_inventory()
         self.inventory_groups = inventory.read_inventory()
@@ -101,4 +113,24 @@ class Terminal_Task:
     def connection_report_Table(self, dct_={}, terminal_print=False, ask_when_hosts_fail=False):
         table = self.ssh.connection_report_Table(dct=dct_, terminal_print=terminal_print, ask_when_hosts_fail=ask_when_hosts_fail)
         return table
+    
+    def execute(self, host_dct, cmd, terminal_print='default', ask_for_confirmation=False, exit_on_fail=True):
+        result = self.ssh.exec(host_dct['channel'], cmd)
+        print(f"@ {host_dct['host']}")
+        print(self.bcolors.OKBLUE + '\n'.join(result['cmd']) + self.bcolors.ENDC)
+        if result['exit_code'] == 0:
+            print(self.bcolors.OKGREEN + '\n'.join(result['stdout']) + self.bcolors.ENDC)
+        else:
+            if exit_on_fail:
+                print()
+                print(self.bcolors.FAIL + '\n'.join(result['stderr']) + self.bcolors.ENDC)
+                print()
+                print("Stopped due to the previous error.")
+                exit(1)
+
+    def execute_raw(self, host_dct, cmd):
+        result = self.ssh.exec(host_dct['channel'], cmd)
+        return result
+
+
 
