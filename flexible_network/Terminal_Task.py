@@ -176,11 +176,12 @@ class Terminal_Task:
         Take full configurations backup of the device
         """
         result = self.ssh.backup_config(host_dct['channel'], comment, target)
+        print("\n@ {}".format(host_dct['host']))
         if result['exit_code'] == 0:
             print("backup taken successfully")
             print("At this point need to create / update 🤔 the backup table.")
         else:
-            print("\nERROR -- Failed to backup config from ..")
+            print("ERROR -- Failed to backup config > [ {} ]".format(comment))
             print(self.bcolors.FAIL + '\n'.join(result['stderr']) + self.bcolors.ENDC)
 
 
