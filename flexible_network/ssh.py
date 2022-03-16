@@ -4,6 +4,7 @@ from tabulate import tabulate
 import textwrap
 import re
 import socket
+from flexible_network.vendors.cisco import Cisco
 
 
 class SSH_connection():
@@ -12,7 +13,7 @@ class SSH_connection():
         self.connected_devices_dct = {}
         self.connected_devices_number = 0
         self.connection_failed_devices_number = 0
-        
+        self._vendor = Cisco()
 
     @property
     def vendor(self):
@@ -161,6 +162,7 @@ class SSH_connection():
             "stderr": "The error (Syntax error are detected.)",
             "exit_code":  0 --> the command run successfully,  1 --> an error occurred
         }
+        - does NOT print to the terminal
         """
 
         def get_stderr(string, stderr_search_keyword=self.vendor.stderr_search_keyword):
@@ -174,10 +176,11 @@ class SSH_connection():
             # If the search is found in one of the lines, then we know the line number that contains the error keyword
             # And since the the command should be directly in the line before the error keyword,
             # we'll return the list starting from the index -1 till the end of the list.
-            for i in range(len(string_lst)):
-                search = re.findall("{}.*$".format(stderr_search_keyword), string_lst[i])
-                if search:
-                    return string_lst[i-1:]
+            for str_to_search in stderr_search_keyword:
+                for i in range(len(string_lst)):
+                    search = re.findall("{}.*$".format(str_to_search), string_lst[i])
+                    if search:
+                        return string_lst[i-1:]
             return []
 
         out = {}
@@ -188,7 +191,7 @@ class SSH_connection():
         out['stderr'] = []
         out['exit_code'] = -1
 
-        ## Thining: How to reconnect if the socket is closed.
+        ## Thinking: How to reconnect if the socket is closed.
         # try:
         #     channel.send("")
         # except (socket.error)  as e:
@@ -229,33 +232,13 @@ class SSH_connection():
         except (socket.error)  as e:
             out['stderr'] = [str(e)]
 
-
-        # Need to clean the output from the last 2 lines "mgmt_sw>"
-        
-        # Considerations (Will differ among vendors.)
-        # 1. 
-
         return out
-
-    def execute(self, channel, cmd, print='default', ask_for_confirmation=False):
-        """
-        - Excutes a command on a remove network device
-        - Print [ default, json ]
-        - Ask for confirmation before executing the command on the remote device.
-        - Returns a dictionary:
-        {
-            "stdout": "The output of the command",
-            "stderr": "The error (Syntax error are detected.)",
-            "exit_code":  0 --> the command run successfully,  1 --> an error occurred
-        }
-        """
-        pass
 
     def backup_config(self, channel, comment, target='local'):
         """
         Take a backup of the device configurations
         Options: 'local' or 's3'
         """
+
+
         return self.vendor.backup_command
-        
-    
