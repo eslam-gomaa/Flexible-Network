@@ -10,6 +10,9 @@ from tabulate import tabulate
 import uuid
 from Flexible_Network import TinyDB_db
 from Flexible_Network import Bcolors
+import json
+from pygments import highlight, lexers, formatters
+
 
 class Terminal_Task:
     task_name = None # Should be updated from a cli option. --task
@@ -133,17 +136,21 @@ class Terminal_Task:
         result = self.ssh.exec(host_dct['channel'], cmd)
         print()
         print(f"@ {host_dct['host']}")
+        # Print the command in blue color
         print(self.bcolors.OKBLUE + '\n'.join(result['cmd']) + self.bcolors.ENDC)
+        if terminal_print == 'json':
+                formatted_json = json.dumps(result, indent=4, sort_keys=True, ensure_ascii=False)
+                colorful_json = highlight(formatted_json.encode('utf8'), lexers.JsonLexer(),  formatters.TerminalFormatter())
+                print(colorful_json)
+                
         if result['exit_code'] == 0:
             if terminal_print == 'default':
-                # Print
-                print(self.bcolors.OKGREEN + '\n'.join(result['stdout']) + self.bcolors.ENDC)
-            elif terminal_print == 'json':
-                # Print full json
-                pass
+                # Print STDOUT in green color
+                print(self.bcolors.OKGREEN + '\n'.join(result['stdout']) + self.bcolors.ENDC)     
         else:
             if exit_on_fail:
                 print()
+                # Print STDERR in red color
                 print(self.bcolors.FAIL + '\n'.join(result['stderr']) + self.bcolors.ENDC)
                 print()
                 print("Stopped due to the previous error.")
