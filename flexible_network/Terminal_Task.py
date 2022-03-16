@@ -31,8 +31,9 @@ class Terminal_Task:
         self.bcolors = Bcolors()
 
         if ReadCliOptions.list_tasks:
-            print("list")
-            exit(1)
+            # print("list")
+            print(self.db.list_all_tasks())
+            exit(0)
 
         # Gernate the task id
         self.task_id = str(uuid.uuid4())
@@ -214,7 +215,7 @@ class Terminal_Task:
         self.db.increment_key_tasks_table('n_of_backups', self.task_id)
         print("\n@ {}".format(host_dct['host']))
         if result['exit_code'] == 0:
-            print("> backup taken successfully")
+            print("> backup taken successfully > [ {} ]".format(comment))
             self.db.update_backups_table({'success': True}, self.backup_id)
         else:
             print("ERROR -- Failed to backup config > [ {} ]".format(comment))

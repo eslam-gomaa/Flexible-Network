@@ -19,13 +19,13 @@ class CLI:
         parser.add_argument('-u', '--user', type=str, required=False, metavar='', help='The user to authenticate the group')
         parser.add_argument('-p', '--password', type=str, required=False, metavar='', help='The password to authenticate the group')
         parser.add_argument('-P', '--port', type=int, required=False, default=22, metavar='', help='The port to connect to the group')
-        parser.add_argument('-l', '--tasks', action='store_true', help='List tasks')
-        parser.add_argument('-b', '--backups', action='store_true', help='List backups')
+        parser.add_argument('-l', '--list-tasks', action='store_true', help='List tasks')
+        parser.add_argument('-b', '--list-backups', action='store_true', help='List backups')
 
 
         results = parser.parse_args()
 
-        if results.tasks:
+        if results.list_tasks:
             ReadCliOptions.list_tasks = True
             
         # elif results.list_backups is not None:
