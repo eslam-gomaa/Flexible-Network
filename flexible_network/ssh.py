@@ -234,11 +234,9 @@ class SSH_connection():
 
         return out
 
-    def backup_config(self, channel, comment, target='local'):
+    def backup_config(self, channel, comment, target):
         """
         Take a backup of the device configurations
-        Options: 'local' or 's3'
         """
-
-
-        return self.vendor.backup_command
+        out = self.exec(channel, self.vendor.backup_command)
+        return out
