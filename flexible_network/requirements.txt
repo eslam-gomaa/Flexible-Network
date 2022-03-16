@@ -6,3 +6,4 @@ paramiko
 tabulate
 tabulate[widechars]
 tinydb
+pygments
