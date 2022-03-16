@@ -12,6 +12,7 @@ from Flexible_Network import TinyDB_db
 from Flexible_Network import Bcolors
 import json
 from pygments import highlight, lexers, formatters
+from datetime import datetime
 
 
 class Terminal_Task:
@@ -29,14 +30,27 @@ class Terminal_Task:
         self.db = TinyDB_db()
         self.bcolors = Bcolors()
 
+        if ReadCliOptions.list_tasks:
+            print("list")
+            exit(1)
+
         # Gernate the task id
         self.task_id = str(uuid.uuid4())
         # Get the task name
         self.task_name = str(ReadCliOptions.task_name)
         # create a row in the tasks table & add the id & name
-        self.db.insert_task({'id': self.task_id, 'name': self.task_name})
-
-        # print(self.db.get_tasks_table_items())
+        date = datetime.today().strftime('%d-%m-%Y')
+        time = datetime.today().strftime('%H-%M-%S')
+        self.db.insert_task_table({'id': self.task_id, 
+                                   'name': self.task_name,
+                                   'comment': 'to be done >> as a cli option.',
+                                   'n_of_backups': 0, 
+                                   'backups_ids': [],
+                                   'date': date, 
+                                   'time': time,
+                                   'full_devices_n': 0,
+                                   'authenticated_devices_n': 0
+                                   })
 
 
         # Should get the vendor based on conditions
@@ -104,8 +118,11 @@ class Terminal_Task:
         self.ssh.authenticate(hosts=hosts, user=user, password=password, port=port, terminal_print=terminal_print)
         self.devices_dct = self.ssh.devices_dct
         self.connected_devices_dct = self.ssh.connected_devices_dct
+        self.full_devices_number = len(hosts)
         self.connected_devices_number = self.ssh.connected_devices_number
         self.connection_failed_devices_number = self.ssh.connection_failed_devices_number
+        self.db.update_task_table({'full_devices_n': self.full_devices_number}, self.task_id)
+        self.db.update_task_table({'authenticated_devices_n': self.connected_devices_number}, self.task_id)
         if terminal_print:
             if ReadCliOptions.no_confirm_auth:
                 ask_when_hosts_fail_ = False
@@ -176,6 +193,13 @@ class Terminal_Task:
         Take full configurations backup of the device
         """
         result = self.ssh.backup_config(host_dct['channel'], comment, target)
+        # Generate a backup ID
+        self.backup_id = str(uuid.uuid4())
+        # Update the backup to the task table .. Add the backup ID to the 
+        self.db.append_backups_ids_task_table('backups_ids', self.backup_id, self.task_id)
+        # self.db.update_task_table({'backups_ids': self.backup_id}, self.task_id)
+        # Increament the backups number in the task by 1
+        self.db.increment_key_task_table('n_of_backups', self.task_id)
         print("\n@ {}".format(host_dct['host']))
         if result['exit_code'] == 0:
             print("backup taken successfully")
