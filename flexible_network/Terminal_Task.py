@@ -115,11 +115,32 @@ class Terminal_Task:
         return table
     
     def execute(self, host_dct, cmd, terminal_print='default', ask_for_confirmation=False, exit_on_fail=True):
+        """
+        - Excutes a command on a remove network device
+        - Returns a dictionary:
+        {
+            "stdout": "The output of the command",
+            "stderr": "The error (Syntax error are detected.)",
+            "exit_code":  0 --> the command run successfully,  1 --> an error occurred
+        }
+        - Options:
+            - terminal_print: print the ouput || error to the terminal
+            - ask_for_confirmation: ask for confirmation before executing a command, default: False
+            - exit_on_fail: exit the script with code 1 if the command executed with errors  default: True
+        """
+        if ask_for_confirmation:
+            self.ssh.ask_for_confirmation(cmd=self.bcolors.OKBLUE +  cmd + self.bcolors.ENDC)
         result = self.ssh.exec(host_dct['channel'], cmd)
+        print()
         print(f"@ {host_dct['host']}")
         print(self.bcolors.OKBLUE + '\n'.join(result['cmd']) + self.bcolors.ENDC)
         if result['exit_code'] == 0:
-            print(self.bcolors.OKGREEN + '\n'.join(result['stdout']) + self.bcolors.ENDC)
+            if terminal_print == 'default':
+                # Print
+                print(self.bcolors.OKGREEN + '\n'.join(result['stdout']) + self.bcolors.ENDC)
+            elif terminal_print == 'json':
+                # Print full json
+                pass
         else:
             if exit_on_fail:
                 print()
@@ -127,8 +148,19 @@ class Terminal_Task:
                 print()
                 print("Stopped due to the previous error.")
                 exit(1)
+        return result
 
     def execute_raw(self, host_dct, cmd):
+        """
+        - Excutes a command on a remove network device
+        - Returns a dictionary:
+        {
+            "stdout": "The output of the command",
+            "stderr": "The error (Syntax error are detected.)",
+            "exit_code":  0 --> the command run successfully,  1 --> an error occurred
+        }
+        - does NOT print to the terminal
+        """
         result = self.ssh.exec(host_dct['channel'], cmd)
         return result
 
