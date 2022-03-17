@@ -9,6 +9,8 @@ class TinyDB_db:
         self.db_file = 'db.json'
         # This will create the DB file if it does NOT exist.
         self.db = TinyDB(self.db_file)
+        ### We have the option to pretify the json file, but this will affect size & performance.
+        # self.db = TinyDB(self.db_file, sort_keys=True, indent=4, separators=(',', ': '))
         self.tasks_table = self.db.table('tasks')
         self.backups_table = self.db.table('backups')
 
