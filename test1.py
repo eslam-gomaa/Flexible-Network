@@ -4,7 +4,6 @@ from Integrations import RocketChat_API
 
 task = Terminal_Task()
 rocket = RocketChat_API()
-rocket.authenticate() # should authenticate internally.
 
 
 ##  1  ## Authenticate
@@ -13,7 +12,7 @@ rocket.authenticate() # should authenticate internally.
 ##  2  ## Get Connection Report
 report = task.connection_report_Table(task.devices_dct)
 # print(report)
-# rocket.send_message('eslam.gomaa', report)
+rocket.send_message('eslam.gomaa', report)
 
 
 ### Test exeuting a command.
