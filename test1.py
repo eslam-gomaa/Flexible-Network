@@ -8,7 +8,7 @@ rocket.authenticate() # should authenticate internally.
 
 
 ##  1  ## Authenticate
-# task.authenticate(hosts=task.inventory, user='orange', password='cisco', port='1113')
+# task.authenticate(hosts=task.inventory_groups['all'], user='orange', password='cisco', port='1113')
 
 ##  2  ## Get Connection Report
 report = task.connection_report_Table(task.devices_dct)
