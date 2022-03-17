@@ -11,7 +11,6 @@ class RocketChat_API():
     def __init__(self):
         """ Authenticate with RocketChat Server """
         self.auth_session = None
-        # self.authenticate()
 
     def auth_raw(self):
         """ Authenticate with RocketChat Server [ Without Exception handeling ] """
@@ -34,11 +33,15 @@ class RocketChat_API():
             exit(1)
 
     def list_channels(self):
+        if self.auth_session is None:
+            self.authenticate()
         """ Returns a list of all channels """
         return self.auth_session.channels_list().json()['channels']
 
     def list_all_members(self):
         """ Return a list of all users """
+        if self.auth_session is None:
+            self.authenticate()
         lst = self.auth_session.users_list(count=0).json()
         return lst
 
@@ -46,6 +49,8 @@ class RocketChat_API():
         pass
 
     def list_members_in_channel(self, channel_id):
+        if self.auth_session is None:
+            self.authenticate()
         output = self.auth_session.channels_members(channel_id).json()
         members_count, members_list = output['count'], output['members']
         return members_list
@@ -54,6 +59,8 @@ class RocketChat_API():
         """
         returns user info (Apply rate limiting in my case !)
         """
+        if self.auth_session is None:
+            self.authenticate()
         output = self.auth_session.users_info(member_id).json()
         return output
 
@@ -61,6 +68,8 @@ class RocketChat_API():
         """ 
         Send message to a member or Channel 
         """
+        if self.auth_session is None:
+            self.authenticate()
         output = self.auth_session.chat_post_message(message, channel=member_id).json()
         return output
 
@@ -68,6 +77,8 @@ class RocketChat_API():
         """
         Search for the id of the user using the name
         """
+        if self.auth_session is None:
+            self.authenticate()
         for member in self.list_all_members()['users']:
             if member['username'] == member_name:
                     return member['_id']
@@ -76,6 +87,11 @@ class RocketChat_API():
         """
         Send a RocketChat message to a list of members
         """
+        if not isinstance(member_name_lst, list):
+            print("ERROR -- RocketChat method 'send_message' takes a List of users\n> You've provided: '{}' which is a {}".format(member_name_lst, type(member_name_lst)))
+            exit(1)
+        if self.auth_session is None:
+            self.authenticate()
         out = {}
         for member_name in member_name_lst:
             id = self.return_member_id_by_name(member_name)
@@ -92,4 +108,6 @@ class RocketChat_API():
         return out
 
     def send_as_attachment(self):
+        if self.auth_session is None:
+            self.authenticate()
         pass
