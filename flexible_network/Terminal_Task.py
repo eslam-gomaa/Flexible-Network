@@ -13,6 +13,8 @@ from Flexible_Network import Bcolors
 import json
 from pygments import highlight, lexers, formatters
 from datetime import datetime
+import random
+from pathlib import Path
 
 
 class Terminal_Task:
@@ -29,11 +31,18 @@ class Terminal_Task:
         self.validate_integrations()
         self.db = TinyDB_db()
         self.bcolors = Bcolors()
+        self.local_db_dir = '.db'
 
         if ReadCliOptions.list_tasks:
             # print("list")
             print(self.db.list_all_tasks())
             exit(0)
+
+        if ReadCliOptions.list_backups:
+            # print("list")
+            print(self.db.list_all_backups())
+            exit(0)
+
 
         # Gernate the task id
         self.task_id = str(uuid.uuid4())
@@ -194,6 +203,8 @@ class Terminal_Task:
         Take full configurations backup of the device
         """
         result = self.ssh.backup_config(host_dct['channel'], comment, target)
+
+        # Inserting the DB record
         # Generate a backup ID
         self.backup_id = str(uuid.uuid4())
         date = datetime.today().strftime('%d-%m-%Y')
@@ -209,6 +220,48 @@ class Terminal_Task:
                                    'success': False,
                                    'failed_reason': ''
                                    })
+
+        # Start storing the backup
+        if result['exit_code'] == 0:
+
+            # Clean the backup output [ Remove the backup commands ]
+            backup_output = '\n'.join(result['stdout'])
+            for c in self.vendor.backup_command.split("\n"):
+                import re
+                backup_output = backup_output.replace(c.lstrip().strip(), '')
+                backup_output = backup_output.strip()
+
+            backup_dir = self.local_db_dir +  '/' + datetime.today().strftime('%d-%m-%Y')
+            backup_file = host_dct['host'] + '-{}.txt'.format(uuid.uuid4().hex.upper()[0:10])
+            def save_backup_locally(b_dir, b_file=backup_file):
+                try:
+                    b_file = b_dir +  '/' + b_file
+                    # The 'local' target stores the backup to file on the local machine
+                    # Create the backup dir
+                    Path(b_dir).mkdir(parents=True, exist_ok=True)
+                    # Create the backup file
+                    with open(b_file, 'w') as file:
+                        # Writing the backup to a file
+                        file.write(backup_output)
+                except FileNotFoundError as e:
+                    print("ERROR -- Failed to backup config > [ {} ]".format(comment))
+                    print("ERROR -- Failed to write backup to file \n> {}".format(e))
+                    exit(1)
+
+            if target == 'local':
+                save_backup_locally(b_dir=backup_dir)
+                # Updating the loaction key with the backup location
+                self.db.update_backups_table({'location': backup_file}, self.backup_id)
+            if target == 's3':
+                # Create a temp_file and save the backup to it
+                save_backup_locally(b_dir='/tmp')
+                # Upload the backup to s3
+                #backup stored here
+                print('/tmp/' + backup_file)
+
+                # Remove the temp backup
+    
+
         # Update the backup to the task table .. Add the backup ID to the 
         self.db.append_backups_ids_tasks_table('backups_ids', self.backup_id, self.task_id)
         # Increament the backups number in the task by 1
@@ -219,7 +272,7 @@ class Terminal_Task:
             self.db.update_backups_table({'success': True}, self.backup_id)
         else:
             print("ERROR -- Failed to backup config > [ {} ]".format(comment))
-            self.db.update_backups_table({'success': True}, self.backup_id)
+            # self.db.update_backups_table({'success': False}, self.backup_id)
             self.db.update_backups_table({'failed_reason': result['stderr']}, self.backup_id)
             print(self.bcolors.FAIL + '\n'.join(result['stderr']) + self.bcolors.ENDC)
 
