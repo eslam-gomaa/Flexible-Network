@@ -9,6 +9,9 @@ class ReadCliOptions:
     auth_user = None
     auth_password = None
     auth_port = None
+    list_tasks = None
+    list_backups = None
+    filter_by_date = None    
 
     def __init__(self):
         self.task_name
@@ -17,3 +20,4 @@ class ReadCliOptions:
         self.config_file
         self.to_validate_lst
         self.authenticate_group
+        self.list_tasks

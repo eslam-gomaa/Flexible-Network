@@ -1,13 +1,10 @@
 from Flexible_Network import Terminal_Task
-from Flexible_Network import Flexible_Network, SSH_connection
-from flexible_network.Vendors import Cisco
 from Integrations import RocketChat_API
 
 
 task = Terminal_Task()
-# ssh.vendor = Cisco()
 rocket = RocketChat_API()
-rocket.authenticate()
+rocket.authenticate() # should authenticate internally.
 
 
 ##  1  ## Authenticate
@@ -30,5 +27,5 @@ for host in task.connected_devices_dct:
     
     task.execute_raw(host_dct, 'enable\n' + 'cisco')
     task.execute(host_dct, cmd)
-    task.backup_config(host_dct, 'Test config backup')    
-    task.backup_config(host_dct, 'Test config backup 2')    
+    task.backup_config(host_dct, 'Test config backup', target='local')    
+

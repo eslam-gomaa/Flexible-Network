@@ -73,11 +73,33 @@ python3.6 -m pytest tests/  -v
 
 <br>
 
-# Usage
+# How it works !
 
 * This project is designed as Python Library that you import to your Python script that gives you a lot of features and integrations out of the box
 * After importing the library you can treat your script as a cli tool
 * 
+
+### Connection Management
+
+The project use SSH to connect to the devices
+
+The way it works is that, it tries to connect to the selected group of devices, and store the ssh Channels of the connected devices in a dictionary [ Which you have access to when create an instance of the class ]
+
+So in simple words, it opens the ssh connection before start executing.
+
+
+
+
+
+
+<br>
+
+---
+
+<br>
+
+# Usage
+
 
 ```bash
 python <your-script.py> -h

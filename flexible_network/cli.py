@@ -27,6 +27,9 @@ class CLI:
 
         if results.list_tasks:
             ReadCliOptions.list_tasks = True
+    
+        if results.list_backups:
+            ReadCliOptions.list_backups = True
             
         # elif results.list_backups is not None:
         #     ReadCliOptions.list_backups == True
