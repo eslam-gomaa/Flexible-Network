@@ -12,7 +12,7 @@ rocket = RocketChat_API()
 ##  2  ## Get Connection Report
 report = task.connection_report_Table(task.devices_dct)
 # print(report)
-rocket.send_message('eslam.gomaa', report)
+rocket.send_message(['eslam.gomaa'], "``` {} ```".format(report))
 
 
 ### Test exeuting a command.
