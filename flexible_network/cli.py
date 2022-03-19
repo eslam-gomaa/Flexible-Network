@@ -53,12 +53,14 @@ class CLI:
             print("\t\t\t* * *\n")
             print(parser.print_help(sys.stderr))
             exit(1)
-            
-        # elif (not results.backup) or (not results.task) or (not results.name):
-        #     print("choose one of 3 options")
-        #     print("\t\t\t* * *\n")
-        #     print(parser.print_help(sys.stderr))
-        #     exit(1)
+        
+        # If nothting from the main options are specified
+        # Should add validate_integration as well as a main option.
+        elif (not results.backup and not results.task and not results.name):
+            print("choose one of 3 options")
+            print("\t\t\t* * *\n")
+            print(parser.print_help(sys.stderr))
+            exit(1)
 
         # If only --task is specified
         elif (results.task) and not (results.list or results.get_log):
