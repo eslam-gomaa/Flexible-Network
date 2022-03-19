@@ -26,28 +26,35 @@ class Terminal_Task:
         # Initialize the "CLI" class so that it read the cli options 
         cli = CLI()
         cli.argparse()
+        
+        # Initialize the DB because we'll need if '--task list' or '--backup list' are specified
+        self.db = TinyDB_db()
+
+        # If --task is specified
+        if ReadCliOptions.list_tasks:
+            print(self.db.list_all_tasks())
+            exit(0)
+
+        # If --backup is specified
+        if ReadCliOptions.list_backups:
+            print(self.db.list_all_backups())
+            exit(0)
+
+        if ReadCliOptions.get_log is not None:
+            print(self.db.get_task_log(ReadCliOptions.get_log))
+            exit(0)
+
+
         # Initialize the "Config" class so that it checks the config file at the begining. 
         config = Config()
         inventory = Inventory()
         self.ssh = SSH_connection()
         self.validate_integrations()
         self.bcolors = Bcolors()
-        self.db = TinyDB_db()
+
+        
         self.local_db_dir = self.db.local_db_dir
         self.log_and_backup_dir = self.local_db_dir +  '/' + datetime.today().strftime('%d-%m-%Y')
-
-
-        if ReadCliOptions.list_tasks:
-            # print("list")
-            print(self.db.list_all_tasks())
-            exit(0)
-
-        if ReadCliOptions.list_backups:
-            # print("list")
-            print(self.db.list_all_backups())
-            exit(0)
-
-
         # Gernate the task id
         self.task_id = str(uuid.uuid4())
         self.log_file = self.log_and_backup_dir + '/' + self.task_id + '.txt'
