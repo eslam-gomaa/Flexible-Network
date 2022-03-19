@@ -3,6 +3,7 @@ from tinydb.operations import increment, add, set
 from tabulate import tabulate
 import os
 from pathlib import Path
+import textwrap
 
 
 
@@ -97,14 +98,18 @@ class TinyDB_db:
         self.backups_table.update(increment(key), Task.id == task_id)
 
     def list_all_tasks(self, wide=False):
+        # The table header
         table = [['id', 'name', 'comment', 'n_of_backups', 'date', 'time']]
         if wide:
             table = [['id', 'name', 'comment', 'n_of_backups', 'date', 'time', 'full_devices_n', 'authenticated_devices_n']]
+        # Get list of all the tasks from the DB
         all_tasks_lst =  self.tasks_table.all()
         for task in all_tasks_lst:
-            row = [task['id'], task['name'], task['comment'], task['n_of_backups'], task['date'], task['time']]
+            comment = "\n".join(textwrap.wrap(task['comment'], width=30, replace_whitespace=False))
+            task_name = "\n".join(textwrap.wrap(task['name'], width=26, replace_whitespace=False))
+            row = [task['id'], task_name, comment, task['n_of_backups'], task['date'], task['time']]
             if wide:
-                row = [task['id'], task['name'], task['comment'], task['n_of_backups'], task['date'], task['time'], task['full_devices_n'], task['authenticated_devices_n']]
+                row = [task['id'], task_name, comment, task['n_of_backups'], task['date'], task['time'], task['full_devices_n'], task['authenticated_devices_n']]
             table.append(row)
         out = tabulate(table, headers='firstrow', tablefmt='grid', showindex=False)
         return out
@@ -113,11 +118,12 @@ class TinyDB_db:
         table = [['id', 'comment', 'host', 'target', 'status','date', 'time']]
         all_backups_lst =  self.backups_table.all()
         for task in all_backups_lst:
+            comment = "\n".join(textwrap.wrap(task['comment'], width=30, replace_whitespace=False))
             if task['success']:
                 status = '🟢 success'
             else:
                 status = '🔴 failed'
-            row = [task['id'], task['comment'], task['host'], task['target'], status, task['date'], task['time']]
+            row = [task['id'], comment, task['host'], task['target'], status, task['date'], task['time']]
             table.append(row)
         out = tabulate(table, headers='firstrow', tablefmt='grid', showindex=False)
         return out
