@@ -16,6 +16,7 @@ from datetime import datetime
 import random
 from pathlib import Path
 import time
+import os
 
 
 class Terminal_Task:
@@ -30,9 +31,9 @@ class Terminal_Task:
         inventory = Inventory()
         self.ssh = SSH_connection()
         self.validate_integrations()
-        self.db = TinyDB_db()
         self.bcolors = Bcolors()
-        self.local_db_dir = '.db'
+        self.db = TinyDB_db()
+        self.local_db_dir = self.db.local_db_dir
         self.log_and_backup_dir = self.local_db_dir +  '/' + datetime.today().strftime('%d-%m-%Y')
 
 
@@ -151,6 +152,8 @@ class Terminal_Task:
         # If connected_devices_number > 0 , set the log_output flag to True
         if self.connected_devices_number > 0:
             self.log_output = True
+            if not os.path.isdir(self.log_and_backup_dir):
+                Path(self.log_and_backup_dir).mkdir(parents=True, exist_ok=True)
             self.db.update_tasks_table({'log_file': self.log_file}, self.task_id)
         else:
             self.db.update_tasks_table({'log_file': None}, self.task_id)
@@ -286,6 +289,7 @@ The command exited with exit_code of {result['exit_code']}
                 error = '\n'.join(result['stderr'])
                 data = f"""\n@ {host_dct['host']}
 [[ backup_config ]]
+@ {host_dct['host']}
 Time: {date_time}
 Execution Time: {float("{:.2f}".format(duration))} seconds
 The backup taken successfully
@@ -302,7 +306,8 @@ Backup ID: {self.backup_id}
                     b_file = b_dir +  '/' + b_file
                     # The 'local' target stores the backup to file on the local machine
                     # Create the backup dir
-                    Path(b_dir).mkdir(parents=True, exist_ok=True)
+                    if not os.path.isdir(b_dir):
+                        Path(b_dir).mkdir(parents=True, exist_ok=True)
                     # Create the backup file
                     with open(b_file, 'w') as file:
                         # Writing the backup to a file

@@ -1,14 +1,22 @@
-from audioop import add
 from tinydb import TinyDB, Query
 from tinydb.operations import increment, add, set
 from tabulate import tabulate
+import os
+from pathlib import Path
+
 
 
 class TinyDB_db:
     def __init__(self):
+        self.local_db_dir = '.db'
         self.db_file = 'db.json'
+        # Create the DB dir
+        if not os.path.isdir(self.local_db_dir):
+            Path(self.local_db_dir).mkdir(parents=True, exist_ok=True)
+            print(f"\n> WARNNING -- New project directory detected. \n> Created db directory: {self.local_db_dir}")
+
         # This will create the DB file if it does NOT exist.
-        self.db = TinyDB(self.db_file)
+        self.db = TinyDB(self.local_db_dir + '/' + self.db_file)
         ### We have the option to pretify the json file, but this will affect size & performance.
         # self.db = TinyDB(self.db_file, sort_keys=True, indent=4, separators=(',', ': '))
         self.tasks_table = self.db.table('tasks')
