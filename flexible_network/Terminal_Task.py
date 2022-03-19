@@ -50,6 +50,7 @@ class Terminal_Task:
         # Gernate the task id
         self.task_id = str(uuid.uuid4())
         self.log_file = self.log_and_backup_dir + '/' + self.task_id + '.txt'
+        print(self.log_file)
         # Get the task name
         self.task_name = str(ReadCliOptions.task_name)
         # By default do NOT log the output,
@@ -207,7 +208,8 @@ The command exited with exit_code of {result['exit_code']}
 {output}
 {error}
 
---------------------------------------------------------"""
+--------------------------------------------------------
+"""
             self.update_log_file(data)
 
         if result['exit_code'] == 0:
@@ -248,7 +250,7 @@ The command exited with exit_code of {result['exit_code']}
         # Generate a backup ID
         self.backup_id = str(uuid.uuid4())
         date = datetime.today().strftime('%d-%m-%Y')
-        time = datetime.today().strftime('%H-%M-%S')
+        time_ = datetime.today().strftime('%H-%M-%S')
         self.db.insert_backups_table({'id': self.backup_id, 
                                    'comment': comment,
                                    'task': self.task_id,
@@ -256,14 +258,13 @@ The command exited with exit_code of {result['exit_code']}
                                    'target': target,
                                    'location': '',
                                    'date': date, 
-                                   'time': time,
+                                   'time': time_,
                                    'success': False,
                                    'failed_reason': ''
                                    })
 
         # Start storing the backup
         if result['exit_code'] == 0:
-
             # Clean the backup output [ Remove the backup commands ]
             backup_output = '\n'.join(result['stdout'])
             for c in self.vendor.backup_command.split("\n"):
@@ -272,6 +273,26 @@ The command exited with exit_code of {result['exit_code']}
                 backup_output = backup_output.strip()
 
             backup_file = host_dct['host'] + '-{}.txt'.format(uuid.uuid4().hex.upper()[0:10])
+
+            
+            # Update Log file
+            date_time = datetime.today().strftime('%d-%m-%Y_%H-%M-%S')
+            start_time = time.time()
+            duration = (time.time() - start_time)
+            if self.log_output:
+                output = '\n'.join(result['stdout'])
+                error = '\n'.join(result['stderr'])
+                data = f"""Time: {date_time}
+Execution Time: {float("{:.2f}".format(duration))} seconds
+The backup taken successfully
+Backup Comment: {comment}
+Backup ID: {self.backup_id}
+
+--------------------------------------------------------
+"""
+                self.update_log_file(data)
+
+
             def save_backup_locally(b_dir=self.log_and_backup_dir, b_file=backup_file):
                 try:
                     b_file = b_dir +  '/' + b_file
