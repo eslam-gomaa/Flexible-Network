@@ -15,6 +15,7 @@ from pygments import highlight, lexers, formatters
 from datetime import datetime
 import random
 from pathlib import Path
+import time
 
 
 class Terminal_Task:
@@ -48,6 +49,10 @@ class Terminal_Task:
         self.task_id = str(uuid.uuid4())
         # Get the task name
         self.task_name = str(ReadCliOptions.task_name)
+        # By default do NOT log the output,
+        # this will be set to True if number_of_authenticated_devices > 0
+        self.log_output = False
+        self.log_output_file = None
         # create a row in the tasks table & add the id & name
         date = datetime.today().strftime('%d-%m-%Y')
         time = datetime.today().strftime('%H-%M-%S')
@@ -139,6 +144,15 @@ class Terminal_Task:
             else:
                 ask_when_hosts_fail_ = True
             self.ssh.connection_report_Table(dct=self.devices_dct, terminal_print=True, ask_when_hosts_fail=ask_when_hosts_fail_)
+        # If connected_devices_number > 0 , set the log_output flag to True
+        if self.connected_devices_number > 0:
+            self.log_output = True
+            self.log_output_file = self.task_id + '.txt'
+
+    def update_log_file(self, data):
+        with open(self.log_output_file, 'a') as file:
+            file.write(data)
+
 
     def connection_report_Table(self, dct_={}, terminal_print=False, ask_when_hosts_fail=False):
         table = self.ssh.connection_report_Table(dct=dct_, terminal_print=terminal_print, ask_when_hosts_fail=ask_when_hosts_fail)
@@ -158,17 +172,39 @@ class Terminal_Task:
             - ask_for_confirmation: ask for confirmation before executing a command, default: False
             - exit_on_fail: exit the script with code 1 if the command executed with errors  default: True
         """
+        date_time = datetime.today().strftime('%d-%m-%Y_%H-%M-%S')
+        start_time = time.time()
         if ask_for_confirmation:
             self.ssh.ask_for_confirmation(cmd=self.bcolors.OKBLUE +  cmd + self.bcolors.ENDC)
         result = self.ssh.exec(host_dct['channel'], cmd)
+        duration = (time.time() - start_time)
         print()
         print(f"@ {host_dct['host']}")
+        print("Execution Time: {} seconds".format(float("{:.2f}".format(duration))))
         # Print the command in blue color
         print(self.bcolors.OKBLUE + '\n'.join(result['cmd']) + self.bcolors.ENDC)
         if terminal_print == 'json':
                 formatted_json = json.dumps(result, indent=4, sort_keys=True, ensure_ascii=False)
                 colorful_json = highlight(formatted_json.encode('utf8'), lexers.JsonLexer(),  formatters.TerminalFormatter())
                 print(colorful_json)
+
+        # Update Log file
+        if self.log_output:
+            command = '\n'.join(result['cmd'])
+            output = '\n'.join(result['stdout'])
+            error = '\n'.join(result['stderr'])
+            data = f"""Time: {date_time}
+Execution Time: {float("{:.2f}".format(duration))} seconds
+The command exited with exit_code of {result['exit_code']}
+>> {command}
+
+{output}
+{error}
+
+-------------------------------------------------------- 
+            """
+            self.update_log_file(data)
+            print('updated ' + self.log_output_file)
                 
         if result['exit_code'] == 0:
             if terminal_print == 'default':
