@@ -70,6 +70,23 @@ class TinyDB_db:
         Task = Query()
         self.tasks_table.upsert({'name': 'ahmed', 'id': 555}, Task.id == '123')
 
+    def get_task_log(self, task_id):
+        """
+        Prints the task log
+        """
+        try:
+            Task = Query()
+            log_file = self.tasks_table.search(Task.id == task_id)[0]['log_file']
+        except IndexError:
+            print("Error -- Could NOT find the task log >> Invalid task ID")
+            exit(1)
+        if not os.path.isfile(log_file):
+            print(f"ERROR -- Could NOT find log file [ {log_file} ]")
+            exit(1)
+        with open(log_file, 'r') as file:
+            print(file.read())
+            exit(0)
+
     ### Backups Table ###
     def get_backups_table_items(self):
         """
