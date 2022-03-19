@@ -200,7 +200,7 @@ class Terminal_Task:
             command = '\n'.join(result['cmd'])
             output = '\n'.join(result['stdout'])
             error = '\n'.join(result['stderr'])
-            data = f"""Time: {date_time}
+            data = f"""\nTime: {date_time}
 Execution Time: {float("{:.2f}".format(duration))} seconds
 The command exited with exit_code of {result['exit_code']}
 >> {command}
@@ -244,6 +244,7 @@ The command exited with exit_code of {result['exit_code']}
         """
         Take full configurations backup of the device
         """
+        start_time = time.time()
         result = self.ssh.backup_config(host_dct['channel'], comment, target)
 
         # Inserting the DB record
@@ -277,12 +278,11 @@ The command exited with exit_code of {result['exit_code']}
             
             # Update Log file
             date_time = datetime.today().strftime('%d-%m-%Y_%H-%M-%S')
-            start_time = time.time()
             duration = (time.time() - start_time)
             if self.log_output:
                 output = '\n'.join(result['stdout'])
                 error = '\n'.join(result['stderr'])
-                data = f"""Time: {date_time}
+                data = f"""\nTime: {date_time}
 Execution Time: {float("{:.2f}".format(duration))} seconds
 The backup taken successfully
 Backup Comment: {comment}
