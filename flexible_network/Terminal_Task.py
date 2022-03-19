@@ -33,6 +33,8 @@ class Terminal_Task:
         self.db = TinyDB_db()
         self.bcolors = Bcolors()
         self.local_db_dir = '.db'
+        self.log_and_backup_dir = self.local_db_dir +  '/' + datetime.today().strftime('%d-%m-%Y')
+
 
         if ReadCliOptions.list_tasks:
             # print("list")
@@ -47,6 +49,7 @@ class Terminal_Task:
 
         # Gernate the task id
         self.task_id = str(uuid.uuid4())
+        self.log_file = self.log_and_backup_dir + '/' + self.task_id + '.txt'
         # Get the task name
         self.task_name = str(ReadCliOptions.task_name)
         # By default do NOT log the output,
@@ -147,12 +150,15 @@ class Terminal_Task:
         # If connected_devices_number > 0 , set the log_output flag to True
         if self.connected_devices_number > 0:
             self.log_output = True
-            self.log_output_file = self.task_id + '.txt'
+            self.db.update_tasks_table({'log_file': self.log_file}, self.task_id)
+        else:
+            self.db.update_tasks_table({'log_file': None}, self.task_id)
+
+
 
     def update_log_file(self, data):
-        with open(self.log_output_file, 'a') as file:
+        with open(self.log_file, 'a') as file:
             file.write(data)
-
 
     def connection_report_Table(self, dct_={}, terminal_print=False, ask_when_hosts_fail=False):
         table = self.ssh.connection_report_Table(dct=dct_, terminal_print=terminal_print, ask_when_hosts_fail=ask_when_hosts_fail)
@@ -201,11 +207,9 @@ The command exited with exit_code of {result['exit_code']}
 {output}
 {error}
 
--------------------------------------------------------- 
-            """
+--------------------------------------------------------"""
             self.update_log_file(data)
-            print('updated ' + self.log_output_file)
-                
+
         if result['exit_code'] == 0:
             if terminal_print == 'default':
                 # Print STDOUT in green color
@@ -267,9 +271,8 @@ The command exited with exit_code of {result['exit_code']}
                 backup_output = backup_output.replace(c.lstrip().strip(), '')
                 backup_output = backup_output.strip()
 
-            backup_dir = self.local_db_dir +  '/' + datetime.today().strftime('%d-%m-%Y')
             backup_file = host_dct['host'] + '-{}.txt'.format(uuid.uuid4().hex.upper()[0:10])
-            def save_backup_locally(b_dir, b_file=backup_file):
+            def save_backup_locally(b_dir=self.log_and_backup_dir, b_file=backup_file):
                 try:
                     b_file = b_dir +  '/' + b_file
                     # The 'local' target stores the backup to file on the local machine
@@ -285,9 +288,9 @@ The command exited with exit_code of {result['exit_code']}
                     exit(1)
 
             if target == 'local':
-                save_backup_locally(b_dir=backup_dir)
+                save_backup_locally(b_dir=self.log_and_backup_dir)
                 # Updating the loaction key with the backup location
-                self.db.update_backups_table({'location': backup_file}, self.backup_id)
+                self.db.update_backups_table({'location': self.log_and_backup_dir + "/" + backup_file}, self.backup_id)
             if target == 's3':
                 # Create a temp_file and save the backup to it
                 save_backup_locally(b_dir='/tmp')
