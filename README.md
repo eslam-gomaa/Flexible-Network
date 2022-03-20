@@ -24,7 +24,7 @@ Our collaboration page: https://flexible-network.devops-caffe.com
 
 # Features
 * Ability to detect errors when executing commands on network devices
-* When executing commands you get a `dict` of output similar to what you get when executing commands on Linux machines [check the `exec` method](#exec)
+* When executing commands you get a `dict` of output similar to what you get when executing commands on Linux machines [check the `exec` method](#execute)
    * Which gives you the power to use ***Python conditionals*** when automating network devices. 
 * *To be documented ...*
 
@@ -38,33 +38,36 @@ Our collaboration page: https://flexible-network.devops-caffe.com
 
 # Install
 
-#### Will be available to install as a Python Library
-
 > **NOTE** At least Python3.6 is needed (_Dependencies constrains_)
 
 ```bash
-pip3.6 install ... # Soon
+# Will be published soon.
+pip3.6 install FlexibleNetwork
 ```
 
 <br>
 
-#### Build
+#### Build from source
 
-Install libraries dependencies
+```bash 
+git clone https://github.com/eslam-gomaa/Flexible-Network.git
+cd Flexible-Network
 
+python3.6 setup.py bdist_wheel
+pip3.6 install dist/FlexibleNetwork-*.whl
 ```
-pip3.6 install --user -r  Flexible_Network/requirements.txt
-```
 
+
+_Test cases [ Ignore it for now ]_
 ```bash
 # Do NOT use it, deprecated  (Will be updated)
 export PYTHONPATH=Flexible_Network/
 python3.6 -m pytest tests/  -v
 ```
 
-```
-# Soon
-```
+<br>
+
+After you have the library installed, you're ready to [use it](#_usage) !
 
 
 <br>
@@ -99,7 +102,7 @@ So in simple words, it opens the ssh connection before start executing.
 <br>
 
 # Usage
-
+<a id=_usage></a>
 
 ```bash
 python <your-script.py> -h
@@ -296,11 +299,10 @@ from Flexible_Network import Terminal_Task
 ```
 
 
-<a id=exec></a>
+<a id=execute></a>
 <details>
-<a id=exec></a>
   <summary> 
-  <b style="font-size:20px"> <code>exec()</code></b>
+  <b style="font-size:20px"> <code>execute()</code></b>
   </summary>
   Execute a command on a remote device.
 
