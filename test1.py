@@ -21,10 +21,10 @@ cmd ='''sh vlan br
 sh ip int br'''
 
 
-for host in task.devices_dct:
-    host_dct = task.devices_dct[host]
+for host in task.connected_devices_dct:
+    host_dct = task.connected_devices_dct[host]
     
     task.execute_raw(host_dct, 'enable\n' + 'cisco')
     task.execute(host_dct, cmd, terminal_print='default')
-    task.backup_config(host_dct, 'Test config backup', target='local')    
+    task.backup_config(host_dct, 'Test config backup 1', target='local')    
 
