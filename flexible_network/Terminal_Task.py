@@ -44,6 +44,11 @@ class Terminal_Task:
             print(self.db.get_task_log(ReadCliOptions.get_log))
             exit(0)
 
+        if ReadCliOptions.get_backup is not None:
+            print(self.db.return_backup(ReadCliOptions.get_backup))
+            exit(0)
+
+
 
         # Initialize the "Config" class so that it checks the config file at the begining. 
         config = Config()

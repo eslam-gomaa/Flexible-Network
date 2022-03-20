@@ -114,6 +114,8 @@ class TinyDB_db:
         Task = Query()
         self.backups_table.update(increment(key), Task.id == task_id)
 
+    ###
+
     def list_all_tasks(self, wide=False):
         # The table header
         table = [['id', 'name', 'comment', 'n_of_backups', 'date', 'time']]
@@ -145,12 +147,22 @@ class TinyDB_db:
         out = tabulate(table, headers='firstrow', tablefmt='grid', showindex=False)
         return out
 
+    def return_backup(self, backup_id):
+        try:
+            Backup = Query()
+            target = self.backups_table.search(Backup.id == backup_id)[0]['target']
+            location = self.backups_table.search(Backup.id == backup_id)[0]['location']
+            if target == 'local':
+                if not os.path.isfile(location):
+                    print(f"ERROR -- Could NOT find Backup file [ {location} ]")
+                    exit(1)
+                with open(location, 'r') as file:
+                    print(file.read())
+                    exit(0)
+        except IndexError:
+            print("ERROR -- Could NOT find the backup >> Invalid backup ID")
+            exit(1)
 
-
-    def search(self, task_id):
-        Task = Query()
-        # results = self.tasks_table.search(Task.id== task_id)[0]['backups_ids']
-        # return results
 
 
 

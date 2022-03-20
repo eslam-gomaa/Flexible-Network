@@ -13,6 +13,7 @@ class ReadCliOptions:
     list_backups = None
     filter_by_date = None    
     get_log = None
+    get_backup = None
 
     def __init__(self):
         self.task_name

@@ -25,10 +25,11 @@ class CLI:
 
 
         parser.add_argument('-b', '--backup', action='store_true', help='Deal with Backups')
+        parser.add_argument('-X', '--get-backup', type=str, help='Returns the configuuration backup')
 
 
         parser.add_argument('-t', '--task', action='store_true', help='Deal with Lists')
-        parser.add_argument('-L', '--get-log', type=str, help='Returns the task log')
+        parser.add_argument('-z', '--get-log', type=str, help='Returns the task log')
 
         parser.add_argument('-l', '--list', action='store_true', help='Deal with Lists')
         
@@ -69,6 +70,13 @@ class CLI:
             print(parser.print_help(sys.stderr))
             exit(1)
 
+        # If only --backup is specified
+        elif (results.backup) and not (results.list or results.get_backup):
+            print("u have 2 options -> list // get_backup\n")
+            print("\t\t\t* * *\n")
+            print(parser.print_help(sys.stderr))
+            exit(1)
+
 
 
         # if --task --list
@@ -78,11 +86,18 @@ class CLI:
         if (results.task and (results.get_log is not None)):
             ReadCliOptions.get_log = results.get_log
 
-        if results.list_tasks:
-            ReadCliOptions.list_tasks = True
-    
-        if results.list_backups:
+        if (results.backup and results.list):
             ReadCliOptions.list_backups = True
+
+        if (results.backup and (results.get_backup is not None)):
+            ReadCliOptions.get_backup = results.get_backup
+
+
+        # if results.list_tasks:
+        #     ReadCliOptions.list_tasks = True
+    
+        # if results.list_backups:
+        #     ReadCliOptions.list_backups = True
             
         # elif results.list_backups is not None:
         #     ReadCliOptions.list_backups == True
