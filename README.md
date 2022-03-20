@@ -22,7 +22,11 @@ This is a Refactored Version of [Flexible_Network  ((Proof of concept))  ](https
 
 <br>
 
+Before reading the features you need to know that the network devices are dump, they don't detect errors (Just return outputs despite if it has and error or not), which limits the flexibility when using Python to automate them.
+
+
 # Features
+
 * Ability to detect errors when executing commands on network devices
 * When executing commands you get a `dict` of output similar to what you get when executing commands on Linux machines [check the `execute` method](#execute)
    * Which gives you the power to use ***Python conditionals*** when automating network devices. 
@@ -88,9 +92,11 @@ After you have the library installed, you're ready to [use it](#_usage) !
 
 The project use SSH to connect to the devices
 
-The way it works is that, it tries to connect to the selected group of devices, and store the ssh Channels of the connected devices in a dictionary [ Which you have access to when create an instance of the class ]
+**The way it works:** it tries to connect to the selected group of devices, and store the `ssh Channels` of the connected devices in a dictionary [ Which you have access to when you create an instance of the class ]
 
-So in simple words, it opens the ssh connection before start executing.
+So in simple words, it opens the ssh connection before start executing commands on the network devices.
+
+And that is actually gives us more flexibility from the development perspective, besides it's much better to be notified if you're NOT able to connect to some devices before starting the automation task rather than being told at the end of task.
 
 
 ![image](https://user-images.githubusercontent.com/33789516/159185347-bbee6112-39e8-4818-93a3-9cea1946fcd1.png)
