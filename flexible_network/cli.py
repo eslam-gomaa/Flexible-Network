@@ -103,9 +103,9 @@ class CLI:
         if results.name is not None:
             ReadCliOptions.task_name = results.name
         
-        # if results.validate_integration is not None:
-        #     # Convert the list to a set to remove the duplicates
-        #     ReadCliOptions.to_validate_lst = set(results.validate_integration)
+        if results.validate_integration is not None:
+            # Convert the list to a set to remove the duplicates
+            ReadCliOptions.to_validate_lst = set(results.validate_integration)
 
         if results.no_confirm_auth:
             ReadCliOptions.no_confirm_auth = True

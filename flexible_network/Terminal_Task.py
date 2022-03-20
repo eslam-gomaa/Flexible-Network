@@ -52,9 +52,9 @@ class Terminal_Task:
 
         # Initialize the "Config" class so that it checks the config file at the begining. 
         config = Config()
+        self.validate_integrations()
         inventory = Inventory()
         self.ssh = SSH_connection()
-        self.validate_integrations()
         self.bcolors = Bcolors()
 
         
