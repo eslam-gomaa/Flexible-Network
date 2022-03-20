@@ -123,7 +123,7 @@ class Terminal_Task:
             table = [['Integration', 'Status', 'Comment']]
             tabulate.WIDE_CHARS_MODE = False
 
-
+            all_good = True 
             if 'rocketChat' in ReadCliOptions.to_validate_lst:
                 rocket = RocketChat_API() 
                 out = {}
@@ -140,11 +140,15 @@ class Terminal_Task:
                     status = '🟢'
                 else:
                     status = '🔴'
+                    all_good = False
                 row = ['rocketChat', status, out['comment']]
                 table.append(row)
             out = tabulate(table, headers='firstrow', tablefmt='grid', showindex=False)
             print(out)
-            exit(1)
+            if all_good:
+                exit(0)
+            else:
+                exit(1)
 
     def authenticate(self, hosts=[], user='orange', password='cisco', port='1113', terminal_print=True):
         self.ssh.authenticate(hosts=hosts, user=user, password=password, port=port, terminal_print=terminal_print)
