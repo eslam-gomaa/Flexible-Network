@@ -28,7 +28,7 @@ This is a Refactored Version of [Flexible_Network  ((Proof of concept))  ](https
    * Which gives you the power to use ***Python conditionals*** when automating network devices. 
 * *To be documented ...*
 
-![image](https://user-images.githubusercontent.com/33789516/159185711-4874327f-f88d-4101-a6bf-012ed16c811a.png)
+![image](https://user-images.githubusercontent.com/33789516/159186029-8f377b31-f839-40b6-96f6-33a6a42d5317.png)
 
 
 
