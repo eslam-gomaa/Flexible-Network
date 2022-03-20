@@ -88,15 +88,15 @@ After you have the library installed, you're ready to [use it](#_usage) !
 * After importing the library you can treat your script as a cli tool
 * 
 
-### Connection Management
+### 1. Connection Management
 
-The project use SSH to connect to the devices
+This project uses SSH to connect to the devices
 
 **The way it works:** it tries to connect to the selected group of devices, and store the `ssh Channels` of the connected devices in a dictionary [ Which you have access to when you create an instance of the class ]
 
-So in simple words, it opens the ssh connection before start executing commands on the network devices.
+So in simple words, it opens the ssh connection with ALL the selected devices before start executing commands.
 
-And that is actually gives us more flexibility from the development perspective, besides it's much better to be notified if you're NOT able to connect to some devices before starting the automation task rather than being told at the end of task.
+And that is actually gives us more flexibility from the development perspective, besides *it's much better to be notified if you're NOT able to connect to some devices before starting the automation task* rather than being told at the end of task.
 
 
 ![image](https://user-images.githubusercontent.com/33789516/159185347-bbee6112-39e8-4818-93a3-9cea1946fcd1.png)
