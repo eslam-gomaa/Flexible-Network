@@ -14,7 +14,7 @@ A Python library / tool to achieve advanced network automation scenarios with fe
 
 This is a Refactored Version of [Flexible_Network  ((Proof of concept))  ](https://github.com/eslam-gomaa/Flexible_Network)
 
-Our collaboration page: https://flexible-network.devops-caffe.com
+**BackLog**: https://flexible-network.devops-caffe.com
 
 <br>
 
@@ -58,7 +58,7 @@ pip3.6 install dist/FlexibleNetwork-*.whl
 ```
 
 
-_Test cases [ Ignore it for now ]_
+_Unit testing [ Ignore it for now ]_
 ```bash
 # Do NOT use it, deprecated  (Will be updated)
 export PYTHONPATH=Flexible_Network/
