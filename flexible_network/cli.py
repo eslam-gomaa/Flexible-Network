@@ -14,28 +14,24 @@ class CLI:
         
         parser.add_argument('-n', '--name', type=str, required=False, metavar='', help='The Task Name')
         parser.add_argument('-i', '--inventory', type=str, required=False, metavar='', help='The inventory file')
-        # parser.add_argument('-V', '--validate-integration', nargs='+',choices=['cyberArk', 'rocketChat'], help='Test API Integrations')
+        parser.add_argument('-V', '--validate-integration', nargs='+',choices=['cyberArk', 'rocketChat'], help='Test API Integrations')
         parser.add_argument('-x', '--no-confirm-auth', action='store_true', help='Skip Asking for confirmation if failed to connect to some deivces')
         parser.add_argument('-c', '--config', type=str, required=False, metavar='', help='The path of configuration file')
         parser.add_argument('-g', '--authenticate-group', type=str, required=False, metavar='', help='Authenticate an inventory group')
         parser.add_argument('-u', '--user', type=str, required=False, metavar='', help='The user to authenticate the group')
         parser.add_argument('-p', '--password', type=str, required=False, metavar='', help='The password to authenticate the group')
         parser.add_argument('-P', '--port', type=int, required=False, default=22, metavar='', help='The port to connect to the group')
-        # parser.add_argument('-k', '--list-tasks', action='store_true', help='List tasks')
-        # parser.add_argument('-j', '--list-backups', action='store_true', help='List backups')
-
 
         parser.add_argument('-b', '--backup', action='store_true', help='Deal with Backups')
-        parser.add_argument('-gb', '--get-backup', type=str, dest='backup_id',help='Returns the configuuration backup')
-
+        parser.add_argument('-gb', '--get-backup', type=str,help='Returns the configuuration backup')
 
         parser.add_argument('-t', '--task', action='store_true', help='Deal with Lists')
-        parser.add_argument('-gl', '--get-log', type=str, dest='task_id', help='Returns the task log')
+        parser.add_argument('-gl', '--get-log', type=str, help='Returns the task log')
 
-        parser.add_argument('-l', '--list', action='store_true', help='Deal with Lists')
+        parser.add_argument('-l', '--list', action='store_true', help='List tasks Or backups')
         
-
         results = parser.parse_args()
+
 
         # If --name & --task & --backup are specified
         if (results.backup) and (results.task) and (results.name):
@@ -92,19 +88,6 @@ class CLI:
 
         if (results.backup and (results.get_backup is not None)):
             ReadCliOptions.get_backup = results.get_backup
-
-
-        # if results.list_tasks:
-        #     ReadCliOptions.list_tasks = True
-    
-        # if results.list_backups:
-        #     ReadCliOptions.list_backups = True
-            
-        # elif results.list_backups is not None:
-        #     ReadCliOptions.list_backups == True
-
-        # if results.filter_by_date is not None:
-        #     ReadCliOptions.filter_by_date = results.filter_by_date
 
         if results.inventory is not None:
             ReadCliOptions.inventory_file = results.inventory
