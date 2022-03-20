@@ -1,5 +1,5 @@
-from Flexible_Network import Terminal_Task
-from Integrations import RocketChat_API
+from FlexibleNetwork.Flexible_Network import Terminal_Task
+from FlexibleNetwork.Integrations import RocketChat_API
 
 
 task = Terminal_Task()

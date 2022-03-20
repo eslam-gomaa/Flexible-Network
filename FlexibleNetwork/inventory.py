@@ -1,5 +1,5 @@
-from Flexible_Network import Config
-from Flexible_Network import ReadCliOptions
+from FlexibleNetwork.Flexible_Network import Config
+from FlexibleNetwork.Flexible_Network import ReadCliOptions
 import os
 import configparser
 

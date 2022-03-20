@@ -1,7 +1,7 @@
 # https://docs.python.org/3/library/configparser.html
 import configparser
 import os
-from Flexible_Network import ReadCliOptions
+from FlexibleNetwork.Flexible_Network import ReadCliOptions
 # from flexible_network.read_cli_options import ReadCliOptions
 
 

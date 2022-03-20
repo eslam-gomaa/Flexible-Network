@@ -6,8 +6,8 @@ if os.path.isfile(requirements):
         install_requires = f.read().splitlines()
 
 setup(name='FlexibleNetwork',
-    packages=find_packages(include=['flexible_network', 'integrations']),
-    package_data={'': ['vendors/*py']},
+    packages=find_packages(include=['FlexibleNetwork']),
+    package_data={'': ['vendors/*py', 'integrations/*py']},
     exclude_package_data={'': ['__pycache__']},
     version='0.0.2',
     description='Library for Flexible network automation with Python',

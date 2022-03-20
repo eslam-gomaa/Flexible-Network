@@ -1,6 +1,6 @@
 import argparse
 from asyncio import tasks
-from Flexible_Network import ReadCliOptions
+from FlexibleNetwork.Flexible_Network import ReadCliOptions
 import sys
 # from flexible_network.read_cli_options import ReadCliOptions
 

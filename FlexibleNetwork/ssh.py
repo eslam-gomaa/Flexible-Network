@@ -1,10 +1,10 @@
-from flexible_network.ssh_authentication import SSH_Authentication
+from FlexibleNetwork.ssh_authentication import SSH_Authentication
 import time
 from tabulate import tabulate
 import textwrap
 import re
 import socket
-from flexible_network.vendors.cisco import Cisco
+from FlexibleNetwork.vendors.cisco import Cisco
 
 
 class SSH_connection():

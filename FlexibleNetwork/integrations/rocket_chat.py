@@ -2,7 +2,7 @@
 from requests import sessions
 from rocketchat_API.rocketchat import RocketChat # https://github.com/jadolg/rocketchat_API
  
-from Flexible_Network import Config
+from FlexibleNetwork.Flexible_Network import Config
 # from flexible_network.read_config import Config
 
 

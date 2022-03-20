@@ -1,15 +1,15 @@
 from distutils.command.config import config
-from flexible_network.Vendors import Cisco
-from Flexible_Network import ReadCliOptions
-from Flexible_Network import CLI
-from Flexible_Network import Config
-from Flexible_Network import Inventory
-from Flexible_Network import SSH_connection
-from Integrations import RocketChat_API
+from FlexibleNetwork.Vendors import Cisco
+from FlexibleNetwork.Flexible_Network import ReadCliOptions
+from FlexibleNetwork.Flexible_Network import CLI
+from FlexibleNetwork.Flexible_Network import Config
+from FlexibleNetwork.Flexible_Network import Inventory
+from FlexibleNetwork.Flexible_Network import SSH_connection
+from FlexibleNetwork.Integrations import RocketChat_API
 from tabulate import tabulate
 import uuid
-from Flexible_Network import TinyDB_db
-from Flexible_Network import Bcolors
+from FlexibleNetwork.Flexible_Network import TinyDB_db
+from FlexibleNetwork.Flexible_Network import Bcolors
 import json
 from pygments import highlight, lexers, formatters
 from datetime import datetime
