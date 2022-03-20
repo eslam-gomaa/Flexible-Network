@@ -35,42 +35,50 @@ class CLI:
 
         # If --name & --task & --backup are specified
         if (results.backup) and (results.task) and (results.name):
-            print("Print Help")
-            print("\t\t\t* * *\n")
+            print("> You can NOT specify --name with --task or --backup")
+            print("\n\t\t\t* * *\n")
             print(parser.print_help(sys.stderr))
             exit(1)
         # If --name & (--task OR --backup) are specified
         elif (results.backup or results.task) and (results.name):
-            print("create new or perform operation on done ones")
+            print("> You can NOT specify --name with --task or --backup")
             print("\t\t\t* * *\n")
             print(parser.print_help(sys.stderr))
             exit(1)
         # If --task and --backup are specified
         elif (results.backup) and (results.task):
-            print("you can NOT specify --task & --backup together\n")
+            print("> You can NOT specify --task & --backup together\n")
             print("\t\t\t* * *\n")
             print(parser.print_help(sys.stderr))
             exit(1)
         
         # If nothting from the main options are specified
         # Should add validate_integration as well as a main option.
-        elif (not results.backup and not results.task and not results.name):
-            print("choose one of 3 options")
-            print("\t\t\t* * *\n")
+        elif (not results.backup and not results.task and not results.name and not results.validate_integration):
+            print("> Supported options:")
+            print("  --name                     Run a new task")
+            print("  --task                     List tasks or get task log")
+            print("  --backup                   List backups or get a backup")
+            print("  --validate-integration     Validate the integrations with external apis")
+            print("\n\t\t\t* * *\n")
             print(parser.print_help(sys.stderr))
             exit(1)
 
         # If only --task is specified
         elif (results.task) and not (results.list or results.get_log):
-            print("u have 2 options -> list // get_log\n")
-            print("\t\t\t* * *\n")
+            print("> Supported options:")
+            print("  --list                     List all tasks")
+            print("  --get-log                  Return the log of a task")
+            print("\n\t\t\t* * *\n")
             print(parser.print_help(sys.stderr))
             exit(1)
 
         # If only --backup is specified
         elif (results.backup) and not (results.list or results.get_backup):
-            print("u have 2 options -> list // get_backup\n")
-            print("\t\t\t* * *\n")
+            print("> Supported options:")
+            print("  --list                     List all tasks")
+            print("  --get-backup               Return the log of a task")
+            print("\n\t\t\t* * *\n")
             print(parser.print_help(sys.stderr))
             exit(1)
 
