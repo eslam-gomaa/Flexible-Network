@@ -80,6 +80,9 @@ class TinyDB_db:
         except IndexError:
             print("Error -- Could NOT find the task log >> Invalid task ID")
             exit(1)
+        if log_file is None:
+            print("> This is an empty task >> N of authenticated devices is 0")
+            exit(0)
         if not os.path.isfile(log_file):
             print(f"ERROR -- Could NOT find log file [ {log_file} ]")
             exit(1)

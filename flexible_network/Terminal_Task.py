@@ -75,6 +75,7 @@ class Terminal_Task:
                                    'comment': 'to be done >> as a cli option.',
                                    'n_of_backups': 0, 
                                    'backups_ids': [],
+                                   'log_file': None,
                                    'date': date, 
                                    'time': time,
                                    'full_devices_n': 0,
