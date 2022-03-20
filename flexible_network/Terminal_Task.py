@@ -42,11 +42,9 @@ class Terminal_Task:
 
         if ReadCliOptions.get_log is not None:
             print(self.db.get_task_log(ReadCliOptions.get_log))
-            exit(0)
 
         if ReadCliOptions.get_backup is not None:
             print(self.db.return_backup(ReadCliOptions.get_backup))
-            exit(0)
 
 
 
@@ -63,7 +61,6 @@ class Terminal_Task:
         # Gernate the task id
         self.task_id = str(uuid.uuid4())
         self.log_file = self.log_and_backup_dir + '/' + self.task_id + '.txt'
-        print(self.log_file)
         # Get the task name
         self.task_name = str(ReadCliOptions.task_name)
         # By default do NOT log the output,
