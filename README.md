@@ -22,7 +22,7 @@ This is a Refactored Version of [Flexible_Network  ((Proof of concept))  ](https
 
 <br>
 
-Before reading the features you need to know that the network devices are dump, they don't detect errors (Just return outputs despite if it has and error or not), which limits the flexibility when using Python to automate them.
+Before reading the features you need to know that the network devices are "dump", they don't detect errors (Just return outputs despite if it has an error or not), which limits the flexibility when using Python to automate them.
 
 
 # Features
