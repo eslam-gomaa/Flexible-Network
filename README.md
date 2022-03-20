@@ -24,7 +24,7 @@ Our collaboration page: https://flexible-network.devops-caffe.com
 
 # Features
 * Ability to detect errors when executing commands on network devices
-* When executing commands you get a `dict` of output similar to what you get when executing commands on Linux machines [check the `exec` method](#execute)
+* When executing commands you get a `dict` of output similar to what you get when executing commands on Linux machines [check the `execute` method](#execute)
    * Which gives you the power to use ***Python conditionals*** when automating network devices. 
 * *To be documented ...*
 
