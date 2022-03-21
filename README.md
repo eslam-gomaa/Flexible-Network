@@ -627,7 +627,7 @@ rocket_msg = rocket.send_message(['eslam.gomaa'], "``` {} ```".format(report))
 
   This integration allows you to send messages 
 
-  ## Configuration section
+  #### Configuration section
 
   ```ini
   [rocket_chat]
@@ -636,14 +636,14 @@ rocket_msg = rocket.send_message(['eslam.gomaa'], "``` {} ```".format(report))
    password = ******
   ```
 
-  ## Usage
+  ##### Usage
 
   ```python
   from FlexibleNetwork.Integrations import RocketChat_API
   rocket = RocketChat_API()
   ```
 
-  ## Methods
+  #### Methods
 
   * rocket.send_message()
   * _More to be documented_
