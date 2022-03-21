@@ -560,15 +560,10 @@ rocket_msg = rocket.send_message(['eslam.gomaa'], "``` {} ```".format(report))
 
 <br>
 <br>
-<br>
-<br>
-<br>
 
 
 ---
 
-<br>
-<br>
 <br>
 <br>
 
@@ -601,9 +596,12 @@ rocket_msg = rocket.send_message(['eslam.gomaa'], "``` {} ```".format(report))
       <b style="font-size:18px"> <code>How Ansible works for Network Automation.</code></b>
       </summary>
       <br>
-      Yes, Ansible is idempotent with network automation, ***How does it work:***
-      * Ansible uses modules, each vendor has different modules
-      * At the begining of the automation task, Ansible gathers the running config of each device and parse, Hence when you tell it to create a VLAN for example, it first takes a look at the configuration it parsed before, and if the vlan does not exist, will create it.
+   Yes, Ansible is idempotent with network automation
+
+   > ***How does it work:***
+      
+   * Ansible uses modules, each vendor has different modules
+   * At the begining of the automation task, Ansible gathers the running config of each device and parse, Hence when you tell it to create a VLAN for example, it first takes a look at the configuration it parsed before, and if the vlan does not exist, will create it.
       
    <br>
    <hr>
@@ -629,3 +627,5 @@ rocket_msg = rocket.send_message(['eslam.gomaa'], "``` {} ```".format(report))
 </details>
 
 
+<br>
+<br>
