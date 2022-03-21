@@ -592,7 +592,35 @@ rocket_msg = rocket.send_message(['eslam.gomaa'], "``` {} ```".format(report))
   <b style="font-size:20px"> <code>Why to use this project while we can use Ansible for Network automation ?</code></b>
   </summary>
   <br>
-  To be added.
+
+  Ansible & Python have different ways for doing network automation
+
+  <a id=flexible-network-vs-ansible></a>
+   <details>
+      <summary> 
+      <b style="font-size:18px"> <code>How Ansible works for Network Automation.</code></b>
+      </summary>
+      <br>
+      Yes, Ansible is idempotent with network automation, ***How does it work:***
+      * Ansible uses modules, each vendor has different modules
+      * At the begining of the automation task, Ansible gathers the running config of each device and parse, Hence when you tell it to create a VLAN for example, it first takes a look at the configuration it parsed before, and if the vlan does not exist, will create it.
+      * 
+      </details>
+
+
+  But despite the different modules & features that ansible provides, many network engineers still prefer to use regular network commands for automation, and In fact Python is used extensively for network automation, **But the problem here** is that we can NOT easily achieve idempotency because network devices are DUMP!
+
+  <br>
+
+  And that's where the [Flexible-Network](https://github.com/eslam-gomaa/Flexible-Network#features) Project come into play.
+
+  The most basic feature that our project gives you is the ability to deal with network devices the same way you used to deal with Linux machines  <sup>[1. Featues](https://github.com/eslam-gomaa/Flexible-Network#features)</sup>    <sup>[2. execute()](https://github.com/eslam-gomaa/Flexible-Network#execute)</sup>
+
+   And that is not the only feature
+
+  <br>
+
+  **In short** Flexible-Network](https://github.com/eslam-gomaa/Flexible-Network#features) == (simplicity + flexibility) + The Power of Python!
 
 </details>
 
