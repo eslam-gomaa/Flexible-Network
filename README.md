@@ -338,8 +338,43 @@ task.devices_dct
 ### get backups
 
 
+<a id=--backup></a>
+<details>
+  <summary> 
+  <b style="font-size:20px"> <code>--backup</code></b>
+  </summary>
+  <br>
+  Perform operations on taken configuration backups
+  
+  > *Optional*
 
+</details>
 
+<a id=--list-backup></a>
+<details>
+  <summary> 
+  <b style="font-size:20px"> <code>--list</code></b>
+  </summary>
+  <br>
+  List the taken configuration backups
+  
+  > *Optional*
+
+</details>
+
+<a id=--get-backup></a>
+<details>
+  <summary> 
+  <b style="font-size:20px"> <code>--get-backup</code></b>
+  </summary>
+  <br>
+  Return the configuration backup for the selected device
+
+  Takes the `backup ID`
+  
+  > *Optional*
+
+</details>
 
 
 
