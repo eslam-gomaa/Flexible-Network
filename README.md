@@ -28,12 +28,17 @@ Before reading the features you need to know that the network devices are "dump"
 # Features
 
 * Ability to detect errors when executing commands on network devices
-* When executing commands you get a `dict` of output similar to what you get when executing commands on Linux machines [check the `execute` method](#execute)
+   * When executing commands you get a `dict` of output similar to what you get when executing commands on Linux machines [check the `execute` method](#execute)
    * Which gives you the power to use ***Python conditionals*** when automating network devices. 
-* *To be documented ...*
 
 ![image](https://user-images.githubusercontent.com/33789516/159186029-8f377b31-f839-40b6-96f6-33a6a42d5317.png)
 
+* Multi-Vendor
+   * Use unified way to automate different types of devices from different vendors
+
+* Backup config, with different storage options including `S3` [ Check the list of supported backup storage (_to be documented_) ]
+
+* Integrations with different external APIs that gives more flexibility & efficiency to your scripts  [ Check the list of supported integrations (_to be documented_) ]
 
 
 <br>
@@ -51,25 +56,43 @@ Before reading the features you need to know that the network devices are "dump"
 pip3.6 install FlexibleNetwork
 ```
 
+```bash
+mkdir /etc/flexible_network
+
+# Download a sample hosts file
+wget -O /etc/flexible_network/hosts https://raw.githubusercontent.com/eslam-gomaa/Flexible-Network/develop/user/hosts
+
+# Download a sample config file
+wget -O /etc/flexible_network/flexible_network.cfg https://raw.githubusercontent.com/eslam-gomaa/Flexible-Network/develop/user/flexible_network.cfg
+```
+
 <br>
 
-#### Build from source
+<a id=--build-from-source></a>
+<details>
+  <summary> 
+  <b style="font-size:23px"> <code>Build from source</code></b>
+  </summary>
+  <br>
 
-```bash 
-git clone https://github.com/eslam-gomaa/Flexible-Network.git
-cd Flexible-Network
+   _Unit testing [ Ignore it for now ]_
+   ```bash
+   # Do NOT use it, deprecated  (Will be updated)
+   export PYTHONPATH=Flexible_Network/
+   python3.6 -m pytest tests/  -v
+   ```
 
-python3.6 setup.py bdist_wheel
-pip3.6 install dist/FlexibleNetwork-*.whl
-```
+   ```bash 
+   git clone https://github.com/eslam-gomaa/Flexible-Network.git
+   cd Flexible-Network
+
+   python3.6 setup.py bdist_wheel
+   pip3.6 install dist/FlexibleNetwork-*.whl
+   ```
+</details>
 
 
-_Unit testing [ Ignore it for now ]_
-```bash
-# Do NOT use it, deprecated  (Will be updated)
-export PYTHONPATH=Flexible_Network/
-python3.6 -m pytest tests/  -v
-```
+
 
 <br>
 
