@@ -40,6 +40,9 @@ Before reading the features you need to know that the network devices are "dump"
 
 * Integrations with different external APIs that gives more flexibility & efficiency to your scripts  [ Check the list of supported integrations (_to be documented_) ]
 
+![image](https://user-images.githubusercontent.com/33789516/159332643-4f4b6108-91a4-4fee-be13-5586c3ad0bfa.png)
+
+
 
 <br>
 
