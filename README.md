@@ -96,7 +96,7 @@ This project uses SSH to connect to the devices
 
 So in simple words, it opens the ssh connection with ALL the selected devices before start executing commands.
 
-And that is actually gives us more flexibility from the development perspective, besides *it's much better to be notified if you're NOT able to connect to some devices before starting the automation task* rather than being told at the end of task.
+And that actually gives us more flexibility from the development perspective, besides *it's much better to be notified if you're NOT able to connect to some devices before starting the automation task* rather than being told at the end of task.
 
 
 ![image](https://user-images.githubusercontent.com/33789516/159185347-bbee6112-39e8-4818-93a3-9cea1946fcd1.png)
@@ -129,6 +129,9 @@ python <your-script.py> -h
 
 ### Cli Options
 
+<br>
+
+#### Run a task
 
 <a id=--name></a>
 <details>
@@ -285,6 +288,54 @@ task.devices_dct
 </details>
 
 
+<br>
+
+#### get tasks
+
+<a id=--task></a>
+<details>
+  <summary> 
+  <b style="font-size:20px"> <code>--task</code></b>
+  </summary>
+  <br>
+  Perform operations on finished tasks
+  
+  > *Optional*
+
+</details>
+
+<a id=--list></a>
+<details>
+  <summary> 
+  <b style="font-size:20px"> <code>--list</code></b>
+  </summary>
+  <br>
+  List the finished tasks
+  
+  > *Optional*
+
+</details>
+
+
+<a id=--get-log></a>
+<details>
+  <summary> 
+  <b style="font-size:20px"> <code>--get-log</code></b>
+  </summary>
+  <br>
+  Return the log of the task
+
+  Takes the `task ID`
+  
+  > *Optional*
+
+</details>
+
+---
+
+<br>
+
+### get backups
 
 
 
