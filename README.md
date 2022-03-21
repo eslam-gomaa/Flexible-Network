@@ -622,7 +622,7 @@ rocket_msg = rocket.send_message(['eslam.gomaa'], "``` {} ```".format(report))
 
   <br>
 
-  **In short** Flexible-Network](https://github.com/eslam-gomaa/Flexible-Network#features) == (simplicity + flexibility) + The Power of Python!
+  ***In short*** [Flexible-Network](https://github.com/eslam-gomaa/Flexible-Network#features) `=>` (simplicity + flexibility) + The Power of Python!
 
 </details>
 
