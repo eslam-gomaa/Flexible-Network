@@ -149,15 +149,15 @@ touch my-network-script.py
 
 <br>
 
-2. import the `Terminal_Task` class from the `FlexibleNetwork` library & and instanciate an instance of the class
+2. import the `Terminal_Task` class from the `FlexibleNetwork` library & and instantiate an instance of the class
 
 > open your script
 
 ```python
 from FlexibleNetwork.Flexible_Network import Terminal_Task
 
-# Instance an instance of the class 
-## that represents creating a new class
+# Instantiate an instance of the class 
+## that represents a new task in the DB
 task = Terminal_Task()
 
 ## Start using the available methods ..
@@ -168,6 +168,10 @@ task = Terminal_Task()
 ```bash
 python my-network-script.py -h
 ```
+
+<br>
+
+_From here, you can take a look at_ the complete examples ( _To be documented_ )
 
 <br>
 
