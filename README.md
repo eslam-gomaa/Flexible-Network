@@ -458,6 +458,29 @@ task.devices_dct
 from Flexible_Network import Terminal_Task
 ```
 
+<a id=authenticate></a>
+<details>
+  <summary> 
+  <b style="font-size:20px"> <code>authenticate</code></b>
+  </summary>
+  <br>
+   Authenticate with an inventory group
+
+  ***Note:*** You can access the inventory through the `inventory_groups` attribute.
+  > **`inventory_groups`** is a dictionary where its keys are the inventory groups
+
+  Example on authenticating with the `all` group which contains all the hosts from all the groups
+  ```python
+  task.authenticate(hosts=task.inventory_groups['all'], user='orange', password='cisco', port='1113')
+  ```
+
+  * The `authentication` method will update the `devices_dct` & `connected_devices_dct` attributes
+    * `devices_dct` `->` A dictionary, contains all the hosts of the authenticated group including the ones that failed to authenticate [ each key is the host IP & the value is the host info ]
+    * `connected_devices_dct` -> the same as `devices_dct` but only contains the authenticated hosts.
+
+
+</details>
+
 
 <a id=execute></a>
 <details>
@@ -466,6 +489,7 @@ from Flexible_Network import Terminal_Task
   </summary>
   Execute a command on a remote device.
 
+  
 <br>
 <br>
 
