@@ -164,23 +164,6 @@ python <your-script.py> -h
 </details>
 
 
-<a id=--validate-integration></a>
-<details>
-  <summary> 
-  <b style="font-size:20px"> <code>--validate-integration</code></b>
-  </summary>
-  <br>
-   Validate the communication with any of the supported API Integrations eg. test to authenticate (And validate permissions if needed).
-   
-   > *Optional*
-
-   * ***Supported Options***'
-        * `cyberArk`
-        * `rocketChat`
-        * more *to be added soon*.
-</details>
-
-
 <a id=--authenticate-group></a>
 <details>
   <summary> 
@@ -331,7 +314,6 @@ task.devices_dct
 
 </details>
 
----
 
 <br>
 
@@ -377,8 +359,27 @@ task.devices_dct
 </details>
 
 
+<br>
+
+### Validate the integration with the external APIs
 
 
+<a id=--validate-integration></a>
+<details>
+  <summary> 
+  <b style="font-size:20px"> <code>--validate-integration</code></b>
+  </summary>
+  <br>
+   Validate the communication with any of the supported API Integrations eg. test to authenticate (And validate permissions if needed).
+   
+   > *Optional*
+
+   * ***Supported Options***'
+        * `cyberArk`
+        * `rocketChat`
+        * `s3`
+        * *more to be added soon*.
+</details>
 
 
 
