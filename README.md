@@ -34,7 +34,7 @@ Before reading the features you need to know that the network devices are "dump"
 ![image](https://user-images.githubusercontent.com/33789516/159186029-8f377b31-f839-40b6-96f6-33a6a42d5317.png)
 
 * Multi-Vendor
-   * Use unified way to automate different types of devices from different vendors
+   * Use a unified way to automate different types of devices from different vendors [ Check the list of supported vendors (_to be documented_) ]
 
 * Backup config, with different storage options including `S3` [ Check the list of supported backup storage (_to be documented_) ]
 
@@ -137,8 +137,36 @@ And that actually gives us more flexibility from the development perspective, be
 # Usage
 <a id=_usage></a>
 
+1. Create a new directory with a new Python script in it.
+
+> The directory contains your python script is the project directory
+
 ```bash
-python <your-script.py> -h
+mkdir sample-dir
+cd sample-dir
+touch my-network-script.py
+```
+
+<br>
+
+2. import the `Terminal_Task` class from the `FlexibleNetwork` library & and instanciate an instance of the class
+
+> open your script
+
+```python
+from FlexibleNetwork.Flexible_Network import Terminal_Task
+
+# Instance an instance of the class 
+## that represents creating a new class
+task = Terminal_Task()
+
+## Start using the available methods ..
+```
+
+3. Use the CLI to run the task ( Or list tasks/backups etc... )
+
+```bash
+python my-network-script.py -h
 ```
 
 <br>
