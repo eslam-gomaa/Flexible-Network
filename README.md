@@ -125,12 +125,20 @@ And that actually gives us more flexibility from the development perspective, be
 ![image](https://user-images.githubusercontent.com/33789516/159185347-bbee6112-39e8-4818-93a3-9cea1946fcd1.png)
 
 
-
-
-
 <br>
 
+### 2. Database
+
+This project uses [TinyDB](https://github.com/msiemens/tinydb) as a local database
+
+This version of Flexible-Network is designed to be used as a Python library / cli tool [ And we didn't want to have any external depedency for it. ] that's why we decided to have a local db per Project directory
+
+* Each project directory has a `.db` directory which stores `database json file`, `tasks logs` and local backups
+
+
+
 ---
+
 
 <br>
 
