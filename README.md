@@ -620,7 +620,7 @@ rocket_msg = rocket.send_message(['eslam.gomaa'], "``` {} ```".format(report))
 <a id=rocketchat></a>
 <details>
   <summary> 
-  <b style="font-size:20px"> <code>RocketChat</code></b>
+  <b style="font-size:25px"> <code>RocketChat</code></b>
   </summary>
   <br>
   https://rocket.chat
