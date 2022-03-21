@@ -317,7 +317,7 @@ task.devices_dct
 
 <br>
 
-### get backups
+#### get backups
 
 
 <a id=--backup></a>
@@ -565,5 +565,35 @@ rocket_msg = rocket.send_message(['eslam.gomaa'], "``` {} ```".format(report))
 <br>
 
 
+---
+
+<br>
+<br>
+<br>
+<br>
+
+
+### FAQs
+
+<a id=faqs-execution-time></a>
+<details>
+  <summary> 
+  <b style="font-size:20px"> <code>Why the execution time of a command takes around 0.4 ms at a minimum ?</code></b>
+  </summary>
+  <br>
+   It takes much less than that, But we wait for a half a second before getting the result of a command from a device so that we're sure that we got the full output of the command
+
+</details>
+
+
+<a id=flexible-network-vs-ansible></a>
+<details>
+  <summary> 
+  <b style="font-size:20px"> <code>Why to use this project while we can use Ansible for Network automation ?</code></b>
+  </summary>
+  <br>
+  To be added.
+
+</details>
 
 
