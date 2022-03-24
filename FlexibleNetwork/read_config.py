@@ -30,24 +30,23 @@ class Config():
             info['default_inventory'] = config.get(section_name, 'default_inventory').strip('"')
             return info
         except configparser.NoOptionError as e:
-            print("ERROR -- Accessing the section '{}'\n> {}".format(section_name, e))
-            exit(1)
-            # raise ValueError("ERROR -- Accessing the section '{}'".format(section_name))
+            raise SystemExit("ERROR -- Accessing the section '{}'\n> {}".format(section_name, e))
 
-    def section_vault(self, section_name='vault'):
+    def section_cyberark(self, section_name='cyberark'):
         try:
             config = configparser.ConfigParser(comment_prefixes=('#',';'), inline_comment_prefixes=('#',';'))
             config.read(self.configuration_file)
             # section = dict(config.items(section_name))
             info = {}
             info['url'] = config.get(section_name, 'url').strip('"')
-            info['token'] = config.get(section_name, 'token').strip('"')
-            info['engine'] = config.get(section_name, 'engine').strip('"')
+            info['username'] = config.get(section_name, 'username').strip('"')
+            info['password'] = config.get(section_name, 'password').strip('"')
+            info['verify_ssl'] = config.get(section_name, 'verify_ssl').strip('"')
+            info['concurrent_session'] = config.get(section_name, 'concurrent_session').strip('"')
+            info['authentication_method'] = config.get(section_name, 'authentication_method').strip('"')
             return info
         except configparser.NoOptionError as e:
-            print("ERROR -- Accessing the section '{}'\n> {}".format(section_name, e))
-            exit(1)
-            # raise ValueError("ERROR -- Accessing the section '{}'".format(section_name))
+            raise SystemExit("ERROR -- Accessing the section '{}'\n> {}".format(section_name, e))
 
     def section_rocket_chat(self, section_name='rocket_chat'):
         try:
@@ -60,10 +59,7 @@ class Config():
             info['password'] = config.get(section_name, 'password').strip('"')
             return info
         except configparser.NoOptionError as e:
-            print("ERROR -- Accessing the section '{}'\n> {}".format(section_name, e))
-            exit(1)
-            # raise ValueError("ERROR -- Accessing the section '{}'".format(section_name))
-
+            raise SystemExit("ERROR -- Accessing the section '{}'\n> {}".format(section_name, e))
 
     def section_s3(self, section_name='s3'):
         try:
@@ -77,9 +73,7 @@ class Config():
             info['bucket'] = config.get(section_name, 'bucket').strip('"')
             return info
         except configparser.NoOptionError as e:
-            print("ERROR -- Accessing the section '{}'\n> {}".format(section_name, e))
-            exit(1)
-            # raise ValueError("ERROR -- Accessing the section '{}'".format(section_name))
+            raise SystemExit("ERROR -- Accessing the section '{}'\n> {}".format(section_name, e))
 
     
 
