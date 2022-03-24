@@ -1,10 +1,13 @@
 from FlexibleNetwork.Flexible_Network import Terminal_Task
 from FlexibleNetwork.Integrations import RocketChat_API
+from FlexibleNetwork.Integrations import Cyberark_APIs_v2
 
 
 task = Terminal_Task()
 rocket = RocketChat_API()
+cyberark = Cyberark_APIs_v2()
 
+print(cyberark.search_accounts(search='egomaa'))
 
 ##  1  ## Authenticate
 # task.authenticate(hosts=task.inventory_groups['all'], user='orange', password='cisco', port='1113')

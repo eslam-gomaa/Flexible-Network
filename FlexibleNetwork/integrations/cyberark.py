@@ -15,8 +15,8 @@ class Cyberark_APIs_v2:
         Authenticate with the Cyberark server
         """
         config = Config()
-        config_data = config.section_rocket_chat()
-        self.cyberark_url = ''
+        config_data = config.section_cyberark()
+        self.cyberark_url = config_data['url']
         self.concurrent_session = bool(config_data['concurrent_session'])
         self.username = config_data['username']
         self.password = config_data['password']
@@ -49,7 +49,8 @@ class Cyberark_APIs_v2:
                 print(f"Cyberark Authentication Failed \n> {req.text}")
                 raise SystemExit(f"ERROR -- Failed Request to {url} , {req.status_code} , {req.reason})")
         except requests.exceptions.RequestException as e:
-            raise SystemExit(e)
+            print(f"ERROR -- Cyberark Authentication Failed \n")
+            raise SystemExit(f"> {e}")
 
     def logoff(self):
         """
