@@ -7,3 +7,4 @@ tabulate
 tabulate[widechars]
 tinydb
 pygments
+boto3
