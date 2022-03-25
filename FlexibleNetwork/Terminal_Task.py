@@ -1,4 +1,4 @@
-from distutils.command.config import config
+# from distutils.command.config import config
 from FlexibleNetwork.Vendors import Cisco
 from FlexibleNetwork.Flexible_Network import ReadCliOptions
 from FlexibleNetwork.Flexible_Network import CLI
@@ -17,6 +17,8 @@ import random
 from pathlib import Path
 import time
 import os
+import re
+
 
 
 class Terminal_Task:
@@ -288,7 +290,6 @@ The command exited with exit_code of {result['exit_code']}
             # Clean the backup output [ Remove the backup commands ]
             backup_output = '\n'.join(result['stdout'])
             for c in self.vendor.backup_command.split("\n"):
-                import re
                 backup_output = backup_output.replace(c.lstrip().strip(), '')
                 backup_output = backup_output.strip()
 
