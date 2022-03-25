@@ -3,29 +3,36 @@ import botocore
 import urllib3
 import socket
 import os
+from FlexibleNetwork.Flexible_Network import Config
+
 
 class S3_APIs:
 
     def __init__(self):
-        # Read from the configuration file
-        self.access_key = ''
-        self.secret_key = ''
-        self.region = ''
-        self.endpoint = ''
         self.s3_client = None
 
 
     def authenticate(self):
+        # Read from the configuration file
+        config = Config()
+        config_data = config.section_s3()
+        try:
+            self.access_key = config_data["ak"]
+            self.secret_key = config_data["sk"]
+            self.region = config_data["region"]
+            self.endpoint = config_data["endpoint"]
+        except KeyError as e:
+            raise SystemExit(f"{e} parameter is missing from {config.configuration_file} >> Expected to be found in the [s3] section")
         self.s3_client = boto3.client(
-            service_name='s3',
-            aws_access_key_id = self.access_key,
-            aws_secret_access_key = self.secret_key,
-            endpoint_url = self.endpoint,
-            region_name = self.region,
-            # The next option is only required because my provider only offers "version 2"
-            # authentication protocol. Otherwise this would be 's3v4' (the default, version 4).
-            # config=botocore.client.Config(signature_version='s3'),
-            )
+        service_name='s3',
+        aws_access_key_id = self.access_key,
+        aws_secret_access_key = self.secret_key,
+        endpoint_url = self.endpoint,
+        region_name = self.region,
+        # The next option is only required because my provider only offers "version 2"
+        # authentication protocol. Otherwise this would be 's3v4' (the default, version 4).
+        # config=botocore.client.Config(signature_version='s3'),
+        )
 
         # Trying to list buckest to Validate credentials
         try:

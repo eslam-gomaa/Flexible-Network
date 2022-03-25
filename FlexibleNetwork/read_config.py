@@ -67,10 +67,12 @@ class Config():
             config.read(self.configuration_file)
             # section = dict(config.items(section_name))
             info = {}
-            info['url'] = config.get(section_name, 'url').strip('"')
+            info['endpoint'] = config.get(section_name, 'endpoint').strip('"')
             info['ak'] = config.get(section_name, 'ak').strip('"')
             info['sk'] = config.get(section_name, 'sk').strip('"')
+            info['region'] = config.get(section_name, 'region').strip('"')
             info['bucket'] = config.get(section_name, 'bucket').strip('"')
+            info['create_bucket'] = config.get(section_name, 'create_bucket').strip('"')
             return info
         except configparser.NoOptionError as e:
             raise SystemExit("ERROR -- Accessing the section '{}'\n> {}".format(section_name, e))
