@@ -189,17 +189,19 @@ class Terminal_Task:
     def execute(self, host_dct, cmd, terminal_print='default', ask_for_confirmation=False, exit_on_fail=True):
         """
         - Excutes a command on a remove network device
-        - Returns a dictionary:
-        {
-            "stdout": "The output of the command",
-            "stderr": "The error (Syntax error are detected.)",
-            "exit_code":  0 --> the command run successfully,  1 --> an error occurred
-        }
-        - Options:
-            - terminal_print: print the ouput || error to the terminal
-            - ask_for_confirmation: ask for confirmation before executing a command, default: False
-            - exit_on_fail: exit the script with code 1 if the command executed with errors  default: True
+        INPUT:
+            1. host_dct -> (dct) The host dictionary,  is key of the  `connected_devices_dct` attribute  (And contains information about the device including the `ssh channel` to use for the command execution )
+            2. cmd -> (string) The command to run on the remote device
+            3. terminal_print -> (string) Print the ouput || error to the terminal, options: ['default', 'json'], default: 'default'
+            4. ask_for_confirmation ->  (bool) Ask for confirmation before executing a command, default: False
+            5. exit_on_fail ->  (bool) exit the script with code 1 if the command executed with errors  default: True
+        OUTPUT: (dictionary)
+            - "stdout":    (list) "The output of the command",
+            - "stderr":    (list) "The error (Syntax error are detected.)",
+            - "exit_code": (int) 0 --> the command run successfully,  1 --> an error occurred
+        - does NOT print to the terminal
         """
+        
         date_time = datetime.today().strftime('%d-%m-%Y_%H-%M-%S')
         start_time = time.time()
         if ask_for_confirmation:
@@ -252,12 +254,13 @@ The command exited with exit_code of {result['exit_code']}
     def execute_raw(self, host_dct, cmd):
         """
         - Excutes a command on a remove network device
-        - Returns a dictionary:
-        {
-            "stdout": "The output of the command",
-            "stderr": "The error (Syntax error are detected.)",
-            "exit_code":  0 --> the command run successfully,  1 --> an error occurred
-        }
+        INPUT:
+            1. host_dct -> The host dictionary,  is key of the  `connected_devices_dct` attribute  (And contains information about the device including the `ssh channel` to use for the command execution )
+            2. cmd -> The command to run on the remote device
+        OUTPUT: (dictionary)
+            - "stdout":    (list) "The output of the command",
+            - "stderr":    (list) "The error (Syntax error are detected.)",
+            - "exit_code": (int) 0 --> the command run successfully,  1 --> an error occurred
         - does NOT print to the terminal
         """
         result = self.ssh.exec(host_dct['channel'], cmd)
