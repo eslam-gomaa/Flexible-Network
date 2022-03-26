@@ -539,7 +539,10 @@ from Flexible_Network import Terminal_Task
   <summary> 
   <b style="font-size:20px"> <code>execute_raw()</code></b>
   </summary>
+
   Execute a command on a remote device.
+
+   <br>
 
   > **Note:** This method does not print to the terminal.
   
@@ -562,7 +565,7 @@ from Flexible_Network import Terminal_Task
 | ----------- | ------ | ------------------------------------------------------------ |
 | `stdout`    | List   | List of lines [ The output of the command ( If any ) ]           |
 | `stderr`    | List   | List of lines [ The error of the command ( If any ) ]                  |
-| `exit_code` | Int    | - `0` The command executed successfully<br />- `1` The command executed with an error <br />- `-1` If the ssh channel was interrupted while excution. 
+| `exit_code` | Int    | - `0` The command executed successfully<br />- `1` The command executed with an error <br />- `-1` If the ssh channel was interrupted during excution. 
 
 
 
@@ -641,7 +644,10 @@ Sample of an unsuccessfull command ( Connection closed before or during the exec
   <summary> 
   <b style="font-size:20px"> <code>execute()</code></b>
   </summary>
+
   Execute a command on a remote device.
+
+   <br>
 
   > **Note:** This method prints the output to the terminal.
    
@@ -670,7 +676,7 @@ Sample of an unsuccessfull command ( Connection closed before or during the exec
    | ----------- | ------ | ------------------------------------------------------------ |
    | `stdout`    | List   | List of lines [ The output of the command ( If any ) ]           |
    | `stderr`    | List   | List of lines [ The error of the command ( If any ) ]                  |
-   | `exit_code` | Int    | - `0` The command executed successfully<br />- `1` The command executed with an error <br />- `-1` If the ssh channel was interrupted while excution. 
+   | `exit_code` | Int    | - `0` The command executed successfully<br />- `1` The command executed with an error <br />- `-1` If the ssh channel was interrupted during excution. 
 
 ### Sample Output
 
