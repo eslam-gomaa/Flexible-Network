@@ -4,6 +4,7 @@ from tabulate import tabulate
 import os
 from pathlib import Path
 import textwrap
+from FlexibleNetwork.Integrations import S3_APIs
 
 
 
@@ -162,6 +163,16 @@ class TinyDB_db:
                 with open(location, 'r') as file:
                     print(file.read())
                     exit(0)
+            if target == 's3':
+                # get the config from S3
+                s3 = S3_APIs()
+                get_backup_file = s3.get_object(bucket=location[0], file_name=location[1])
+                if get_backup_file['success']:
+                    print(get_backup_file['output'])
+                    # print(f"[ Bucket: {location[0]}, Key: {location[1]} ]")
+                    exit(0)
+                else:
+                    raise SystemExit(f"ERROR -- Failed to get the backup form S3 [ Bucket: {location[0]}, Key: {location[1]} ]\n> {get_backup_file['fail_reason']}")
         except IndexError:
             print("ERROR -- Could NOT find the backup >> Invalid backup ID")
             exit(1)

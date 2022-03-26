@@ -180,9 +180,9 @@ class S3_APIs:
             self.authenticate()
         try:
             obj = self.s3_client.get_object(Bucket=bucket, Key=file_name)
-        except (self.s3_client.Client.exceptions.NoSuchKey, 
-                self.s3_client.Client.exceptions.InvalidObjectState) as e:
-                return {"success": True, "fail_reason": e, 'output': ''}
+        except (self.s3_client.exceptions.NoSuchKey,
+                self.s3_client.exceptions.InvalidObjectState) as e:
+                return {"success": False, "fail_reason": e, 'output': ''}
         return {"success": True, "fail_reason": '', 'output': obj.get('Body').read().decode('utf-8')}
 
 
