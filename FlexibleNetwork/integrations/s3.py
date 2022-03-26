@@ -7,12 +7,9 @@ from FlexibleNetwork.Flexible_Network import Config
 
 
 class S3_APIs:
-
     def __init__(self):
         self.s3_client = None
-
-
-    def authenticate(self):
+        self.bucket = None
         # Read from the configuration file
         config = Config()
         config_data = config.section_s3()
@@ -20,19 +17,36 @@ class S3_APIs:
             self.access_key = config_data["ak"]
             self.secret_key = config_data["sk"]
             self.region = config_data["region"]
+            self.bucket = config_data["bucket"]
             self.endpoint = config_data["endpoint"]
+            self.endpoint = config_data["endpoint"]
+            self.create_bucket_if_does_not_exist = config_data['create_bucket']
         except KeyError as e:
             raise SystemExit(f"{e} parameter is missing from {config.configuration_file} >> Expected to be found in the [s3] section")
-        self.s3_client = boto3.client(
-        service_name='s3',
-        aws_access_key_id = self.access_key,
-        aws_secret_access_key = self.secret_key,
-        endpoint_url = self.endpoint,
-        region_name = self.region,
-        # The next option is only required because my provider only offers "version 2"
-        # authentication protocol. Otherwise this would be 's3v4' (the default, version 4).
-        # config=botocore.client.Config(signature_version='s3'),
-        )
+
+
+    def authenticate(self):
+        if self.region =='default':
+            self.s3_client = boto3.client(
+            service_name='s3',
+            aws_access_key_id = self.access_key,
+            aws_secret_access_key = self.secret_key,
+            endpoint_url = self.endpoint,
+            # The next option is only required because my provider only offers "version 2"
+            # authentication protocol. Otherwise this would be 's3v4' (the default, version 4).
+            # config=botocore.client.Config(signature_version='s3'),
+            )
+        else:
+            self.s3_client = boto3.client(
+            service_name='s3',
+            aws_access_key_id = self.access_key,
+            aws_secret_access_key = self.secret_key,
+            endpoint_url = self.endpoint,
+            region_name = self.region,
+            # The next option is only required because my provider only offers "version 2"
+            # authentication protocol. Otherwise this would be 's3v4' (the default, version 4).
+            # config=botocore.client.Config(signature_version='s3'),
+            )
 
         # Trying to list buckest to Validate credentials
         try:
@@ -74,7 +88,8 @@ class S3_APIs:
                 location = {'LocationConstraint': region}
                 self.s3_client.create_bucket(Bucket=bucket_name, CreateBucketConfiguration=location)
             return {"success": True, "fail_reason": ''}
-        except (botocore.exceptions.ClientError) as e:
+        except (botocore.exceptions.ClientError,
+                botocore.exceptions.ParamValidationError) as e:
             return {"success": False, "fail_reason": e}
 
     def delete_bucket(self, bucket_name):
@@ -90,6 +105,26 @@ class S3_APIs:
         except (botocore.exceptions.ClientError) as e:
             return {"success": False, "fail_reason": e}
         return {"success": True, "fail_reason": ''}
+
+    def bucket_exists(self, bucket_name):
+        """
+        Method to check if the bucket exists
+        INPUT:
+            1. Bucket name
+        Returns : True if the bucket exists, False otherwise
+        """
+        print(bucket_name)
+        if self.s3_client is None:
+            self.authenticate()
+        try:
+            self.s3_client.head_bucket(Bucket=bucket_name)
+        except (self.s3_client.exceptions.NoSuchBucket,
+                botocore.exceptions.ParamValidationError,
+                botocore.exceptions.ClientError) as e:
+            print(e)
+            return False
+        return True
+
 
     def create_object_from_data(self, bucket, object_name, content):
         pass
@@ -155,7 +190,7 @@ class S3_APIs:
 
 
 
-s3 = S3_APIs()
+# s3 = S3_APIs()
 # print(s3.list_buckets())
 # print(s3.delete_bucket('love-you'))
 # print(s3.upload_file('/tmp/90.84.41.239-8D30EC0137.txt', 'love-you-2', directory='sub-dir3'))

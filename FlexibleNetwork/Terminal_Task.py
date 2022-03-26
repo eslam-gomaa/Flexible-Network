@@ -6,6 +6,7 @@ from FlexibleNetwork.Flexible_Network import Config
 from FlexibleNetwork.Flexible_Network import Inventory
 from FlexibleNetwork.Flexible_Network import SSH_connection
 from FlexibleNetwork.Integrations import RocketChat_API
+from FlexibleNetwork.Integrations import S3_APIs
 from tabulate import tabulate
 import uuid
 from FlexibleNetwork.Flexible_Network import TinyDB_db
@@ -18,6 +19,7 @@ from pathlib import Path
 import time
 import os
 import re
+
 
 
 
@@ -286,6 +288,7 @@ The command exited with exit_code of {result['exit_code']}
                                    })
 
         # Start storing the backup
+        # If the backup commaned executed successfully
         if result['exit_code'] == 0:
             # Clean the backup output [ Remove the backup commands ]
             backup_output = '\n'.join(result['stdout'])
@@ -337,26 +340,62 @@ Backup ID: {self.backup_id}
                 # Updating the loaction key with the backup location
                 self.db.update_backups_table({'location': self.log_and_backup_dir + "/" + backup_file}, self.backup_id)
             if target == 's3':
+                s3 = S3_APIs()
                 # Create a temp_file and save the backup to it
                 save_backup_locally(b_dir='/tmp')
                 # Upload the backup to s3
                 #backup stored here
-                print('/tmp/' + backup_file)
+                # print('/tmp/' + backup_file)
 
-                # Remove the temp backup
-    
+                # Check if the bucket exists (the bucket specified int the config file)
+                if not s3.bucket_exists(s3.bucket):
+                    # print(s3.s3_client.get_bucket_acl(Bucket=s3.bucket))
+                    # If specified in the configuration file to create the bucket if it does NOT exist.
+                    if s3.create_bucket_if_does_not_exist:
+                        # Create the bucket
+                        if s3.region == 'default':
+                            create_bucket = s3.create_bucket(bucket_name=s3.bucket)
+                        else:
+                            create_bucket = s3.create_bucket(bucket_name=s3.bucket, region=s3.region)
+                        if not create_bucket['success']:
+                            raise SystemExit(f"ERROR -- Failed to create bucket: [ {s3.bucket} ]\n> {create_bucket['fail_reason']}")
+                        else:
+                            print(f"INFO -- Bucket [ {s3.bucket} ] created successfully")
+                    else:
+                        raise SystemExit(f"ERROR -- bucket [ {s3.bucket} ] does NOT exist.")
+
+                # upload the backup
+                upload_backup_file = s3.upload_file(bucket=s3.bucket, file_path='/tmp/' + backup_file, directory=datetime.today().strftime('%d-%m-%Y'))
+                if upload_backup_file['success']:
+                    # Remove the temp backup file
+                    os.remove('/tmp/' + backup_file)
+                    # Update the DB
+                    # For S3 targets -> location row is a list; the 0 index contains the bucket & the 1 index contains the key
+                    self.db.update_backups_table({'location': [s3.bucket, datetime.today().strftime('%d-%m-%Y') + '/' + backup_file]}, self.backup_id)
+  
+                else:
+                    print("ERROR -- Failed to backup config > [ {} ]".format(comment))
+                    # Update the DB with the fail_reason
+                    self.db.update_backups_table({'fail_reason': upload_backup_file['fail_reason']}, self.backup_id)
+                    # Remove the temp backup file
+                    os.remove('/tmp/' + backup_file)
+                    raise SystemExit(f"> Failed to upload the backup to S3 >> {upload_backup_file['fail_reason']}")
+                    
 
         # Update the backup to the task table .. Add the backup ID to the 
         self.db.append_backups_ids_tasks_table('backups_ids', self.backup_id, self.task_id)
         # Increament the backups number in the task by 1
         self.db.increment_key_tasks_table('n_of_backups', self.task_id)
+
+        ## Terminal printing ##
         print("\n@ {}".format(host_dct['host']))
         if result['exit_code'] == 0:
             print("> backup taken successfully > [ {} ]".format(comment))
             self.db.update_backups_table({'success': True}, self.backup_id)
         else:
-            print("ERROR -- Failed to backup config > [ {} ]".format(comment))
-            # self.db.update_backups_table({'success': False}, self.backup_id)
+            self.db.update_backups_table({'success': False}, self.backup_id)
             self.db.update_backups_table({'failed_reason': result['stderr']}, self.backup_id)
-            print(self.bcolors.FAIL + '\n'.join(result['stderr']) + self.bcolors.ENDC)
+
+            print("ERROR -- Failed to backup config > [ {} ]".format(comment))
+            raise SystemExit(self.bcolors.FAIL + '\n'.join(result['stderr']) + self.bcolors.ENDC)
 
