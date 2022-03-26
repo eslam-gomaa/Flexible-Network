@@ -20,16 +20,18 @@ rocket.send_message(['eslam.gomaa'], "``` {} ```".format(report))
 
 ### Test exeuting a command.
 
-cmd ='''sh vlan br716
+cmd ='''sh vlan br
 sh ip int br'''
 
 
-for host in task.connected_devices_dct:
+for host in task.connected_devices_dct: 
     host_dct = task.connected_devices_dct[host]
     
-    task.execute_raw(host_dct, 'enable\n' + 'cisco')
-    task.execute(host_dct, cmd, terminal_print='default')
-    task.execute(host_dct, cmd, terminal_print='json')
-    task.backup_config(host_dct, 'Testing with Dakhli', target='local')    
-    task.backup_config(host_dct, 'before important update', target='local')    
+    enable = task.execute_raw(host_dct, 'enable\n' + 'cisco')
+    if enable['exit_code'] == 0: 
+        task.execute(host_dct, cmd)
+        task.execute(host_dct, cmd, terminal_print='json')
+        task.backup_config(host_dct, 'Testing S3 integrations', target='s3')    
+
+print('test.1')
 
