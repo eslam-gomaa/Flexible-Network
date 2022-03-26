@@ -5,14 +5,12 @@
 #### [ Under development ]
 
 
-Dev branch
-
 <br>
 
 A Python library / tool to achieve advanced network automation scenarios with few lines of code
 * Required: Basic python knowledge
 
-This is a Refactored Version of [Flexible_Network  ((Proof of concept))  ](https://github.com/eslam-gomaa/Flexible_Network)
+A Refactored Version of [Flexible_Network  ((Proof of concept))  ](https://github.com/eslam-gomaa/Flexible_Network)
 
 **BackLog**: https://flexible-network.devops-caffe.com
 
@@ -53,12 +51,19 @@ Before reading the features you need to know that the network devices are "dump"
 
 # Install
 
+
+## Install with `pip`
+
 > **NOTE** At least Python3.6 is needed (_Dependencies constrains_)
 
 ```bash
 # Will be published soon.
 pip3.6 install FlexibleNetwork
 ```
+
+<br>
+
+> Download a sample `config file` & `inventory file`
 
 ```bash
 mkdir /etc/flexible_network
@@ -73,28 +78,27 @@ wget -O /etc/flexible_network/flexible_network.cfg https://raw.githubusercontent
 <br>
 
 <a id=--build-from-source></a>
-<details>
-  <summary> 
-  <b style="font-size:23px"> <code>Build from source</code></b>
-  </summary>
-  <br>
+## Build from source
 
-   _Unit testing [ Ignore it for now ]_
-   ```bash
-   # Do NOT use it, deprecated  (Will be updated)
-   export PYTHONPATH=Flexible_Network/
-   python3.6 -m pytest tests/  -v
+
+
+Run unit tests
+```bash
+# Do NOT use it, deprecated  (Will be updated)
+export PYTHONPATH=Flexible_Network/
+python3.6 -m pytest tests/  -v
+```
+
+Build & Install
+```bash 
+git clone https://github.com/eslam-gomaa/Flexible-Network.git
+cd Flexible-Network
+
+# Build
+python3.6 setup.py bdist_wheel
+# Install
+pip3.6 install dist/FlexibleNetwork-*.whl
    ```
-
-   ```bash 
-   git clone https://github.com/eslam-gomaa/Flexible-Network.git
-   cd Flexible-Network
-
-   python3.6 setup.py bdist_wheel
-   pip3.6 install dist/FlexibleNetwork-*.whl
-   ```
-</details>
-
 
 
 
@@ -138,6 +142,13 @@ This project uses [TinyDB](https://github.com/msiemens/tinydb) as a local databa
 This version of Flexible-Network is designed to be used as a Python library / cli tool [ And we didn't want to have any external depedency for it. ] that's why we decided to have a local db per Project directory
 
 * Each project directory has a `.db` directory which stores `database json file`, `tasks logs` and local backups
+
+
+### 3. Error Detection
+
+Describe how it works
+
+
 
 
 
@@ -194,11 +205,11 @@ _From here, you can take a look at_ the complete examples ( _To be documented_ )
 # Documentation
 
 
-### Cli Options
+## Cli Options
 
 <br>
 
-#### Run a task
+### Run a task
 
 <a id=--name></a>
 <details>
@@ -340,7 +351,7 @@ task.devices_dct
 
 <br>
 
-#### get tasks
+### get tasks
 
 <a id=--task></a>
 <details>
@@ -384,7 +395,7 @@ task.devices_dct
 
 <br>
 
-#### get backups
+### get backups
 
 
 <a id=--backup></a>
@@ -511,6 +522,8 @@ from Flexible_Network import Terminal_Task
 
 **Sample Output**
 
+Sample of a successful command
+
 ```json
 {
    "cmd":[
@@ -534,6 +547,8 @@ from Flexible_Network import Terminal_Task
 }
 ```
 
+Sample of an unsuccessfull command
+
 ```json
 {
    "cmd":[
@@ -554,6 +569,8 @@ from Flexible_Network import Terminal_Task
    "exit_code":1
 }
 ```
+
+Sample of an unsuccessfull command ( Connection closed before or during the execution )
 
 
 ```json
