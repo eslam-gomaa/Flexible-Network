@@ -116,19 +116,51 @@ After you have the library installed, you're ready to [use it](#_usage) !
 # How it works !
 
 * This project is designed as Python Library that you import to your Python script that gives you a lot of features and integrations out of the box
-* After importing the library you can treat your script as a cli tool
-* 
+* After importing the library you can treat your script as a cli tool that  [[ Check the [cli parameters](#cli_options) ]] that you use to run tasks, get task logs, list & get backups etc.
+
+> This section gives an overview of how the library works internally
+
+<br>
+
+### **. Inventory
+
+We use the same inventory concept as Ansible, Here is an example of an inventory file
+
+> This inventory has 4 groups works, `switches`, `routers`, `empty` each contains the devices listed below it
+
+```ini
+[works]
+192.168.100.4
+
+[switches]
+192.168.1.10
+192.168.1.11
+
+[routers]
+192.168.1.12
+192.168.1.13
+192.168.1.11
+
+[empty]
+```
+
+🟡 Custom inventory parameters will be added soon.
+
+
+
+
 
 ### 1. Connection Management
 
 This project uses SSH to connect to the devices
 
-**The way it works:** it tries to connect to the selected group of devices, and store the `ssh Channels` of the connected devices in a dictionary [ Which you have access to when you create an instance of the class ]
+**The way it works:** it tries to connect to the selected group of devices, and store the `ssh Channels` of each connected device in a dictionary [ Which you have access to when you create an instance of the class ]
 
 So in simple words, it opens the ssh connection with ALL the selected devices before start executing commands.
 
 And that actually gives us more flexibility from the development perspective, besides *it's much better to be notified if you're NOT able to connect to some devices before starting the automation task* rather than being told at the end of task.
 
+> **NOTE:** any commands you run on the devices *will be exeuted over the same ssh connection*.
 
 ![image](https://user-images.githubusercontent.com/33789516/159185347-bbee6112-39e8-4818-93a3-9cea1946fcd1.png)
 
@@ -143,13 +175,18 @@ This version of Flexible-Network is designed to be used as a Python library / cl
 
 * Each project directory has a `.db` directory which stores `database json file`, `tasks logs` and local backups
 
+<br>
 
 ### 3. Error Detection
 
-Describe how it works
+One of the core features in [Flexible-Network](https://github.com/eslam-gomaa/Flexible-Network#features) is the ability to detect error when executing commands on network devices, _So here is how that is done behind the scene:_
 
+* When a command is executed on a network device, fist the library reads the command's output & parse it to see if there is an error
+   * And based on that, **if an error is found** we are able to return `stderr` plus we can return `exit_code` of 1 (Which is an indecation of a command that executed with errors)
+   * Otherwise, the command is executed successfully & it returns `exit_code` of 0
+* Different vendors may have different keywords to search for errors, so we have a [class for each supported vendor](https://github.com/eslam-gomaa/Flexible-Network/tree/develop/FlexibleNetwork/vendors) where the kewords to search are defined as a list eg. `self._stderr_search_keyword`
 
-
+[check the `execute` method](#execute)
 
 
 ---
@@ -204,7 +241,7 @@ _From here, you can take a look at_ the complete examples ( _To be documented_ )
 
 # Documentation
 
-
+<a id=cli_options></a>
 ## Cli Options
 
 <br>
@@ -497,16 +534,28 @@ from Flexible_Network import Terminal_Task
 </details>
 
 
-<a id=execute></a>
+<a id=execute_raw></a>
 <details>
   <summary> 
-  <b style="font-size:20px"> <code>execute()</code></b>
+  <b style="font-size:20px"> <code>execute_raw()</code></b>
   </summary>
   Execute a command on a remote device.
 
+  > **Note:** This method does not print to the terminal.
   
 <br>
 <br>
+
+### INPUT
+
+|  Input      | Type       | Description                                                  |
+| ----------- | ------     | ------------------------------------------------------------ |
+| `hos_dct`   | dictionary | The host dictionary => is key of the  `connected_devices_dct` attribute  (And contains information about the device including the `ssh channel` to use for the command execution )   |
+| `cmd`       | string     | The command to run on the remote device                |
+
+<br>
+
+### OUTPUT
 
 > Returns a dictionary
 
@@ -516,9 +565,11 @@ from Flexible_Network import Terminal_Task
 | `stderr`    | List   | List of lines [ The error of the command ( If any ) ]                  |
 | `exit_code` | Int    | - `0` The command executed successfully<br />- `1` The command executed with an error <br />- `-1` If the ssh channel was interrupted while excution. 
 
-* **Input**
-   1. The ssh channel of the device
-   2. The command to execute
+
+
+<br>
+
+<a id=execute_raw_sample_output></a>
 
 **Sample Output**
 
@@ -585,6 +636,34 @@ Sample of an unsuccessfull command ( Connection closed before or during the exec
    "exit_code":-1
 }
 ```
+</details>
+
+
+<a id=execute></a>
+<details>
+  <summary> 
+  <b style="font-size:20px"> <code>execute()</code></b>
+  </summary>
+  Execute a command on a remote device.
+
+  
+<br>
+<br>
+
+> Returns a dictionary
+
+|  Key           | Type   | Description                                                  |
+| ----------- | ------ | ------------------------------------------------------------ |
+| `stdout`    | List   | List of lines [ The output of the command ( If any ) ]           |
+| `stderr`    | List   | List of lines [ The error of the command ( If any ) ]                  |
+| `exit_code` | Int    | - `0` The command executed successfully<br />- `1` The command executed with an error <br />- `-1` If the ssh channel was interrupted while excution. 
+
+* **Input**
+   1. The ssh channel of the device
+   2. The command to execute
+
+
+[The same as](#execute_raw_sample_output)
 
 
 </details>
