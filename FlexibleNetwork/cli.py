@@ -14,7 +14,7 @@ class CLI:
         
         parser.add_argument('-n', '--name', type=str, required=False, metavar='', help='The Task Name')
         parser.add_argument('-i', '--inventory', type=str, required=False, metavar='', help='The inventory file')
-        parser.add_argument('-V', '--validate-integration', nargs='+',choices=['cyberArk', 'rocketChat'], help='Test API Integrations')
+        parser.add_argument('-V', '--validate-integration', nargs='+',choices=['cyberArk', 'rocketChat', 's3'], help='Test API Integrations')
         parser.add_argument('-x', '--no-confirm-auth', action='store_true', help='Skip Asking for confirmation if failed to connect to some deivces')
         parser.add_argument('-c', '--config', type=str, required=False, metavar='', help='The path of configuration file')
         parser.add_argument('-g', '--authenticate-group', type=str, required=False, metavar='', help='Authenticate an inventory group')

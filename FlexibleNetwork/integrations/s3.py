@@ -58,10 +58,43 @@ class S3_APIs:
                 botocore.exceptions.EndpointConnectionError,
                 urllib3.exceptions.NewConnectionError,
                 botocore.exceptions.ClientError) as e:
-                print(f"ERROR -- Failed to validate S3 authentication\n> {e}")
-                exit(1)
-                
-        
+            raise SystemExit(f"ERROR -- Failed to validate S3 authentication\n> {e}")
+
+    def authenticate_raw(self):
+        if self.region =='default':
+            self.s3_client = boto3.client(
+            service_name='s3',
+            aws_access_key_id = self.access_key,
+            aws_secret_access_key = self.secret_key,
+            endpoint_url = self.endpoint,
+            # The next option is only required because my provider only offers "version 2"
+            # authentication protocol. Otherwise this would be 's3v4' (the default, version 4).
+            # config=botocore.client.Config(signature_version='s3'),
+            )
+        else:
+            self.s3_client = boto3.client(
+            service_name='s3',
+            aws_access_key_id = self.access_key,
+            aws_secret_access_key = self.secret_key,
+            endpoint_url = self.endpoint,
+            region_name = self.region,
+            # The next option is only required because my provider only offers "version 2"
+            # authentication protocol. Otherwise this would be 's3v4' (the default, version 4).
+            # config=botocore.client.Config(signature_version='s3'),
+            )
+
+        # Trying to list buckest to Validate credentials
+        try:
+            self.list_buckets()
+            return {"success": True, 'fail_reason': ''}
+        except (botocore.exceptions.HTTPClientError,
+                urllib3.exceptions.URLSchemeUnknown,
+                ValueError,
+                socket.gaierror,
+                botocore.exceptions.EndpointConnectionError,
+                urllib3.exceptions.NewConnectionError,
+                botocore.exceptions.ClientError) as e:
+            return {"success": False, 'fail_reason': str(e)}        
 
     def list_buckets(self):
         if self.s3_client is None:
@@ -90,7 +123,7 @@ class S3_APIs:
             return {"success": True, "fail_reason": ''}
         except (botocore.exceptions.ClientError,
                 botocore.exceptions.ParamValidationError) as e:
-            return {"success": False, "fail_reason": e}
+            return {"success": False, "fail_reason": str(e)}
 
     def delete_bucket(self, bucket_name):
         """

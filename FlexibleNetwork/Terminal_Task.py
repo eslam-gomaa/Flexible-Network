@@ -128,10 +128,8 @@ class Terminal_Task:
             all_good = True 
             if 'rocketChat' in ReadCliOptions.to_validate_lst:
                 rocket = RocketChat_API() 
-                out = {}
-                out['success'] = False
-                out['comment'] = ""
                 auth = rocket.auth_raw()
+                out = { 'success': False, 'comment': ""}
                 if auth['success']:
                     out['success'] = True
                     out['comment'] = "Works !"
@@ -147,7 +145,23 @@ class Terminal_Task:
                 row = ['rocketChat', status, comment]
                 table.append(row)
             if 's3' in ReadCliOptions.to_validate_lst:
-                pass
+                s3 = S3_APIs()
+                auth = s3.authenticate_raw()
+                out = { 'success': False, 'comment': ""}
+                if auth['success']:
+                    out['success'] = True
+                    out['comment'] = "Works !"
+                else:
+                    out['comment'] = auth['fail_reason']
+
+                if out['success']:
+                    status = '🟢'
+                else:
+                    status = '🔴'
+                    all_good = False
+                comment = "\n".join(textwrap.wrap(out['comment'], width=50, replace_whitespace=False))
+                row = ['S3', status, comment]
+                table.append(row)
             out = tabulate(table, headers='firstrow', tablefmt='grid', showindex=False)
             print(out)
             if all_good:
