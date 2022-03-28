@@ -487,15 +487,33 @@ task.devices_dct
   <br>
    Validate the communication with any of the supported API Integrations eg. test to authenticate (And validate permissions if needed).
    
+   <br>
+
    > *Optional*
 
    * ***Supported Options***'
         * `cyberArk`
         * `rocketChat`
         * `s3`
-        * *more to be added soon*.
+
 </details>
 
+<br>
+
+_**Example**_
+
+```bash
+python3.6 <script.py> -c ~/flexible_network.cfg  --validate-integration s3 rocketChat
+
+> Validating Integration
++---------------+----------+-----------+
+| Integration   | Status   | Comment   |
++===============+==========+===========+
+| rocketChat    | 🟢       | Works !   |
++---------------+----------+-----------+
+| S3            | 🟢       | Works !   |
++---------------+----------+-----------+
+```
 
 
 <br>
@@ -684,6 +702,33 @@ Sample of an unsuccessfull command ( Connection closed before or during the exec
 </details>
 
 
+<a id=execute_from_file></a>
+<details>
+  <summary> 
+  <b style="font-size:20px"> <code>execute_from_file()</code></b>
+  </summary>
+
+  Load commands from file & execute each line one by one. using the [execute()](#excute) method
+
+   <br>
+
+  > **Note:** This method prints the output to the terminal.
+   
+   <br>
+
+   ### INPUT
+
+   The same as the [execute()](#excute) method
+
+   <br>
+
+   ### OUTPUT
+
+   > does NOT return
+
+</details>
+
+
 <a id=connection_report_Table></a>
 <details>
   <summary> 
@@ -744,7 +789,41 @@ rocket_msg = rocket.send_message(['eslam.gomaa'], "``` {} ```".format(report))
 
 </details>
 
- *Others To be documented*
+
+<a id=backup_config></a>
+<details>
+  <summary> 
+  <b style="font-size:20px"> <code>backup_config()</code></b>
+  </summary>
+
+  Backup running configuration from the remote device & store them in the local directory by default, for other backup storage options check [supported backup targets]
+
+   <br>
+
+  > **Note:** This method prints the output to the terminal.
+   
+   <br>
+
+   ### INPUT
+
+   | Input     | Type | Description                                                  | Options        | Default |
+   | --------- | ---- | ------------------------------------------------------------ | -------------- | ------- |
+   | `hos_dct` | dct  | The host dictionary => is key of the  `connected_devices_dct` attribute  (And contains information about the device including the `ssh channel` to use for the command execution ) |                |         |
+   | `comment` | str  | A comment indicates the purpose of the backup                |                |         |
+   | `target`  | str  | Print the ouput \|\| error to the terminal                   | 'local',  's3' | 'local' |
+
+
+   > **NOTE:** targets other than 'local' requires you to add the credentials in the config file
+   
+
+   <br>
+
+   ### OUTPUT
+
+   > does NOT return
+
+</details>
+
 
 
 <br>
