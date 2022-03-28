@@ -1,9 +1,11 @@
 class Huawei:
     def __init__(self):
-        self._stderr_search_keyword = '9999'
-        self.clean_output_search_keywords = ['.*#']
+        self._stderr_search_keyword = ['\^', '% Ambiguous command']
+        self._clean_output_search_keywords = ['.*#', '.*>']
         self._backup_command = """
-            huawei
+            screen-length 0
+            display current-configuration
+            undo screen-length
             """
 
     @property
