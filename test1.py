@@ -12,7 +12,7 @@ rocket = RocketChat_API()
 ##  2  ## Get Connection Report
 report = task.connection_report_Table(task.devices_dct)
 # print(report)
-rocket.send_message(['eslam.gomaa'], "``` {} ```".format(report))
+# rocket.send_message(['eslam.gomaa'], "``` {} ```".format(report))
 
 
 ### Test exeuting a command.
@@ -25,6 +25,7 @@ for host in task.connected_devices_dct:
     host_dct = task.connected_devices_dct[host]
     
     task.execute_raw(host_dct, 'enable\n' + 'cisco')
-    task.execute(host_dct, cmd, terminal_print='default')
-    task.backup_config(host_dct, 'Test config backup 1', target='local')    
+    # task.execute(host_dct, cmd, terminal_print='default')
+    task.execute_from_file(host_dct, 'test_file.txt', ask_for_confirmation=True, terminal_print='json')
+    # task.backup_config(host_dct, 'Test config backup 1', target='local')    
 
