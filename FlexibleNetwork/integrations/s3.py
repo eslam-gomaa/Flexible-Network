@@ -57,7 +57,9 @@ class S3_APIs:
                 socket.gaierror,
                 botocore.exceptions.EndpointConnectionError,
                 urllib3.exceptions.NewConnectionError,
-                botocore.exceptions.ClientError) as e:
+                botocore.exceptions.ClientError,
+                TypeError,
+                ValueError) as e:
             raise SystemExit(f"ERROR -- Failed to validate S3 authentication\n> {e}")
 
     def authenticate_raw(self):
@@ -93,7 +95,9 @@ class S3_APIs:
                 socket.gaierror,
                 botocore.exceptions.EndpointConnectionError,
                 urllib3.exceptions.NewConnectionError,
-                botocore.exceptions.ClientError) as e:
+                botocore.exceptions.ClientError,
+                TypeError,
+                ValueError) as e:
             return {"success": False, 'fail_reason': str(e)}        
 
     def list_buckets(self):
