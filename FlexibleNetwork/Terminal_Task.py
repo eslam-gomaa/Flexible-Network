@@ -14,11 +14,11 @@ from FlexibleNetwork.Flexible_Network import Bcolors
 import json
 from pygments import highlight, lexers, formatters
 from datetime import datetime
-import random
 from pathlib import Path
 import time
 import os
-import re
+import textwrap
+
 
 
 
@@ -131,20 +131,23 @@ class Terminal_Task:
                 out = {}
                 out['success'] = False
                 out['comment'] = ""
-                try:
-                    rocket.auth_raw()
+                auth = rocket.auth_raw()
+                if auth['success']:
                     out['success'] = True
                     out['comment'] = "Works !"
+                else:
+                    out['comment'] = auth['fail_reason']
 
-                except:
-                    out['comment'] = 'Authentication Failed'
                 if out['success']:
                     status = '🟢'
                 else:
                     status = '🔴'
                     all_good = False
-                row = ['rocketChat', status, out['comment']]
+                comment = "\n".join(textwrap.wrap(out['comment'], width=50, replace_whitespace=False))
+                row = ['rocketChat', status, comment]
                 table.append(row)
+            if 's3' in ReadCliOptions.to_validate_lst:
+                pass
             out = tabulate(table, headers='firstrow', tablefmt='grid', showindex=False)
             print(out)
             if all_good:

@@ -1,8 +1,9 @@
 
 from requests import sessions
 from rocketchat_API.rocketchat import RocketChat # https://github.com/jadolg/rocketchat_API
- 
+from rocketchat_API.APIExceptions import RocketExceptions
 from FlexibleNetwork.Flexible_Network import Config
+import requests
 
 
 class RocketChat_API():
@@ -15,12 +16,23 @@ class RocketChat_API():
         """ Authenticate with RocketChat Server [ Without Exception handeling ] """
         config = Config()
         config_data = config.section_rocket_chat()
-        with sessions.Session() as session:
-            rocket = RocketChat(config_data["username"], 
-                                config_data["password"],
-                                server_url=config_data["url"],
-                                session=session)
-        self.auth_session = rocket
+        try:
+            with sessions.Session() as session:
+                rocket = RocketChat(config_data["username"], 
+                                    config_data["password"],
+                                    server_url=config_data["url"],
+                                    session=session)
+            self.auth_session = rocket
+            return {'success': True, 'fail_reason': ''} 
+        except (RocketExceptions.RocketAuthenticationException, 
+                RocketExceptions.RocketConnectionException,
+                RocketExceptions.RocketMissingParamException,):
+            # The RocketChat exceptions doesn't return messages, so I'll assume that it's an authentication issue.
+            # (Since all other connection issues are raised via requests exceptoins)
+            return {'success': False, 'fail_reason': 'Authentication Failed'}
+        except (requests.exceptions.RequestException) as e :
+            return {'success': False, 'fail_reason': str(e)}
+
 
 
     def authenticate(self):
@@ -28,8 +40,7 @@ class RocketChat_API():
         try:
             self.auth_raw()
         except:
-            print("ERROR -- Failed to authenticate RocketChat")
-            exit(1)
+            raise SystemExit("ERROR -- Failed to authenticate RocketChat")
 
     def list_channels(self):
         if self.auth_session is None:
