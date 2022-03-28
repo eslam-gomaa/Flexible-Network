@@ -1,4 +1,4 @@
-# from distutils.command.config import config
+import cmd
 from FlexibleNetwork.Vendors import Cisco
 from FlexibleNetwork.Flexible_Network import ReadCliOptions
 from FlexibleNetwork.Flexible_Network import CLI
@@ -7,7 +7,7 @@ from FlexibleNetwork.Flexible_Network import Inventory
 from FlexibleNetwork.Flexible_Network import SSH_connection
 from FlexibleNetwork.Integrations import RocketChat_API
 from FlexibleNetwork.Integrations import S3_APIs
-from FlexibleNetwork.Integrations import RocketChat_API
+from FlexibleNetwork.Integrations import Cyberark_APIs_v2
 from tabulate import tabulate
 import uuid
 from FlexibleNetwork.Flexible_Network import TinyDB_db
@@ -19,11 +19,6 @@ from pathlib import Path
 import time
 import os
 import textwrap
-
-from FlexibleNetwork.integrations.cyberark import Cyberark_APIs_v2
-
-
-
 
 
 class Terminal_Task:
@@ -52,7 +47,6 @@ class Terminal_Task:
 
         if ReadCliOptions.get_backup is not None:
             print(self.db.return_backup(ReadCliOptions.get_backup))
-
 
 
         # Initialize the "Config" class so that it checks the config file at the begining. 
@@ -302,6 +296,33 @@ The command exited with exit_code of {result['exit_code']}
         """
         result = self.ssh.exec(host_dct['channel'], cmd)
         return result
+
+    def execute_from_file(self, host_dct, file, terminal_print='default', ask_for_confirmation=False, exit_on_fail=True):
+        """
+        """
+        # Check if the file exists
+        if not os.path.exists(file):
+            raise SystemExit(f"ERROR -- execute_from_file >> [ {file} ] does NOT exist")
+
+        if not os.path.isfile(file):
+            raise SystemExit(f"ERROR -- execute_from_file >> [ {file} ] is NOT a file")
+
+        # Read the file
+        try:
+            with open(file, 'r') as f:
+                file_content = f.read()
+                file_content_lines = file_content.split("\n")
+                # Remove empty lines
+                file_content_lines = [x for x in file_content_lines if x]
+        except Exception as e:
+            raise SystemExit(f"ERROR -- execute_from_file >> {e}")
+
+        if ask_for_confirmation:
+            self.ssh.ask_for_confirmation(cmd=self.bcolors.OKBLUE +  file_content + self.bcolors.ENDC)
+        
+        for cmd in file_content_lines:
+            self.execute(host_dct=host_dct, cmd=cmd, terminal_print=terminal_print, ask_for_confirmation=False, exit_on_fail=exit_on_fail)
+
 
     def backup_config(self, host_dct, comment, target='local'):
         """
