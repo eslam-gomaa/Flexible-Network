@@ -52,6 +52,26 @@ class Cyberark_APIs_v2:
             print(f"ERROR -- Cyberark Authentication Failed \n")
             raise SystemExit(f"> {e}")
 
+    def authenticate_raw(self):
+        """
+        Returns the session token
+        """
+        url = f"{self.cyberark_url}/PasswordVault/API/auth/LDAP/Logon"
+        try:
+            
+            self.session.verify = self.verify_ssl
+            req = self.session.post(url, data={"username": self.username,
+                                        "password": self.password,
+                                        "concurrentSession": self.concurrent_session})
+
+            if req.status_code == int(200):
+                return {"success": True, 'fail_reason': ''}
+            else:
+                return {"success": False, 'fail_reason': f"Cyberark Authentication Failed \n> {req.text} \n> Failed Request to {url} , {req.status_code} , {req.reason})"}
+        except requests.exceptions.RequestException as e:
+            return {"success": False, 'fail_reason': str(e)}
+
+
     def logoff(self):
         """
         Returns the session token

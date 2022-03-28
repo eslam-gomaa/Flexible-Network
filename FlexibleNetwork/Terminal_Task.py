@@ -7,6 +7,7 @@ from FlexibleNetwork.Flexible_Network import Inventory
 from FlexibleNetwork.Flexible_Network import SSH_connection
 from FlexibleNetwork.Integrations import RocketChat_API
 from FlexibleNetwork.Integrations import S3_APIs
+from FlexibleNetwork.Integrations import RocketChat_API
 from tabulate import tabulate
 import uuid
 from FlexibleNetwork.Flexible_Network import TinyDB_db
@@ -18,6 +19,8 @@ from pathlib import Path
 import time
 import os
 import textwrap
+
+from FlexibleNetwork.integrations.cyberark import Cyberark_APIs_v2
 
 
 
@@ -161,6 +164,23 @@ class Terminal_Task:
                     all_good = False
                 comment = "\n".join(textwrap.wrap(out['comment'], width=50, replace_whitespace=False))
                 row = ['S3', status, comment]
+                table.append(row)
+            if 'cyberArk' in ReadCliOptions.to_validate_lst:
+                cyberark = Cyberark_APIs_v2()
+                auth = cyberark.authenticate_raw()
+                out = { 'success': False, 'comment': ""}
+                if auth['success']:
+                    out['success'] = True
+                    out['comment'] = "Works !"
+                else:
+                    out['comment'] = auth['fail_reason']
+                if out['success']:
+                    status = '🟢'
+                else:
+                    status = '🔴'
+                    all_good = False
+                comment = "\n".join(textwrap.wrap(out['comment'], width=50, replace_whitespace=False))
+                row = ['cyberArk', status, comment]
                 table.append(row)
             out = tabulate(table, headers='firstrow', tablefmt='grid', showindex=False)
             print(out)
