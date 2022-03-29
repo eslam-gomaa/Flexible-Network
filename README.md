@@ -122,34 +122,6 @@ After you have the library installed, you're ready to [use it](#_usage) !
 
 <br>
 
-### **. Inventory
-
-We use the same inventory concept as Ansible, Here is an example of an inventory file
-
-> This inventory has 4 groups works, `switches`, `routers`, `empty` each contains the devices listed below it
-
-```ini
-[works]
-192.168.100.4
-
-[switches]
-192.168.1.10
-192.168.1.11
-
-[routers]
-192.168.1.12
-192.168.1.13
-192.168.1.11
-
-[empty]
-```
-
-🟡 Custom inventory parameters will be added soon.
-
-
-
-
-
 ### 1. Connection Management
 
 This project uses SSH to connect to the devices
@@ -228,6 +200,11 @@ task = Terminal_Task()
 ```bash
 python my-network-script.py -h
 ```
+
+<br>
+
+* You need the add the hosts you'll automate in an [inentory file](Docs/inventory.md)
+* If you plan to use any of the external APIs, make sure you put their information in the [config file](Docs/config_file.md)
 
 <br>
 
