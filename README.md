@@ -694,7 +694,15 @@ Sample of an unsuccessfull command ( Connection closed before or during the exec
 
    ### INPUT
 
-   The same as the [execute()](#excute) method
+
+   | Input                  | Type  | Description                                                  | Options            | Default   |
+   | ---------------------- | ----- | ------------------------------------------------------------ | ------------------ | --------- |
+   | `hos_dct`              | dct   | The host dictionary => is key of the  `connected_devices_dct` attribute  (And contains information about the device including the `ssh channel` to use for the command execution ) |                    |           |
+   | `file`                 | str   | The file to load the commands from                      |                    |           |
+   | `terminal_print`       | str   | Print the ouput \|\| error to the terminal                   | 'default',  'json' | 'default' |
+   | `ask_for_confirmation` | bool  | Ask for confirmation before executing a command,             |                    | False     |
+   | `exit_on_fail`         | boola | Exit the script with code of `1` if the command executed with errors |                    | True      |
+
 
    <br>
 
