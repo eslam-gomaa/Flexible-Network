@@ -59,7 +59,6 @@ Before reading the features you need to know that the network devices are "dump"
 https://pypi.org/project/FlexibleNetwork/0.0.2/
 
 ```bash
-# Will be published soon.
 pip3.6 install FlexibleNetwork
 ```
 
