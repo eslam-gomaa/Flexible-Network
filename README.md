@@ -56,6 +56,8 @@ Before reading the features you need to know that the network devices are "dump"
 
 > **NOTE** At least Python3.6 is needed (_Dependencies constrains_)
 
+https://pypi.org/project/FlexibleNetwork/0.0.2/
+
 ```bash
 # Will be published soon.
 pip3.6 install FlexibleNetwork
