@@ -13,7 +13,7 @@ username = **********
 password = **********
 ```
 
-[A full config file sample](../Docs/config_file.md#sample_config_file)
+[A full config file sample](/Docs/config_file.md#sample_config_file)
 
 ##### Usage
 
@@ -24,7 +24,6 @@ rocket = RocketChat_API()
 
 #### Methods
 
-* rocket.send_message()
 
 <a id=send_message()></a>
 <details>
