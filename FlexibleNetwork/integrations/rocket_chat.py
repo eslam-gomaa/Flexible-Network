@@ -96,6 +96,9 @@ class RocketChat_API():
     def send_message(self, member_name_lst, message):
         """
         Send a RocketChat message to a list of members
+        INPUT:
+            1. member_name_lst -> (List of strings)  users to send messages to.
+            2. message -> (String)  Message to send
         """
         if not isinstance(member_name_lst, list):
             print("ERROR -- RocketChat method 'send_message' takes a List of users\n> You've provided: '{}' which is a {}".format(member_name_lst, type(member_name_lst)))

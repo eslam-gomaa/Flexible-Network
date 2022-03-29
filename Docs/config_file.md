@@ -32,7 +32,7 @@ authentication_method = 'LDAP'
 
 
 [rocket_chat]
-url      = https://your-rocket-chat-server.eu
+url      = https://your-rocket-chat-server.com
 username = **********
 password = **********
 
