@@ -489,12 +489,12 @@ task.devices_dct
    
   <br>
 
-   > *Optional*
+  > *Optional*
 
-   * ***Supported Options***'
-        * `cyberArk`
-        * `rocketChat`
-        * `s3`
+  * ***Supported Options***'
+      * `cyberArk`
+      * `rocketChat`
+      * `s3`
 
 </details>
 
