@@ -811,39 +811,9 @@ rocket_msg = rocket.send_message(['eslam.gomaa'], "``` {} ```".format(report))
 
 ### Supported API Integrations
 
-<a id=rocketchat></a>
-<details>
-  <summary> 
-  <b style="font-size:25px"> <code>RocketChat</code></b>
-  </summary>
-  <br>
-  https://rocket.chat
-
-  This integration allows you to send messages 
-
-  #### Configuration section
-
-  ```ini
-  [rocket_chat]
-   url      = https://******
-   username = ******
-   password = ******
-  ```
-
-  ##### Usage
-
-  ```python
-  from FlexibleNetwork.Integrations import RocketChat_API
-  rocket = RocketChat_API()
-  ```
-
-  #### Methods
-
-  * rocket.send_message()
-  * _More to be documented_
-  
-
-</details>
+* [RocketChat](Docs/Integrations/rocketchat.md)
+* [CyberArk](Docs/Integrations/cyberark.md)
+* [S3](Docs/Integrations/s3.md)
 
 
 
