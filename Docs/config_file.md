@@ -5,6 +5,8 @@ The configuration file is used mainly to provide credentials for the external AP
 
 > **Note:** Reading credentials from Environment Variables will be considered in the next milestone.
 
+<br>
+
 The default location of the configuration file is expected at `/etc/flexible_network/flexible_network.cfg` 
 
 <br>
