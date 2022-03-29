@@ -486,8 +486,7 @@ task.devices_dct
   </summary>
   <br>
    Validate the communication with any of the supported API Integrations eg. test to authenticate (And validate permissions if needed).
-   
-<br>
+  <br>
 
   > *Optional*
 
