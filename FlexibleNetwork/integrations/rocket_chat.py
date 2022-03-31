@@ -30,7 +30,7 @@ class RocketChat_API():
             # The RocketChat exceptions doesn't return messages, so I'll assume that it's an authentication issue.
             # (Since all other connection issues are raised via requests exceptoins)
             return {'success': False, 'fail_reason': 'Authentication Failed'}
-        except (requests.exceptions.RequestException) as e :
+        except (requests.exceptions.RequestException, requests.exceptions.MissingSchema) as e :
             return {'success': False, 'fail_reason': str(e)}
 
 
