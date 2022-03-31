@@ -1,4 +1,4 @@
-import cmd
+from asyncio import transports
 from FlexibleNetwork.Vendors import Cisco
 from FlexibleNetwork.Flexible_Network import ReadCliOptions
 from FlexibleNetwork.Flexible_Network import CLI
@@ -19,6 +19,7 @@ from pathlib import Path
 import time
 import os
 import textwrap
+import socket
 
 
 class Terminal_Task:
@@ -209,6 +210,7 @@ class Terminal_Task:
 
 
 
+
     def update_log_file(self, data):
         with open(self.log_file, 'a') as file:
             file.write(data)
@@ -217,7 +219,7 @@ class Terminal_Task:
         table = self.ssh.connection_report_Table(dct=dct_, terminal_print=terminal_print, ask_when_hosts_fail=ask_when_hosts_fail)
         return table
     
-    def execute(self, host_dct, cmd, terminal_print='default', ask_for_confirmation=False, exit_on_fail=True):
+    def execute(self, host_dct, cmd, terminal_print='default', ask_for_confirmation=False, exit_on_fail=True, reconnect_closed_socket=True):
         """
         - Excutes a command on a remove network device
         INPUT:
@@ -237,6 +239,27 @@ class Terminal_Task:
         start_time = time.time()
         if ask_for_confirmation:
             self.ssh.ask_for_confirmation(cmd=self.bcolors.OKBLUE +  cmd + self.bcolors.ENDC)
+
+        # Re-connect if the ssh connection was closed.
+        if reconnect_closed_socket:
+            try:
+                # This code will update the ssh connection & channel status if the connection is closed.
+                transport = host_dct['ssh'].get_transport()
+                host_dct['channel'].send("\n")
+                time.sleep(0.1)
+                # print("channel closed", channel.closed)
+                if not transport.is_active():
+                    print(f"> Closed Socket detected @{host_dct['host']}\n> Re-authenticating...")
+                    # Re-authenticate the host
+                    reauth = self.ssh.authenticate(hosts=[host_dct['host']], user=self.ssh.user, password=self.ssh.password, port=self.ssh.port, terminal_print=True)
+                    # Update the channel & ssh objects of the host (So that the channel will be used for commands execution.)
+                    host_dct['channel']  = reauth[host_dct['host']]['channel']
+                    host_dct['ssh']  = reauth[host_dct['host']]['ssh']
+
+            except socket.error  as e:
+                print(f"Something went wrong !\n> {e}")
+                exit(1)
+        
         result = self.ssh.exec(host_dct['channel'], cmd)
         duration = (time.time() - start_time)
         print()
@@ -278,7 +301,7 @@ The command exited with exit_code of {result['exit_code']}
                 # Print STDERR in red color
                 print(self.bcolors.FAIL + '\n'.join(result['stderr']) + self.bcolors.ENDC)
                 print()
-                print("Stopped due to the previous error.")
+                print("> Stopped due to the previous error.")
                 exit(1)
         return result
 
