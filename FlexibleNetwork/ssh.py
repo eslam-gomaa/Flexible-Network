@@ -11,7 +11,6 @@ class SSH_connection():
     def __init__(self):
         self.devices_dct = {}
         self.connected_devices_dct = {}
-        self.connected_devices_number = 0
         self.connection_failed_devices_number = 0
         self._vendor = Cisco()
 
@@ -24,7 +23,7 @@ class SSH_connection():
         self._vendor = vendor
 
 
-    def authenticate(self, hosts=[], user='orange', password='cisco', port='1113', terminal_print=False):
+    def authenticate(self, hosts, user, password, port, terminal_print=False):
         """
         Autenticates a List of devices and returns a dictionary of dictionaries,
         * The key of each nested dict is the host IP and the value is the connection & authentication information.
@@ -35,6 +34,7 @@ class SSH_connection():
                 print()
                 print("> Authenticating selected devices")         
             
+            self.connected_devices_number = 0
             self.user = user
             self.password = password
             self.port = port
@@ -184,12 +184,13 @@ class SSH_connection():
             return []
 
         out = {}
-        # What was I replacing !??
+        # Clean the command & turn it to a list (splitted with new lines.)
         out['cmd'] = cmd.replace("\r", '').split("\n")
+        # Clean the empty lines
         out['cmd'] = [i for i in out['cmd'] if i]
         out['stdout'] = []
         out['stderr'] = []
-        out['exit_code'] = -1
+        out['exit_code'] = 0
 
         ## Thinking: How to reconnect if the socket is closed.
         # try:
@@ -200,6 +201,7 @@ class SSH_connection():
         # Run the command
         try:
             channel.send(cmd + '\n' + '\n')
+            # print(channel.closed)
             # Important to set wait time, if not set it might not be able to read full output.
             time.sleep(0.5)
         
@@ -215,7 +217,7 @@ class SSH_connection():
 
             # Get the stderr
             out['stderr'] = get_stderr(stdout_original)
-            out['exit_code'] = 0
+            # out['exit_code'] = 0
             if len(out['stderr']) > 0:
                 # Get the exit_code based on the stderr
                 out['exit_code'] = 1
@@ -231,6 +233,8 @@ class SSH_connection():
                 # If the connection is interrupted during execution
         except (socket.error)  as e:
             out['stderr'] = [str(e)]
+            out['exit_code'] = -1
+            
 
         return out
 
