@@ -1,4 +1,3 @@
-from unittest import result
 from FlexibleNetwork.ssh_authentication import SSH_Authentication
 import time
 from tabulate import tabulate
@@ -99,7 +98,6 @@ class SSH_connection():
                 exit(1)
 
 
-
     def connection_report_Table(self, dct={}, terminal_print=False, ask_when_hosts_fail=False):
         """
         Takes an dict generated from the "authenticate_devices" Method
@@ -154,47 +152,68 @@ class SSH_connection():
         # Need to Figure out how to write these these data to a csv or Excel file. 
 
     def reconnect_if_socket_closed(self, host_dct):
-            self.needed = False
-            self.reconnected = False
-            def reconnect():
-                print(f"> Closed Socket detected @{host_dct['host']}\n> Trying to reconnect ...")
-                # Re-authenticate the host
-                reauth = self.authenticate(hosts=[host_dct['host']], user=self.user, password=self.password, port=self.port, terminal_print=True)
-                # Update the channel & ssh objects of the host (So that the channel will be used for commands execution.)
-                if reauth[host_dct['host']]['is_connected']:
-                    host_dct['channel']  = reauth[host_dct['host']]['channel']
-                    host_dct['ssh']  = reauth[host_dct['host']]['ssh']
-                    print(f"> Reconnected successfully to @{host_dct['host']}")
-                    self.reconnected = True
-
-                else:
-                    print(f"> FAILED to reconnect to @{host_dct['host']}")
-                    self.reconnected = False
-            try:
-                # This code will update the ssh connection & channel status if the connection is closed.
-                transport = host_dct['ssh'].get_transport()
-                host_dct['channel'].send("\n")
-                time.sleep(0.1)
-                if not host_dct['channel'].recv_ready():
-                    reconnect()
-                    self.needed = True
-
-                elif not transport.is_active():
-                    reconnect()
-                    self.needed = True
-                elif host_dct['channel'].closed:
-                    reconnect()
-                    self.needed = True
-                return {'needed': self.needed, 'reconnected': self.reconnected}
-            except socket.error  as e:
-                print(f"ERROR -- Something went wrong !\n> {e}")
-                exit(1)
+        """
+        Method to detect if the ssh connection is close, and if so will try to re-connect.
+        INPUT:
+            1. host_dct -> (dct) the authentication information of a host 
+        """
+        # Flag to watch if a connection reconnect was needed (closed connection detected.)
+        self.needed = False
+        # Flag to watch if the connection of the host was re-connected.
+        self.reconnected = False
+        def reconnect():
+            """
+            A function to try to reconnect a closed ssh connection
+            - Will be triggered if a closed socket is detected.
+            """
+            print(f"> Closed Socket detected @{host_dct['host']}\n> Trying to reconnect ...")
+            # Re-authenticate the host
+            reauth = self.authenticate(hosts=[host_dct['host']], user=self.user, password=self.password, port=self.port, terminal_print=True)
+            # If the host was re-connected successfully.
+            if reauth[host_dct['host']]['is_connected']:
+                # Update the channel & ssh client objects of the host (So that the channel will be used for further commands execution.)
+                host_dct['channel']  = reauth[host_dct['host']]['channel']
+                host_dct['ssh']  = reauth[host_dct['host']]['ssh']
+                print(f"> Reconnected successfully to @{host_dct['host']}")
+                self.reconnected = True
+            else:
+                print(f"> FAILED to reconnect to @{host_dct['host']}")
+                self.reconnected = False
+        try:
+            # This code will update the ssh connection & channel status if the connection is closed.
+            transport = host_dct['ssh'].get_transport()
+            # Send a new line on the ssh channel as a test
+            host_dct['channel'].send("\n")
+            # We need to wait a bit after sending the test new line.
+            time.sleep(0.1)
+            # Check if the channel has something to get receive. (If no then there is a problem and we need to reconnect
+            # [because we already sent a test new line & that should return something.])
+            if not host_dct['channel'].recv_ready():
+                reconnect()
+                self.needed = True
+                print("transport is active", transport.is_active())
+                print("channel closed", host_dct['channel'].closed)
+            # Reconnect if the transport is not active or the channel is closed.
+            elif not transport.is_active():
+                reconnect()
+                self.needed = True
+            elif host_dct['channel'].closed:
+                reconnect()
+                self.needed = True
+            return {'needed': self.needed, 'reconnected': self.reconnected}
+        except socket.error  as e:
+            print(f"ERROR -- Something went wrong !\n> {e}")
+            exit(1)
         
  
     def exec(self, host_dct, cmd, reconnect_closed_socket=True):
         """
-        - Excutes a command on a remove network device
-        - Returns a dictionary:
+        Excutes a command on a remove network device
+        INPUT:
+            1. host_dct -> (dct) the authentication information of a host 
+            2. reconnect_closed_socket -> (bool) If to try to reconnect closed sockets. (Default: True)
+        
+        Returns a dictionary:
         {
             "stdout": "The output of the command",
             "stderr": "The error (Syntax error are detected.)",
@@ -233,7 +252,7 @@ class SSH_connection():
         # If the socket is closed try to reconnect.
         if reconnect_closed_socket:
             result = self.reconnect_if_socket_closed(host_dct)
-            # If tried to re-connect & failed return -1
+            # If tried to re-connect & failed -> return -1
             if (result['needed']) and (not result['reconnected']):
                 out['exit_code'] = -1
                 out['stderr'] = ["Socket is closed > Failed to reconnect."]
@@ -275,12 +294,11 @@ class SSH_connection():
             if len(out['stdout']) > 0:
                 out['stdout'] = [i for i in out['stdout'] if i]
         
-                # If the connection is interrupted during execution
+        # If the connection is interrupted during execution
         except (socket.error)  as e:
             out['stderr'] = [str(e)]
             out['exit_code'] = -1
             
-
         return out
 
     def backup_config(self, host_dct, comment, target):
