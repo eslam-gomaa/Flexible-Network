@@ -35,6 +35,7 @@ class SSH_Authentication():
                                     allow_agent=allow_agent, look_for_keys=False)
                 self.channel = self.ssh.invoke_shell()
                 self.is_connected = True
+                self.Fail_Reason = ""
 
                 output = self.channel.recv(9999)
                 self.channel.send_ready()

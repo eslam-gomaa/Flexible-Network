@@ -20,6 +20,7 @@ import time
 import os
 import textwrap
 import socket
+import timeout_decorator
 
 
 class Terminal_Task:
@@ -236,31 +237,19 @@ class Terminal_Task:
         """
         
         date_time = datetime.today().strftime('%d-%m-%Y_%H-%M-%S')
-        start_time = time.time()
         if ask_for_confirmation:
             self.ssh.ask_for_confirmation(cmd=self.bcolors.OKBLUE +  cmd + self.bcolors.ENDC)
-
-        # Re-connect if the ssh connection was closed.
-        if reconnect_closed_socket:
-            try:
-                # This code will update the ssh connection & channel status if the connection is closed.
-                transport = host_dct['ssh'].get_transport()
-                host_dct['channel'].send("\n")
-                time.sleep(0.1)
-                # print("channel closed", channel.closed)
-                if not transport.is_active():
-                    print(f"> Closed Socket detected @{host_dct['host']}\n> Re-authenticating...")
-                    # Re-authenticate the host
-                    reauth = self.ssh.authenticate(hosts=[host_dct['host']], user=self.ssh.user, password=self.ssh.password, port=self.ssh.port, terminal_print=True)
-                    # Update the channel & ssh objects of the host (So that the channel will be used for commands execution.)
-                    host_dct['channel']  = reauth[host_dct['host']]['channel']
-                    host_dct['ssh']  = reauth[host_dct['host']]['ssh']
-
-            except socket.error  as e:
-                print(f"Something went wrong !\n> {e}")
-                exit(1)
         
-        result = self.ssh.exec(host_dct['channel'], cmd)
+        start_time = time.time()
+        # Re-connect if the ssh connection was closed.
+        
+
+
+        # if reconnect_closed_socket:
+        #     result = reconnect_if_socket_closed()
+        #     print(result)
+ 
+        result = self.ssh.exec(host_dct, cmd)
         duration = (time.time() - start_time)
         print()
         print(f"@ {host_dct['host']}")
@@ -317,7 +306,7 @@ The command exited with exit_code of {result['exit_code']}
             - "exit_code": (int) 0 --> the command run successfully,  1 --> an error occurred
         - does NOT print to the terminal
         """
-        result = self.ssh.exec(host_dct['channel'], cmd)
+        result = self.ssh.exec(host_dct, cmd)
         return result
 
     def execute_from_file(self, host_dct, file, terminal_print='default', ask_for_confirmation=False, exit_on_fail=True):
@@ -352,7 +341,7 @@ The command exited with exit_code of {result['exit_code']}
         Take full configurations backup of the device
         """
         start_time = time.time()
-        result = self.ssh.backup_config(host_dct['channel'], comment, target)
+        result = self.ssh.backup_config(host_dct, comment, target)
 
         # Inserting the DB record
         # Generate a backup ID

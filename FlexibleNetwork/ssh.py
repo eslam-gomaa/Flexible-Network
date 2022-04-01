@@ -1,3 +1,4 @@
+from unittest import result
 from FlexibleNetwork.ssh_authentication import SSH_Authentication
 import time
 from tabulate import tabulate
@@ -151,9 +152,46 @@ class SSH_connection():
             table.append(row)
         output_data = tabulate(table, headers='firstrow', tablefmt='tsv', showindex=False)
         # Need to Figure out how to write these these data to a csv or Excel file. 
+
+    def reconnect_if_socket_closed(self, host_dct):
+            self.needed = False
+            self.reconnected = False
+            def reconnect():
+                print(f"> Closed Socket detected @{host_dct['host']}\n> Trying to reconnect ...")
+                # Re-authenticate the host
+                reauth = self.authenticate(hosts=[host_dct['host']], user=self.user, password=self.password, port=self.port, terminal_print=True)
+                # Update the channel & ssh objects of the host (So that the channel will be used for commands execution.)
+                if reauth[host_dct['host']]['is_connected']:
+                    host_dct['channel']  = reauth[host_dct['host']]['channel']
+                    host_dct['ssh']  = reauth[host_dct['host']]['ssh']
+                    print(f"> Reconnected successfully to @{host_dct['host']}")
+                    self.reconnected = True
+
+                else:
+                    print(f"> FAILED to reconnect to @{host_dct['host']}")
+                    self.reconnected = False
+            try:
+                # This code will update the ssh connection & channel status if the connection is closed.
+                transport = host_dct['ssh'].get_transport()
+                host_dct['channel'].send("\n")
+                time.sleep(0.1)
+                if not host_dct['channel'].recv_ready():
+                    reconnect()
+                    self.needed = True
+
+                elif not transport.is_active():
+                    reconnect()
+                    self.needed = True
+                elif host_dct['channel'].closed:
+                    reconnect()
+                    self.needed = True
+                return {'needed': self.needed, 'reconnected': self.reconnected}
+            except socket.error  as e:
+                print(f"ERROR -- Something went wrong !\n> {e}")
+                exit(1)
         
  
-    def exec(self, channel, cmd):
+    def exec(self, host_dct, cmd, reconnect_closed_socket=True):
         """
         - Excutes a command on a remove network device
         - Returns a dictionary:
@@ -192,21 +230,28 @@ class SSH_connection():
         out['stderr'] = []
         out['exit_code'] = 0
 
-        ## Thinking: How to reconnect if the socket is closed.
-        # try:
-        #     channel.send("")
-        # except (socket.error)  as e:
-        #     pass
+        # If the socket is closed try to reconnect.
+        if reconnect_closed_socket:
+            result = self.reconnect_if_socket_closed(host_dct)
+            # If tried to re-connect & failed return -1
+            if (result['needed']) and (not result['reconnected']):
+                out['exit_code'] = -1
+                out['stderr'] = ["Socket is closed > Failed to reconnect."]
+                return out
     
         # Run the command
         try:
+            channel = host_dct['channel']
             channel.send(cmd + '\n' + '\n')
-            # print(channel.closed)
             # Important to set wait time, if not set it might not be able to read full output.
             time.sleep(0.5)
         
             # Get the output of the command
-            out['stdout'] = channel.recv(9999).decode("utf-8")
+            if channel.recv_ready():
+                out['stdout'] = channel.recv(9999).decode("utf-8")
+            else:
+                out['stdout'] = ""
+
             # Preserve of the original stdout (Before cleaning)
             stdout_original = out['stdout']
             # Clean the "command" from the output & the white spaces.
@@ -238,9 +283,10 @@ class SSH_connection():
 
         return out
 
-    def backup_config(self, channel, comment, target):
+    def backup_config(self, host_dct, comment, target):
         """
         Take a backup of the device configurations
         """
+        channel = host_dct['channel']
         out = self.exec(channel, self.vendor.backup_command)
         return out
