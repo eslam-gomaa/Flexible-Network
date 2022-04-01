@@ -20,14 +20,16 @@ report = task.connection_report_Table(task.devices_dct)
 
 ### Test exeuting a command.
 
-cmd ='''sh vlan br'''
+cmd ='''
+    sh vlan br
+    conf t        
+     '''
 
 
 for host in task.connected_devices_dct:     
     host_dct = task.connected_devices_dct[host]
     
-    enable = task.execute_raw(host_dct, 'enable\n' + 'cisco')
-    if enable['exit_code'] == 0: 
-        task.execute(host_dct, cmd, ask_for_confirmation=True, terminal_print='json')
+    enable = task.execute(host_dct, 'enable\n' + 'cisco', ask_for_confirmation=True)
+    task.execute(host_dct, cmd, terminal_print='json')
 
 
