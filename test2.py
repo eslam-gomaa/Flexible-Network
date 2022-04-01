@@ -15,23 +15,19 @@ rocket = RocketChat_API()
 ##  2  ## Get Connection Report
 report = task.connection_report_Table(task.devices_dct)
 # print(report)
-rocket.send_message(['eslam.gomaa', 'Nabawy'], "``` {} ```".format(report))
+# rocket.send_message(['eslam.gomaa'], f"``` {report} ```")
 
 
 ### Test exeuting a command.
 
-cmd ='''sh vlan br
-sh ip int br'''
+cmd ='''sh vlan br'''
 
 
-for host in task.connected_devices_dct: 
+for host in task.connected_devices_dct:     
     host_dct = task.connected_devices_dct[host]
     
     enable = task.execute_raw(host_dct, 'enable\n' + 'cisco')
     if enable['exit_code'] == 0: 
-        task.execute(host_dct, cmd)
-        task.execute(host_dct, cmd, terminal_print='json')
-        task.backup_config(host_dct, 'Testing S3 integrations', target='s3')    
+        task.execute(host_dct, cmd, ask_for_confirmation=True, terminal_print='json')
 
-print('test.1')
 
