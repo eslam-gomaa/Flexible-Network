@@ -165,7 +165,7 @@ class SSH_connection():
             A function to try to reconnect a closed ssh connection
             - Will be triggered if a closed socket is detected.
             """
-            print(f"\n> Closed Socket detected @{host_dct['host']}\n> Trying to reconnect ...")
+            print(f"\n> 🟡 Closed Socket detected @{host_dct['host']}\n> Trying to reconnect ...")
             # Re-authenticate the host
             reauth = self.authenticate(hosts=[host_dct['host']], user=self.user, password=self.password, port=self.port, terminal_print=True)
             # If the host was re-connected successfully.
@@ -173,10 +173,10 @@ class SSH_connection():
                 # Update the channel & ssh client objects of the host (So that the channel will be used for further commands execution.)
                 host_dct['channel']  = reauth[host_dct['host']]['channel']
                 host_dct['ssh']  = reauth[host_dct['host']]['ssh']
-                print(f"> Reconnected successfully to @{host_dct['host']}")
+                print(f"> 🟢 Reconnected successfully to @{host_dct['host']}")
                 self.reconnected = True
             else:
-                print(f"> FAILED to reconnect to @{host_dct['host']}")
+                print(f"> 🔴 FAILED to reconnect to @{host_dct['host']}")
                 self.reconnected = False
         try:
             transport = host_dct['ssh'].get_transport()
