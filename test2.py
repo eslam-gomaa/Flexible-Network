@@ -10,26 +10,29 @@ rocket = RocketChat_API()
 # print(cyberark.search_accounts(search='egomaa'))
 
 ##  1  ## Authenticate
-# task.authenticate(hosts=task.inventory_groups['all'], user='orange', password='cisco', port='1113')
+task.authenticate(hosts=task.inventory_groups['switches2'], user='orange', password='cisco', port='1113')
+
+# print(task.devices_dct)
 
 ##  2  ## Get Connection Report
-report = task.connection_report_Table(task.devices_dct)
+# report = task.connection_report_Table(task.devices_dct)
 # print(report)
 # rocket.send_message(['eslam.gomaa'], f"``` {report} ```")
 
 
 ### Test exeuting a command.
 
+# exit(0)
+
 cmd ='''
-    sh vlan br
-    conf t        
+    sh vlan br       
      '''
 
 
 for host in task.connected_devices_dct:     
     host_dct = task.connected_devices_dct[host]
     
-    enable = task.execute(host_dct, 'enable\n' + 'cisco', ask_for_confirmation=True)
-    task.execute(host_dct, cmd, terminal_print='json')
-
+    task.execute_raw(host_dct, 'enable\ncisco')
+    task.execute(host_dct, cmd, terminal_print='json', ask_for_confirmation=True)
+    task.execute(host_dct, 'sh ip int br')
 
