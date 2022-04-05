@@ -1,4 +1,3 @@
-from asyncio import transports
 from FlexibleNetwork.Vendors import Cisco
 from FlexibleNetwork.Flexible_Network import ReadCliOptions
 from FlexibleNetwork.Flexible_Network import CLI
@@ -182,7 +181,7 @@ class Terminal_Task:
             else:
                 exit(1)
 
-    def authenticate(self, hosts=[], user='orange', password='cisco', port='1113', terminal_print=True):
+    def authenticate(self, hosts, user, password, port, terminal_print=True):
         self.ssh.authenticate(hosts=hosts, user=user, password=password, port=port, terminal_print=terminal_print)
         self.devices_dct = self.ssh.devices_dct
         self.connected_devices_dct = self.ssh.connected_devices_dct
@@ -205,7 +204,6 @@ class Terminal_Task:
             self.db.update_tasks_table({'log_file': self.log_file}, self.task_id)
         else:
             self.db.update_tasks_table({'log_file': None}, self.task_id)
-
 
     def update_log_file(self, data):
         with open(self.log_file, 'a') as file:
