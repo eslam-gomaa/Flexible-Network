@@ -28,6 +28,7 @@ class SSH_Authentication():
         self.tries = 1
         while  (self.tries <= max_tries):
             try:
+                # Create an ssh client
                 self.ssh = paramiko.SSHClient()
                 
                 self.ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
