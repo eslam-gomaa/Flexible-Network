@@ -1,3 +1,5 @@
+from concurrent.futures import thread
+from sqlite3 import connect
 from FlexibleNetwork.ssh_authentication import SSH_Authentication
 import time
 from tabulate import tabulate
@@ -5,6 +7,8 @@ import textwrap
 import re
 import socket
 from FlexibleNetwork.vendors.cisco import Cisco
+import concurrent.futures
+
 
 
 class SSH_connection():
@@ -51,6 +55,89 @@ class SSH_connection():
                 if terminal_print:
                     print("   {}  [ {} / {} ]          Connected [ {} ]     Failed [ {} ]    ".format(host, cnt , len(hosts), self.connected_devices_number, self.connection_failed_devices_number), end="\r")
             # print("                                                                                              ", end='\r')
+            print()
+            self.devices_dct = out
+            for host in self.devices_dct:
+                if self.devices_dct[host]['is_connected']:
+                    self.connected_devices_dct[host] = self.devices_dct[host]
+            return out
+        except KeyboardInterrupt:
+            print()
+            print("> Stopped.  See you \n")
+            exit(1)
+
+    def authenticate_concurrent(self, hosts, user, password, port, terminal_print=True):
+        """
+        Autenticates a List of devices and returns a dictionary of dictionaries,
+        * The key of each nested dict is the host IP and the value is the connection & authentication information.
+        # Modified copy of .. (for terminal printing.)
+        """
+        try:
+            if terminal_print:
+                print("> Authenticating selected devices")
+
+            self.connection_failed_devices_number = 0
+            self.connected_devices_number = 0
+            self.user = user
+            self.password = password
+            self.port = port
+
+            out = {}
+            self.authentication = SSH_Authentication()
+            cnt = 0
+            
+            with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
+                host_feature_dct = {}
+
+                # for host in hosts:
+                #     connection = executor.map(self.authentication.connect, host, user, password, port, timeout=5)
+                #     print(host, connection)
+                #     host_feature_dct[host] = connection
+                
+                # for host, future in host_feature_dct.items():
+                #     print(str(future))
+
+                for host in hosts:
+                    connection = executor.submit(self.authentication.connect, host, user, password, port)
+                    time.sleep(2)
+                    print(f"> Starting parallel ssh clients:  [ {host} ]", end="\r")
+                    # results.append(connection)
+                    host_feature_dct[host] = connection
+
+                for host, future in zip(host_feature_dct.keys(), concurrent.futures.as_completed(host_feature_dct.values())):
+                    if future.result()['is_connected']:
+                        self.connected_devices_number +=1
+                    else:
+                        self.connection_failed_devices_number  +=1
+                    out[host] = future.result()
+                    cnt +=1
+                    if terminal_print:
+                        print("   {}  [ {} / {} ]          Connected [ {} ]     Failed [ {} ]    ".format(host, cnt , len(hosts), self.connected_devices_number, self.connection_failed_devices_number), end="\r")
+
+
+
+                # for host, future in host_feature_dct.items():
+                #     if future.result()['is_connected']:
+                #         self.connected_devices_number +=1
+                #     else:
+                #         self.connection_failed_devices_number  +=1
+                #     out[host] = future.result()
+                #     cnt +=1
+                #     if terminal_print:
+                #         print("   {}  [ {} / {} ]          Connected [ {} ]     Failed [ {} ]    ".format(host, cnt , len(hosts), self.connected_devices_number, self.connection_failed_devices_number), end="\r")
+
+
+                # for f, host in zip(concurrent.futures.as_completed(results), hosts):
+                #     if f.result()['is_connected']:
+                #         self.connected_devices_number +=1
+                #     else:
+                #         self.connection_failed_devices_number  +=1
+                #     out[host] = f.result()
+                #     cnt +=1
+                #     if terminal_print:
+                #         print("   {}  [ {} / {} ]          Connected [ {} ]     Failed [ {} ]    ".format(host, cnt , len(hosts), self.connected_devices_number, self.connection_failed_devices_number), end="\r")
+
+                # print("                                                                                              ", end='\r')
             print()
             self.devices_dct = out
             for host in self.devices_dct:
