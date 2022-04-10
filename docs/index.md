@@ -99,9 +99,7 @@ Before reading the features you need to know that the network devices are "dump"
 
 ## Install with `pip`
 
-Note
-{: .label .label-orange }
-At least Python3.6 is needed (_Dependencies constrains_)
+**_Note_** At least Python3.6 is needed (_Dependencies constrains_)
 
 https://pypi.org/project/FlexibleNetwork/0.0.2/
 
