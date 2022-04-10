@@ -99,8 +99,9 @@ Before reading the features you need to know that the network devices are "dump"
 
 ## Install with `pip`
 
-**Note**
-{: .label .label-orange } At least Python3.6 is needed (_Dependencies constrains_)
+Note
+{: .label .label-orange }
+At least Python3.6 is needed (_Dependencies constrains_)
 
 https://pypi.org/project/FlexibleNetwork/0.0.2/
 
@@ -276,7 +277,6 @@ _From here, you can take a look at_ the complete examples ( _To be documented_ )
   <summary markdown='span'> 
   <b style="font-size:20px"> <code>--name</code></b>
   </summary>
-  <br>
    The task name
 
    Required
@@ -293,8 +293,7 @@ _From here, you can take a look at_ the complete examples ( _To be documented_ )
   <summary markdown="span"> 
   <b style="font-size:20px"> <code>--inventory</code></b>
   </summary>
-  <br>
-   file that contains the devices to automate
+   A file that contains the devices to automate
 
    Optional
    {: .label .label-green }
