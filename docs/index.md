@@ -1,7 +1,8 @@
 ---
 # default, page
 layout: default
-title: Flexible Network Documentation
+description: Home documentation of Flexibe Network
+title: Home
 markdown: Kramdown
 kramdown:
   parse_block_html: true
