@@ -18,7 +18,7 @@ kramdown:
 A Python library / cli-tool to achieve advanced network automation scenarios with few lines of code
 {: .fs-6 .fw-300 }
 
-[Get started now](#getting-started){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 } [View it on GitHub](https://github.com/eslam-gomaa/Flexible_Network){: .btn .fs-5 .mb-4 .mb-md-0 }
+[Get started now](#getting-started){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 } [View it on GitHub](https://github.com/eslam-gomaa/Flexible-Network){: .btn .fs-5 .mb-4 .mb-md-0 }
 
 
 <br>
@@ -36,19 +36,10 @@ A Python library / cli-tool to achieve advanced network automation scenarios wit
 
 
 <br>
-
-[ Under development ]
-
 A Refactored Version of [Flexible_Network  ((Proof of concept))  ](https://github.com/eslam-gomaa/Flexible_Network)
 
 
-<br>
-
-A Python library / cli-tool to achieve advanced network automation scenarios with few lines of code
-
-<br>
-
-
+[ Under development ]
 [**BackLog**](https://shiny-pruner-f62.notion.site/Flexible-Network-Project-8a037585793a4405acf892e66e6a4132){: .btn }
 
 
