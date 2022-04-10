@@ -235,8 +235,7 @@ _From here, you can take a look at_ the complete examples ( _To be documented_ )
 
 ### Run a task
 
-<a id=--name></a>
-<details>
+<details markdown="1" id="--name">
   <summary markdown='span'> 
   <b style="font-size:20px"> <code>--name</code></b>
   </summary>
@@ -248,9 +247,8 @@ _From here, you can take a look at_ the complete examples ( _To be documented_ )
    > Each script run represents a task, Tasks state are stored.
 </details>
 
-<!-- <a id=--inventory></a> -->
 
-<details markdown="1" id="title">
+<details markdown="1" id="--inventory">
   <summary markdown="span"> 
   <b style="font-size:20px"> <code>--inventory</code></b>
   </summary>
