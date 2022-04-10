@@ -247,6 +247,7 @@ _From here, you can take a look at_ the complete examples ( _To be documented_ )
    > Each script run represents a task, Tasks state are stored.
 </details>
 
+<br>
 
 <details markdown="1" id="--inventory">
   <summary markdown="span"> 
@@ -264,10 +265,10 @@ _From here, you can take a look at_ the complete examples ( _To be documented_ )
    >```
 </details>
 
+<br>
 
-<a id=--authenticate-group></a>
-<details>
-  <summary> 
+<details markdown="1" id="--authenticate-group">
+  <summary markdown="span"> 
   <b style="font-size:20px"> <code>--authenticate-group</code></b>
   </summary>
   <br>
@@ -306,10 +307,10 @@ task.devices_dct
 ```
 </details>
 
+<br>
 
-<a id=--no-confirm-auth></a>
-<details>
-  <summary> 
+<details markdown="1" id="--no-confirm-auth">
+  <summary markdown="span"> 
   <b style="font-size:20px"> <code>--no-confirm-auth</code></b>
   </summary>
   <br>
@@ -320,6 +321,7 @@ task.devices_dct
   > The dfault Behavior is to ask you for confirmation before proceeding if failed to authenticate to some devices.
 </details>
 
+<br>
 
 <a id=--user></a>
 <details>
