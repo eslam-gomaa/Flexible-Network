@@ -99,7 +99,8 @@ Before reading the features you need to know that the network devices are "dump"
 
 ## Install with `pip`
 
-> **NOTE** At least Python3.6 is needed (_Dependencies constrains_)
+**Note**
+{: .label .label-orange } At least Python3.6 is needed (_Dependencies constrains_)
 
 https://pypi.org/project/FlexibleNetwork/0.0.2/
 
@@ -277,6 +278,7 @@ _From here, you can take a look at_ the complete examples ( _To be documented_ )
   </summary>
   <br>
    The task name
+
    Required
    {: .label .label-yellow }
    
@@ -293,6 +295,7 @@ _From here, you can take a look at_ the complete examples ( _To be documented_ )
   </summary>
   <br>
    file that contains the devices to automate
+
    Optional
    {: .label .label-green }
    
@@ -313,7 +316,8 @@ _From here, you can take a look at_ the complete examples ( _To be documented_ )
   <br>
    Privide an inventory group to authenticate
    
-   > *Optional*
+   Optional
+   {: .label .label-green }
 
 
 
