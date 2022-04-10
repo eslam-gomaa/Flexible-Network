@@ -2,6 +2,9 @@
 layout: default
 title: Flexible Network Documentation
 markdown: CommonMarkGhPages
+commonmark:
+  options: ["UNSAFE", "SMART", "FOOTNOTES"]
+  extensions: ["strikethrough", "autolink", "table", "tagfilter"]
 ---
 
 
