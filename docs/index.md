@@ -21,8 +21,9 @@ kramdown:
 
 <br>
 
-A Python library / tool to achieve advanced network automation scenarios with few lines of code
-* Required: Basic python knowledge
+A Python library / cli-tool to achieve advanced network automation scenarios with few lines of code
+
+<br>
 
 A Refactored Version of [Flexible_Network  ((Proof of concept))  ](https://github.com/eslam-gomaa/Flexible_Network)
 
