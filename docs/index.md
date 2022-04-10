@@ -4,6 +4,7 @@ title: Flexible Network Documentation
 markdown: Kramdown
 kramdown:
   parse_block_html: true
+  auto_ids: false
 ---
 
 
