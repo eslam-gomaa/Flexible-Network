@@ -1,5 +1,6 @@
 ---
-layout: default
+# default, post
+layout: page
 title: Flexible Network Documentation
 markdown: Kramdown
 kramdown:
