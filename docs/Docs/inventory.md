@@ -3,7 +3,7 @@
 # default, page
 layout: default
 <!-- permalink: / -->
-title: Home
+title: Inventory
 markdown: Kramdown
 kramdown:
   parse_block_html: true

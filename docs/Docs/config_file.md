@@ -1,9 +1,8 @@
 
 ---
-# default, page
 layout: default
 <!-- permalink: / -->
-title: Home
+title: Config file
 markdown: Kramdown
 kramdown:
   parse_block_html: true
