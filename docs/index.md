@@ -8,8 +8,7 @@ kramdown:
   syntax_highlighter: coderay
 ---
 
-This is a paragraph that for some reason we want blue.
-{: .blue}
+This is a paragraph that for some reason we want blue. {: .blue}
 
 - TOC
 {:toc}
