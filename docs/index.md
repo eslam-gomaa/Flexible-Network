@@ -5,6 +5,7 @@ markdown: Kramdown
 kramdown:
   parse_block_html: true
   auto_ids: false
+  syntax_highlighter: coderay
 ---
 
 
@@ -247,8 +248,7 @@ _From here, you can take a look at_ the complete examples ( _To be documented_ )
    > Each script run represents a task, Tasks state are stored.
 </details>
 
-<!-- <a id=--inventory></a> -->
-<A href="#--inventory">Inventory</A>
+<a id=--inventory></a>
 
 <details markdown="1">
   <summary markdown="span"> 
