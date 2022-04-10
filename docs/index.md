@@ -277,8 +277,8 @@ _From here, you can take a look at_ the complete examples ( _To be documented_ )
   </summary>
   <br>
    The task name
-   
-   > *Required*
+   Required
+   {: .label .label-yellow }
    
    > Each script run represents a task, Tasks state are stored.
 
@@ -293,7 +293,6 @@ _From here, you can take a look at_ the complete examples ( _To be documented_ )
   </summary>
   <br>
    file that contains the devices to automate
-   
    Optional
    {: .label .label-green }
    
