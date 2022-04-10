@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Flexible Network Documentation
-markdown: kramdown
+markdown: GFM
 ---
 
 
