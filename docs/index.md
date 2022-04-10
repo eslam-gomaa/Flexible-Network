@@ -27,7 +27,6 @@ A Python library / cli-tool to achieve advanced network automation scenarios wit
   <summary markdown='span'> 
   <b style="font-size:20px"> <code>Table of contents</code></b>
   </summary>
-  <br>
 
 - TOC
 {:toc}
