@@ -4,7 +4,7 @@ title: Flexible Network Documentation
 markdown: Kramdown
 kramdown:
   parse_block_html: true
-  auto_ids: false
+  auto_ids: true
   syntax_highlighter: coderay
 ---
 
