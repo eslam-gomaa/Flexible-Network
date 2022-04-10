@@ -247,8 +247,8 @@ _From here, you can take a look at_ the complete examples ( _To be documented_ )
 </details>
 
 <a id=--inventory></a>
-<details>
-  <summary> 
+<details markdown="1">
+  <summary markdown="span"> 
   <b style="font-size:20px"> <code>--inventory</code></b>
   </summary>
   <br>
