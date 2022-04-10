@@ -277,7 +277,7 @@ _From here, you can take a look at_ the complete examples ( _To be documented_ )
   <br>
    file that contains the devices to automate
    
-   > *Optional*
+   New {: .label .label-green }
    
    > This argument overrides the following option in the config file.
    >```ini
