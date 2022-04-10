@@ -2,6 +2,7 @@
 # default, page
 layout: default
 description: Home documentation of Flexibe Network
+permalink: /
 title: Home
 markdown: Kramdown
 kramdown:
@@ -10,6 +11,8 @@ kramdown:
   syntax_highlighter: coderay
 ---
 
+# Flexible Network documentation
+{: .fs-9 }
 
 - TOC
 {:toc}
