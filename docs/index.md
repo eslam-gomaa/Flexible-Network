@@ -1,7 +1,7 @@
 ---
 # default, page
 layout: default
-description: Home documentation of Flexibe Network
+description: A Python library / cli-tool to achieve advanced network automation scenarios with few lines of code
 permalink: /
 title: Home
 markdown: Kramdown
@@ -23,6 +23,8 @@ kramdown:
 
 [ Under development ]
 
+A Refactored Version of [Flexible_Network  ((Proof of concept))  ](https://github.com/eslam-gomaa/Flexible_Network)
+
 
 <br>
 
@@ -30,7 +32,6 @@ A Python library / cli-tool to achieve advanced network automation scenarios wit
 
 <br>
 
-A Refactored Version of [Flexible_Network  ((Proof of concept))  ](https://github.com/eslam-gomaa/Flexible_Network)
 
 [**BackLog**](https://shiny-pruner-f62.notion.site/Flexible-Network-Project-8a037585793a4405acf892e66e6a4132){: .btn }
 
