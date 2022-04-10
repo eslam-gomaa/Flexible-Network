@@ -17,7 +17,7 @@ kramdown:
 
 <br>
 
-#### [ Under development ]
+[ Under development ]
 
 
 <br>
@@ -252,9 +252,11 @@ _From here, you can take a look at_ the complete examples ( _To be documented_ )
    > *Required*
    
    > Each script run represents a task, Tasks state are stored.
+
+   ---
+
 </details>
 
-<br>
 
 <details markdown="1" id="--inventory">
   <summary markdown="span"> 
@@ -270,9 +272,10 @@ _From here, you can take a look at_ the complete examples ( _To be documented_ )
    >[general]
    >default_inventory = /etc/flexible-network/hosts
    >```
-</details>
 
-<br>
+   ---
+
+</details>
 
 <details markdown="1" id="--authenticate-group">
   <summary markdown="span"> 
@@ -312,9 +315,11 @@ task.connected_devices_dct
 # A dict that contails ALL the devices (including ones that failed to authenticate)
 task.devices_dct
 ```
+
+---
+
 </details>
 
-<br>
 
 <details markdown="1" id="--no-confirm-auth">
   <summary markdown="span"> 
@@ -339,6 +344,9 @@ task.devices_dct
   The user to authenticate the group with
 
   > *Optional*
+
+  ---
+
 </details>
 
 
@@ -351,6 +359,9 @@ task.devices_dct
   The password to authenticate the group with
 
   > *Optional*
+
+  ---
+  
 </details>
 
 
