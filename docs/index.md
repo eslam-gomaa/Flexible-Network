@@ -11,7 +11,7 @@ kramdown:
   syntax_highlighter: coderay
 ---
 
-<button class="btn js-toggle-dark-mode">Dark Theme>
+<button class="btn js-toggle-dark-mode">Dark Theme
 
 <script>
 const toggleDarkMode = document.querySelector('.js-toggle-dark-mode');
@@ -22,7 +22,7 @@ jtd.addEvent(toggleDarkMode, 'click', function(){
     toggleDarkMode.textContent = 'Dark Theme';
   } else {
     jtd.setTheme('dark');
-    toggleDarkMode.textContent = 'Dark Theme';
+    toggleDarkMode.textContent = 'Light Theme';
   }
 });
 </script>
