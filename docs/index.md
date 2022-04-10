@@ -247,7 +247,8 @@ _From here, you can take a look at_ the complete examples ( _To be documented_ )
    > Each script run represents a task, Tasks state are stored.
 </details>
 
-<a id=--inventory></a>
+<!-- <a id=--inventory></a> -->
+<A href="#--inventory">Inventory</A>
 
 <details markdown="1">
   <summary markdown="span"> 
