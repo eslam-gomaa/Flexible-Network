@@ -21,10 +21,18 @@ A Python library / cli-tool to achieve advanced network automation scenarios wit
 [Get started now](#getting-started){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 } [View it on GitHub](https://github.com/eslam-gomaa/Flexible_Network){: .btn .fs-5 .mb-4 .mb-md-0 }
 
 
+<br>
+
+<details markdown="1" id="--toc">
+  <summary markdown='span'> 
+  <b style="font-size:20px"> <code>TOC</code></b>
+  </summary>
+  <br>
 
 - TOC
 {:toc}
 
+</details>
 
 
 <br>
