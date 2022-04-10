@@ -8,7 +8,6 @@ kramdown:
   syntax_highlighter: coderay
 ---
 
-This is a paragraph that for some reason we want blue. {: .blue}
 
 - TOC
 {:toc}
@@ -27,7 +26,7 @@ A Python library / tool to achieve advanced network automation scenarios with fe
 
 A Refactored Version of [Flexible_Network  ((Proof of concept))  ](https://github.com/eslam-gomaa/Flexible_Network)
 
-**BackLog**: https://flexible-network.devops-caffe.com
+## [BackLog](https://flexible-network.devops-caffe.com)
 
 <br>
 
