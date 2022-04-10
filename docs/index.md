@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: page
 title: Flexible Network Documentation
 markdown: GFM
 ---
