@@ -235,7 +235,7 @@ _From here, you can take a look at_ the complete examples ( _To be documented_ )
 
 <a id=--name></a>
 <details>
-  <summary> 
+  <summary markdown='span'> 
   <b style="font-size:20px"> <code>--name</code></b>
   </summary>
   <br>
