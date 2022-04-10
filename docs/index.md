@@ -99,9 +99,11 @@ Before reading the features you need to know that the network devices are "dump"
 
 ## Install with `pip`
 
-**_Note_** At least Python3.6 is needed (_Dependencies constrains_)
+> **Note** At least Python3.6 is needed (_Dependencies constrains_)
 
-https://pypi.org/project/FlexibleNetwork/0.0.2/
+[**view on pypi.org**](https://pypi.org/project/FlexibleNetwork){: .btn }
+
+
 
 ```bash
 pip3.6 install FlexibleNetwork
