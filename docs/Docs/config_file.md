@@ -1,4 +1,33 @@
 
+---
+# default, page
+layout: default
+<!-- permalink: / -->
+title: Home
+markdown: Kramdown
+kramdown:
+  parse_block_html: true
+  auto_ids: true
+  syntax_highlighter: coderay
+---
+
+<button class="btn js-toggle-dark-mode">Switch to Dark Mode
+
+<script>
+const toggleDarkMode = document.querySelector('.js-toggle-dark-mode');
+
+jtd.addEvent(toggleDarkMode, 'click', function(){
+  if (jtd.getTheme() === 'dark') {
+    jtd.setTheme('light');
+    toggleDarkMode.textContent = 'Switch to Dark Mode';
+  } else {
+    jtd.setTheme('dark');
+    toggleDarkMode.textContent = 'Switch to Light Mode';
+  }
+});
+</script>
+
+
 # Configuration file
 
 The configuration file is used mainly to provide credentials for the external APIs like `S3`, `CyberArk`, etc. 
