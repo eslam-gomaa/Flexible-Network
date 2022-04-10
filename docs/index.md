@@ -8,6 +8,13 @@ kramdown:
   syntax_highlighter: coderay
 ---
 
+This is a paragraph that for some reason we want blue.
+{: .blue}
+
+- TOC
+{:toc}
+
+
 
 <br>
 
@@ -922,31 +929,3 @@ rocket_msg = rocket.send_message(['eslam.gomaa'], "``` {} ```".format(report))
 <br>
 <br>
 
-
----
-
-Backup running configuration from the remote device & store them in the local directory by default, for other backup storage options check [supported backup targets]
-
-<br>
-
-> **Note:** This method prints the output to the terminal.
-
-<br>
-
-### INPUT
-
-| Input     | Type | Description                                                  | Options        | Default |
-| --------- | ---- | ------------------------------------------------------------ | -------------- | ------- |
-| `hos_dct` | dct  | The host dictionary => is key of the  `connected_devices_dct` attribute  (And contains information about the device including the `ssh channel` to use for the command execution ) |                |         |
-| `comment` | str  | A comment indicates the purpose of the backup                |                |         |
-| `target`  | str  | Print the ouput \|\| error to the terminal                   | 'local',  's3' | 'local' |
-
-
-> **NOTE:** targets other than 'local' requires you to add the credentials in the config file
-
-
-<br>
-
-### OUTPUT
-
-> does NOT return
