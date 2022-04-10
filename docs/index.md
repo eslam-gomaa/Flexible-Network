@@ -111,7 +111,7 @@ pip3.6 install FlexibleNetwork
 
 <br>
 
-> Download a sample `config file` & `inventory file`
+☝️ Download a sample `config file` & `inventory file`
 
 ```bash
 mkdir /etc/flexible_network
