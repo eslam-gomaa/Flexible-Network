@@ -1,10 +1,9 @@
 ---
 layout: default
 title: Flexible Network Documentation
-markdown: CommonMarkGhPages
-commonmark:
-  options: ["UNSAFE", "SMART", "FOOTNOTES"]
-  extensions: ["strikethrough", "autolink", "table", "tagfilter"]
+markdown: Kramdown
+kramdown:
+  parse_block_html: true
 ---
 
 
