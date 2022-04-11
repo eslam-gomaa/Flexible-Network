@@ -60,10 +60,8 @@ rocket = RocketChat_API()
 
 #### Methods
 
-
-<a id=send_message()></a>
-<details>
-  <summary> 
+<details markdown="1" id="send_message">
+  <summary markdown='span'> 
   <b style="font-size:20px"> <code>send_message()</code></b>
   </summary>
   <br>
