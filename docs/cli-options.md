@@ -286,7 +286,7 @@ task.devices_dct
 
 <br>
 
-Validate the integration with the external APIs
+#### Validate the integration with the external APIs
 {: .fs-6 .fw-300 }
 
 <details markdown="1" id="--validate-integration">
