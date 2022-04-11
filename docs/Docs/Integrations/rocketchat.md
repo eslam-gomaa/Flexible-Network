@@ -3,6 +3,7 @@ layout: default
 nav_order: 1
 # permalink: /integrations/rocketchat
 parent: Integrations
+has_children: true
 title: RocketChat
 markdown: Kramdown
 kramdown:
