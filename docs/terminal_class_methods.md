@@ -30,6 +30,7 @@ jtd.addEvent(toggleDarkMode, 'click', function(){
 # `Terminal_Task` class Methods
 {: .fs-9 }
 
+<br>
 
 ```python
 from Flexible_Network import Terminal_Task
