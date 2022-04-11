@@ -1,6 +1,6 @@
-
 ---
 layout: default
+nav_order: 2
 permalink: /
 title: Inventory
 markdown: Kramdown

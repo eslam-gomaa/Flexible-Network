@@ -1,6 +1,7 @@
 ---
 # default, page
 layout: default
+nav_order: 0
 description: A Python library / cli-tool to achieve advanced network automation scenarios with few lines of code
 permalink: /
 title: Home
