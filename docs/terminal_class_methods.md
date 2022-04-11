@@ -52,6 +52,7 @@ from Flexible_Network import Terminal_Task
     * `devices_dct` `->` A dictionary, contains all the hosts of the authenticated group including the ones that failed to authenticate [ each key is the host IP & the value is the host info ]
     * `connected_devices_dct` -> the same as `devices_dct` but only contains the authenticated hosts.
 
+   ---
 
 </details>
 
@@ -159,6 +160,9 @@ Sample of an unsuccessful command ( Connection closed before or during the execu
    "exit_code":-1
 }
 ```
+
+---
+
 </details>
 
 
@@ -204,6 +208,7 @@ Sample of an unsuccessful command ( Connection closed before or during the execu
 
 [The same as `execute_raw` method](#execute_raw)
 
+---
 
 </details>
 
@@ -240,6 +245,8 @@ Sample of an unsuccessful command ( Connection closed before or during the execu
 {: .fs-6 .fw-300 }
 
    > does NOT return
+
+   ---
 
 </details>
 
@@ -300,6 +307,7 @@ rocket_msg = rocket.send_message(['eslam.gomaa'], "``` {} ```".format(report))
 +----------------+---------------------+-----------------+--------------+---------------+-------------------------+------------------------+
 ```
 
+---
 
 </details>
 
@@ -337,13 +345,12 @@ rocket_msg = rocket.send_message(['eslam.gomaa'], "``` {} ```".format(report))
 
    > does NOT return
 
+
+---
+
 </details>
 
 
-
-<br>
-
----
 
 <br>
 
