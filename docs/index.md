@@ -100,7 +100,6 @@ Before reading the features you need to know that the network devices are "dump"
   <summary markdown='span'> 
   <b style="font-size:20px"> <code>Why the execution time of a command takes around 0.6 ms ?</code></b>
   </summary>
-  <br>
    It takes much less than that, But we wait for a half a second before getting the result of a command from a device so that we're sure that we got the full output of the command
 
 </details>
@@ -110,16 +109,13 @@ Before reading the features you need to know that the network devices are "dump"
   <summary markdown='span'> 
   <b style="font-size:20px"> <code>Why to use this project while we can use Ansible for Network automation ?</code></b>
   </summary>
-  <br>
-
   Ansible & Python have different ways for doing network automation
 
    <details markdown="1" id="flexible-network-vs-ansible">
       <summary markdown='span'>
       <b style="font-size:18px"> <code>How Ansible works for Network Automation.</code></b>
       </summary>
-      <br>
-   Yes, Ansible is idempotent with network automation
+    Yes, Ansible is idempotent with network automation
 
    > ***How does it work:***
       
