@@ -34,7 +34,7 @@ jtd.addEvent(toggleDarkMode, 'click', function(){
 A Python library / cli-tool to achieve advanced network automation scenarios with few lines of code
 {: .fs-6 .fw-300 }
 
-[Get started now](#Features){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 } [View it on GitHub](https://github.com/eslam-gomaa/Flexible-Network){: .btn .fs-5 .mb-4 .mb-md-0 }
+[Get started now](#features){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 } [View it on GitHub](https://github.com/eslam-gomaa/Flexible-Network){: .btn .fs-5 .mb-4 .mb-md-0 }
 
 
 <br>

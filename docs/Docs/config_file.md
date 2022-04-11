@@ -1,7 +1,7 @@
 
 ---
 layout: default
-<!-- permalink: / -->
+permalink: /
 title: Config file
 markdown: Kramdown
 kramdown:

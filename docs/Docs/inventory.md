@@ -1,8 +1,7 @@
 
 ---
-# default, page
 layout: default
-<!-- permalink: / -->
+permalink: /
 title: Inventory
 markdown: Kramdown
 kramdown:
