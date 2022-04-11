@@ -111,23 +111,9 @@ Before reading the features you need to know that the network devices are "dump"
   </summary>
   Ansible & Python have different ways for doing network automation
 
-   <details markdown="1" id="flexible-network-vs-ansible">
-      <summary markdown='span'>
-      <b style="font-size:18px"> <code>How Ansible works for Network Automation.</code></b>
-      </summary>
-    Yes, Ansible is idempotent with network automation
-
-   > ***How does it work:***
-      
-   * Ansible uses modules, each vendor has different modules
-   * At the begining of the automation task, Ansible gathers the running config of each device and parse, Hence when you tell it to create a VLAN for example, it first takes a look at the configuration it parsed before, and if the vlan does not exist, will create it.
-      
-   <br>
-   <hr>
-   <br>
-
-   </details>
-
+  > _**How Ansible works for Network Automation**_
+  > * Ansible uses modules, each vendor has different modules
+    * At the begining of the automation task, Ansible gathers the running config of each device and parse, Hence when you tell it to create a VLAN for example, it first takes a look at the configuration it parsed before, and if the vlan does not exist, will create it.
 
   But despite the different modules & features that ansible provides, many network engineers still prefer to use regular network commands for automation, and In fact Python is used extensively for network automation, **But the problem here** is that we can NOT easily achieve idempotency because network devices are DUMP!
 
