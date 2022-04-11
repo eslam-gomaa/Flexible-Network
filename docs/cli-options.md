@@ -188,7 +188,7 @@ task.devices_dct
 
 <br>
 
-get tasks
+#### get tasks
 {: .fs-6 .fw-300 }
 
 
@@ -237,7 +237,7 @@ get tasks
 
 <br>
 
-get backups
+#### get backups
 {: .fs-6 .fw-300 }
 
 <details markdown="1" id="--backup">
