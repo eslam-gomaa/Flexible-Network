@@ -38,8 +38,5 @@ Allows you to get/update credentials from & to Cyberark secret manager.
 
 To be documented
 
-```
-{% raw %}
-**Note**
-{% endraw %}
-```
+Test
+.highlight .hll { background-color: #ffffcc }
