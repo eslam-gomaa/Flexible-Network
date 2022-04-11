@@ -10,3 +10,17 @@ kramdown:
   auto_ids: true
   syntax_highlighter: coderay
 ---
+
+# Integrations
+{: .no_toc }
+
+
+Integrate your scripts with external APIs easily
+{: .fs-6 .fw-300 }
+
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
