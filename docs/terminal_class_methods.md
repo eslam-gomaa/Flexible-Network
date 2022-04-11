@@ -33,9 +33,8 @@ jtd.addEvent(toggleDarkMode, 'click', function(){
 from Flexible_Network import Terminal_Task
 ```
 
-<a id=authenticate></a>
-<details>
-  <summary> 
+<details markdown="1" id="authenticate">
+  <summary markdown='span'> 
   <b style="font-size:20px"> <code>authenticate</code></b>
   </summary>
   <br>
@@ -57,9 +56,8 @@ from Flexible_Network import Terminal_Task
 </details>
 
 
-<a id=execute_raw></a>
-<details>
-  <summary> 
+<details markdown="1" id="execute_raw">
+  <summary markdown='span'> 
   <b style="font-size:20px"> <code>execute_raw()</code></b>
   </summary>
 
@@ -121,7 +119,7 @@ Sample of a successful command
 }
 ```
 
-Sample of an unsuccessfull command
+Sample of an unsuccessful command
 
 ```json
 {
@@ -144,7 +142,7 @@ Sample of an unsuccessfull command
 }
 ```
 
-Sample of an unsuccessfull command ( Connection closed before or during the execution )
+Sample of an unsuccessful command ( Connection closed before or during the execution )
 
 
 ```json
@@ -162,9 +160,8 @@ Sample of an unsuccessfull command ( Connection closed before or during the exec
 </details>
 
 
-<a id=execute></a>
-<details>
-  <summary> 
+<details markdown="1" id="execute">
+  <summary markdown='span'> 
   <b style="font-size:20px"> <code>execute()</code></b>
   </summary>
 
@@ -207,9 +204,8 @@ Sample of an unsuccessfull command ( Connection closed before or during the exec
 </details>
 
 
-<a id=execute_from_file></a>
-<details>
-  <summary> 
+<details markdown="1" id="execute_from_file">
+  <summary markdown='span'> 
   <b style="font-size:20px"> <code>execute_from_file()</code></b>
   </summary>
 
@@ -242,9 +238,8 @@ Sample of an unsuccessfull command ( Connection closed before or during the exec
 </details>
 
 
-<a id=connection_report_Table></a>
-<details>
-  <summary> 
+<details markdown="1" id="connection_report_Table">
+  <summary markdown='span'> 
   <b style="font-size:20px"> <code>connection_report_Table()</code></b>
   </summary>
    Return a structured table describes the authentication status of the selected devices
@@ -303,9 +298,8 @@ rocket_msg = rocket.send_message(['eslam.gomaa'], "``` {} ```".format(report))
 </details>
 
 
-<a id=backup_config></a>
-<details>
-  <summary> 
+<details markdown="1" id="backup_config">
+  <summary markdown='span'> 
   <b style="font-size:20px"> <code>backup_config()</code></b>
   </summary>
 
@@ -358,11 +352,3 @@ rocket_msg = rocket.send_message(['eslam.gomaa'], "``` {} ```".format(report))
 * *To be ogranized ...*
 
 <br>
-<br>
-
-
----
-
-<br>
-<br>
-
