@@ -30,6 +30,8 @@ jtd.addEvent(toggleDarkMode, 'click', function(){
 # Configuration file
 
 The configuration file is used mainly to provide credentials for the external APIs like `S3`, `CyberArk`, etc. 
+{: .fs-6 .fw-300 }
+
 
 > **Note:** Reading credentials from Environment Variables will be considered in the next milestone.
 

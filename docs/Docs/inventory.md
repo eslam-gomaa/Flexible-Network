@@ -29,6 +29,8 @@ jtd.addEvent(toggleDarkMode, 'click', function(){
 # Inventory
 
 We use the same inventory concept as Ansible, Here is an example of an inventory file
+{: .fs-6 .fw-300 }
+
 
 > This inventory has 4 groups `testing`, `switches`, `routers` and `empty`, each contains the devices listed below it
 
