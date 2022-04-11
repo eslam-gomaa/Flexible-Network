@@ -33,7 +33,7 @@ jtd.addEvent(toggleDarkMode, 'click', function(){
 ## Install with `pip`
 
 > **Note** At least Python3.6 is needed (_Dependencies constrains_)
-{: .fs-2 .fw-300 }
+{: .fs-4 .fw-300 }
 
 
 [**view on pypi.org**](https://pypi.org/project/FlexibleNetwork){: .btn }
