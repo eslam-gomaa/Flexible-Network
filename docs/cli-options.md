@@ -30,7 +30,7 @@ jtd.addEvent(toggleDarkMode, 'click', function(){
 {: .fs-9 }
 
 
-### Run a task
+#### Run a task
 {: .fs-9 }
 
 <details markdown="1" id="--name">
@@ -188,7 +188,7 @@ task.devices_dct
 
 <br>
 
-### get tasks
+#### get tasks
 {: .fs-9 }
 
 
@@ -201,7 +201,7 @@ task.devices_dct
   
   > *Optional*
 
-  ---
+---
 
 </details>
 
@@ -235,7 +235,7 @@ task.devices_dct
 
 <br>
 
-### get backups
+#### get backups
 {: .fs-9 }
 
 <details markdown="1" id="--backup">
@@ -282,7 +282,7 @@ task.devices_dct
 
 <br>
 
-### Validate the integration with the external APIs
+#### Validate the integration with the external APIs
 
 
 <details markdown="1" id="--validate-integration">
