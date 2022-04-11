@@ -126,7 +126,6 @@ task.devices_dct
   > The dfault Behavior is to ask you for confirmation before proceeding if failed to authenticate to some devices.
 </details>
 
-<br>
 
 <details markdown="1" id="--user">
   <summary markdown='span'> 
