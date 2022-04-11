@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_order: 2
-permalink: /
+# permalink: /
 title: Config file
 markdown: Kramdown
 kramdown:

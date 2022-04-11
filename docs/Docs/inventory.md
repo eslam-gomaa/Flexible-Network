@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_order: 3
-permalink: /
+# permalink: /
 title: Inventory
 markdown: Kramdown
 kramdown:
