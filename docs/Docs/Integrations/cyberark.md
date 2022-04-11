@@ -33,10 +33,13 @@ jtd.addEvent(toggleDarkMode, 'click', function(){
 Allows you to get/update credentials from & to Cyberark secret manager.
 {: .fs-6 .fw-300 }
 
+[**https://www.cyberark.com**](https://www.cyberark.com){: .btn }
+
+
 To be documented
 
 ```
 {% raw %}
-  test
+**Note**
 {% endraw %}
 ```
