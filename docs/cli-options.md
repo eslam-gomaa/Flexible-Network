@@ -72,8 +72,7 @@ jtd.addEvent(toggleDarkMode, 'click', function(){
   <summary markdown="span"> 
   <b style="font-size:20px"> <code>--authenticate-group</code></b>
   </summary>
-  <br>
-   Privide an inventory group to authenticate
+   Provide an inventory group to authenticate
    
    Optional
    {: .label .label-green }
@@ -96,7 +95,7 @@ python3.6 test1.py -n task1 \
 
 <br>
 
--> This will update the `devices_dct` & `connected_devices_dct` attributes in the `Terminal_Task` class (Which you can access after you instanciate an instance of the class)
+-> This will update the `devices_dct` & `connected_devices_dct` attributes in the `Terminal_Task` class (Which you can access after you instantiate an instance of the class)
 
 ```python
 task = Terminal_Task()
@@ -117,7 +116,6 @@ task.devices_dct
   <summary markdown="span"> 
   <b style="font-size:20px"> <code>--no-confirm-auth</code></b>
   </summary>
-  <br>
   Skip Asking for confirmation if failed to connect to some deivces
   
   Optional
@@ -132,7 +130,6 @@ task.devices_dct
   <summary markdown='span'> 
   <b style="font-size:20px"> <code>--user</code></b>
   </summary>
-  <br>
   The user to authenticate the group with
 
   Optional
@@ -147,7 +144,6 @@ task.devices_dct
   <summary markdown='span'> 
   <b style="font-size:20px"> <code>--password</code></b>
   </summary>
-  <br>
   The password to authenticate the group with
 
   Optional
@@ -162,7 +158,6 @@ task.devices_dct
   <summary markdown='span'>
   <b style="font-size:20px"> <code>--port</code></b>
   </summary>
-  <br>
   The port to use to connect to the group.
 
   Optional
@@ -178,7 +173,6 @@ task.devices_dct
   <summary markdown='span'>
   <b style="font-size:20px"> <code>--config</code></b>
   </summary>
-  <br>
   Specify a custom configuration file path (Overrides the default configuration file path)
   
   Optional
@@ -201,7 +195,6 @@ task.devices_dct
   <summary markdown='span'>
   <b style="font-size:20px"> <code>--task</code></b>
   </summary>
-  <br>
   Perform operations on finished tasks
   
   required
@@ -215,7 +208,6 @@ task.devices_dct
   <summary markdown='span'>
   <b style="font-size:20px"> <code>--list</code></b>
   </summary>
-  <br>
   List the finished tasks
   
   Optional
@@ -230,7 +222,6 @@ task.devices_dct
   <summary markdown='span'>
   <b style="font-size:20px"> <code>--get-log</code></b>
   </summary>
-  <br>
   Return the log of the task
 
   Takes the `task ID`
@@ -250,13 +241,12 @@ task.devices_dct
   <summary markdown='span'> 
   <b style="font-size:20px"> <code>--backup</code></b>
   </summary>
-  <br>
   Perform operations on taken configuration backups
   
   required
   {: .label .label-yellow }
 
----
+  ---
 
 </details>
 
@@ -264,7 +254,6 @@ task.devices_dct
   <summary markdown='span'>  
   <b style="font-size:20px"> <code>--list</code></b>
   </summary>
-  <br>
   List the taken configuration backups
   
   Optional
@@ -278,7 +267,6 @@ task.devices_dct
   <summary markdown='span'> 
   <b style="font-size:20px"> <code>--get-backup</code></b>
   </summary>
-  <br>
   Return the configuration backup for the selected device
 
   Takes the `backup ID`
@@ -300,12 +288,10 @@ task.devices_dct
   <summary markdown='span'> 
   <b style="font-size:20px"> <code>--validate-integration</code></b>
   </summary>
-  <br>
    Validate the communication with any of the supported API Integrations eg. test to authenticate (And validate permissions if needed).
-  <br>
 
   Optional
-{: .label .label-green }
+  {: .label .label-green }
 
   * ***Supported Options***'
       * `cyberArk`
