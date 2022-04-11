@@ -1,5 +1,32 @@
+---
+layout: default
+nav_order: 1
+permalink: /integrations/rocketchat
+title: Integrations
+markdown: Kramdown
+kramdown:
+  parse_block_html: true
+  auto_ids: true
+  syntax_highlighter: coderay
+---
 
-<a id=rocketchat></a>
+<button class="btn js-toggle-dark-mode">Switch to Dark Mode
+
+<script>
+const toggleDarkMode = document.querySelector('.js-toggle-dark-mode');
+
+jtd.addEvent(toggleDarkMode, 'click', function(){
+  if (jtd.getTheme() === 'dark') {
+    jtd.setTheme('light');
+    toggleDarkMode.textContent = 'Switch to Dark Mode';
+  } else {
+    jtd.setTheme('dark');
+    toggleDarkMode.textContent = 'Switch to Light Mode';
+  }
+});
+</script>
+
+
 https://rocket.chat
 
 This integration allows you to send messages & attachments to RocketChat users & channels

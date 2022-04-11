@@ -1,7 +1,7 @@
 ---
 layout: default
-nav_order: 3
-# permalink: /
+nav_order: 4
+permalink: /integrations
 title: Integrations
 markdown: Kramdown
 kramdown:
