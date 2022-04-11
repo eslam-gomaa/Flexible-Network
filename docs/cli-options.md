@@ -250,20 +250,24 @@ get backups
   required
   {: .label .label-yellow }
 
-</details>
-
-<details markdown="1" id="--list-backup">
-  <summary markdown='span'>  
-  <b style="font-size:20px"> <code>--list</code></b>
-  </summary>
-  List the taken configuration backups
-  
-  Optional
-  {: .label .label-green }
-
   ---
 
 </details>
+
+
+<details markdown="1" id="--list-backup">
+  <summary markdown='span'> 
+  <b style="font-size:20px"> <code>--list</code></b>
+  </summary>
+  List the taken configuration backups
+
+  Optional
+  {: .label .label-green }
+
+---
+
+</details>
+
 
 <details markdown="1" id="--get-backup">
   <summary markdown='span'> 
