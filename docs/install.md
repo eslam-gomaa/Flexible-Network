@@ -4,7 +4,7 @@ nav_order: 2
 parent: Home
 title: Installation
 markdown: Kramdown
-kramdown: 2
+kramdown:
   parse_block_html: true
   auto_ids: true
   syntax_highlighter: coderay
