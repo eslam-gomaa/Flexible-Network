@@ -1,7 +1,8 @@
 ---
 layout: default
 nav_order: 2
-permalink: /integrations/cyberark
+# permalink: /integrations/cyberark
+parent: Integrations
 title: CyberArk
 markdown: Kramdown
 kramdown:
