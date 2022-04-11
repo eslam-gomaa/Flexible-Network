@@ -1,10 +1,10 @@
 ---
 layout: default
-nav_order: 1
+nav_order: 2
 parent: Home
 title: Installation
 markdown: Kramdown
-kramdown:
+kramdown: 2
   parse_block_html: true
   auto_ids: true
   syntax_highlighter: coderay
