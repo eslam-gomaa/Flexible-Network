@@ -69,7 +69,8 @@ from Flexible_Network import Terminal_Task
   
 <br>
 
-### INPUT
+INPUT
+{: .fs-6 .fw-300 }
 
 |  Input      | Type       | Description                                                  |
 | ----------- | ------     | ------------------------------------------------------------ |
@@ -78,7 +79,8 @@ from Flexible_Network import Terminal_Task
 
 <br>
 
-### OUTPUT
+OUTPUT
+{: .fs-6 .fw-300 }
 
 > Returns a dictionary
 
@@ -173,7 +175,8 @@ Sample of an unsuccessful command ( Connection closed before or during the execu
    
    <br>
 
-   ### INPUT
+   INPUT
+   {: .fs-6 .fw-300 }
 
 
    | Input                  | Type  | Description                                                  | Options            | Default   |
@@ -186,7 +189,8 @@ Sample of an unsuccessful command ( Connection closed before or during the execu
 
    <br>
 
-   ### OUTPUT
+   OUTPUT
+   {: .fs-6 .fw-300 }
 
    > Returns a dictionary
 
@@ -217,7 +221,8 @@ Sample of an unsuccessful command ( Connection closed before or during the execu
    
    <br>
 
-   ### INPUT
+   INPUT
+{: .fs-6 .fw-300 }
 
 
    | Input                  | Type  | Description                                                  | Options            | Default   |
@@ -231,7 +236,8 @@ Sample of an unsuccessful command ( Connection closed before or during the execu
 
    <br>
 
-   ### OUTPUT
+   OUTPUT
+{: .fs-6 .fw-300 }
 
    > does NOT return
 
@@ -311,7 +317,8 @@ rocket_msg = rocket.send_message(['eslam.gomaa'], "``` {} ```".format(report))
    
    <br>
 
-   ### INPUT
+   INPUT
+{: .fs-6 .fw-300 }
 
    | Input     | Type | Description                                                  | Options        | Default |
    | --------- | ---- | ------------------------------------------------------------ | -------------- | ------- |
@@ -325,7 +332,8 @@ rocket_msg = rocket.send_message(['eslam.gomaa'], "``` {} ```".format(report))
 
    <br>
 
-   ### OUTPUT
+   OUTPUT
+{: .fs-6 .fw-300 }
 
    > does NOT return
 
