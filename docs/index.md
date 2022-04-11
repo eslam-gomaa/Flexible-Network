@@ -94,16 +94,6 @@ Before reading the features you need to know that the network devices are "dump"
 
 ---
 
-<br>
-
----
-
-<br>
-
-# How it works !
-
----
-
 
 <br>
 
