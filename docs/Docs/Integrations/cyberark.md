@@ -27,5 +27,10 @@ jtd.addEvent(toggleDarkMode, 'click', function(){
 });
 </script>
 
+# CyberArk
+{: .fs-9 }
+
+Allows you to get/update credentials from & to Cyberark secret manager.
+{: .fs-6 .fw-300 }
 
 To be documented

@@ -38,6 +38,7 @@ Allows you to send messages & attachments to RocketChat users & channels
 [**https://rocket.chat**](https://rocket.chat){: .btn }
 
 
+<br>
 
 #### Configuration section
 
