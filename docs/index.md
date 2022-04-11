@@ -41,7 +41,7 @@ A Python library / cli-tool to achieve advanced network automation scenarios wit
 
 <br>
 
-<details markdown="1" id="toc">
+<!-- <details markdown="1" id="toc">
   <summary markdown='span'> 
   <b style="font-size:20px"> <code>Table of contents</code></b>
   </summary>
@@ -49,8 +49,10 @@ A Python library / cli-tool to achieve advanced network automation scenarios wit
 - TOC
 {:toc}
 
-</details>
+</details> -->
 
+1. TOC
+{:toc}
 
 <br>
 A Refactored Version of [Flexible_Network  ((Proof of concept))  ](https://github.com/eslam-gomaa/Flexible_Network)
@@ -92,7 +94,7 @@ Before reading the features you need to know that the network devices are "dump"
 ---
 
 
-### FAQs
+## FAQs
 
 <a id=faqs-execution-time></a>
 <details>
@@ -149,9 +151,5 @@ Before reading the features you need to know that the network devices are "dump"
   **In short** [Flexible-Network](https://github.com/eslam-gomaa/Flexible-Network#features) `=>` (`simplicity` & `flexibility`) + `The Power of Python!` 💪
 
 </details>
-
-
-<br>
-<br>
 
 
