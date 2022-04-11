@@ -31,6 +31,7 @@ jtd.addEvent(toggleDarkMode, 'click', function(){
 
 
 ### Run a task
+{: .fs-9 }
 
 <details markdown="1" id="--name">
   <summary markdown='span'> 
@@ -126,9 +127,8 @@ task.devices_dct
 
 <br>
 
-<a id=--user></a>
-<details>
-  <summary> 
+<details markdown="1" id="--user">
+  <summary markdown='span'> 
   <b style="font-size:20px"> <code>--user</code></b>
   </summary>
   <br>
@@ -141,9 +141,8 @@ task.devices_dct
 </details>
 
 
-<a id=--password></a>
-<details>
-  <summary> 
+<details markdown="1" id="--password">
+  <summary markdown='span'> 
   <b style="font-size:20px"> <code>--password</code></b>
   </summary>
   <br>
@@ -156,9 +155,8 @@ task.devices_dct
 </details>
 
 
-<a id=--port></a>
-<details>
-  <summary> 
+<details markdown="1" id="--port">
+  <summary markdown='span'>
   <b style="font-size:20px"> <code>--port</code></b>
   </summary>
   <br>
@@ -167,11 +165,13 @@ task.devices_dct
   > *Optional*
 
   > default port is `22`
+
+  ---
+
 </details>
 
-<a id=--config></a>
-<details>
-  <summary> 
+<details markdown="1" id="--config">
+  <summary markdown='span'>
   <b style="font-size:20px"> <code>--config</code></b>
   </summary>
   <br>
@@ -180,16 +180,20 @@ task.devices_dct
   > *Optional*
 
   > Default configuration file path is `/etc/flexible_network/flexible_network.cfg`
+
+---
+
 </details>
 
 
 <br>
 
 ### get tasks
+{: .fs-9 }
 
-<a id=--task></a>
-<details>
-  <summary> 
+
+<details markdown="1" id="--task">
+  <summary markdown='span'>
   <b style="font-size:20px"> <code>--task</code></b>
   </summary>
   <br>
@@ -197,11 +201,12 @@ task.devices_dct
   
   > *Optional*
 
+  ---
+
 </details>
 
-<a id=--list></a>
-<details>
-  <summary> 
+<details markdown="1" id="--list">
+  <summary markdown='span'>
   <b style="font-size:20px"> <code>--list</code></b>
   </summary>
   <br>
@@ -209,12 +214,13 @@ task.devices_dct
   
   > *Optional*
 
+---
+
 </details>
 
 
-<a id=--get-log></a>
-<details>
-  <summary> 
+<details markdown="1" id="--get-log">
+  <summary markdown='span'>
   <b style="font-size:20px"> <code>--get-log</code></b>
   </summary>
   <br>
@@ -230,11 +236,10 @@ task.devices_dct
 <br>
 
 ### get backups
+{: .fs-9 }
 
-
-<a id=--backup></a>
-<details>
-  <summary> 
+<details markdown="1" id="--backup">
+  <summary markdown='span'> 
   <b style="font-size:20px"> <code>--backup</code></b>
   </summary>
   <br>
@@ -242,11 +247,12 @@ task.devices_dct
   
   > *Optional*
 
+---
+
 </details>
 
-<a id=--list-backup></a>
-<details>
-  <summary> 
+<details markdown="1" id="--list-backup">
+  <summary markdown='span'>  
   <b style="font-size:20px"> <code>--list</code></b>
   </summary>
   <br>
@@ -254,11 +260,12 @@ task.devices_dct
   
   > *Optional*
 
+  ---
+
 </details>
 
-<a id=--get-backup></a>
-<details>
-  <summary> 
+<details markdown="1" id="--get-backup">
+  <summary markdown='span'> 
   <b style="font-size:20px"> <code>--get-backup</code></b>
   </summary>
   <br>
@@ -268,6 +275,8 @@ task.devices_dct
   
   > *Optional*
 
+---
+
 </details>
 
 
@@ -276,9 +285,8 @@ task.devices_dct
 ### Validate the integration with the external APIs
 
 
-<a id=--validate-integration></a>
-<details>
-  <summary> 
+<details markdown="1" id="--validate-integration">
+  <summary markdown='span'> 
   <b style="font-size:20px"> <code>--validate-integration</code></b>
   </summary>
   <br>
