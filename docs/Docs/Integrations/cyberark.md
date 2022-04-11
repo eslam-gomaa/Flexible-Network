@@ -1,8 +1,8 @@
 ---
 layout: default
 nav_order: 2
-permalink: /integrations/rocketchat
-title: Integrations
+permalink: /integrations/cyberark
+title: CyberArk
 markdown: Kramdown
 kramdown:
   parse_block_html: true

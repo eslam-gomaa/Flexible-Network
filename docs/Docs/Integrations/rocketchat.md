@@ -2,7 +2,7 @@
 layout: default
 nav_order: 1
 permalink: /integrations/rocketchat
-title: Integrations
+title: RocketChat
 markdown: Kramdown
 kramdown:
   parse_block_html: true
