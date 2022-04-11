@@ -1,6 +1,6 @@
 ---
 layout: default
-nav_order: 6
+nav_order: 5
 parent: Home
 title: Terminal_Class methods
 markdown: Kramdown
