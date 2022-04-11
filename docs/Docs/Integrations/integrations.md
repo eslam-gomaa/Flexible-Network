@@ -12,6 +12,7 @@ kramdown:
 ---
 
 # Integrations
+{: .fs-9 }
 {: .no_toc }
 
 

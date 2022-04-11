@@ -28,9 +28,16 @@ jtd.addEvent(toggleDarkMode, 'click', function(){
 </script>
 
 
-https://rocket.chat
+# RocketChat
+{: .fs-9 }
 
-This integration allows you to send messages & attachments to RocketChat users & channels
+Allows you to send messages & attachments to RocketChat users & channels
+{: .fs-6 .fw-300 }
+
+
+[**https://rocket.chat**](https://rocket.chat){: .btn }
+
+
 
 #### Configuration section
 
