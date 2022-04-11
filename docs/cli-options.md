@@ -32,7 +32,7 @@ jtd.addEvent(toggleDarkMode, 'click', function(){
 
 <br>
 
-### Run a task
+#### Run a task
 {: .fs-6 .fw-300 }
 
 <details markdown="1" id="--name">
@@ -249,8 +249,6 @@ get backups
   
   required
   {: .label .label-yellow }
-
-  ---
 
 </details>
 
