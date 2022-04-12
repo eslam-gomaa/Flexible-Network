@@ -2,8 +2,6 @@
 
 A Python library / cli-tool to achieve advanced network automation scenarios with few lines of code
 
-<br>
-
 ## Features
 
 * Ability to detect errors when executing commands on network devices
@@ -29,4 +27,10 @@ A Python library / cli-tool to achieve advanced network automation scenarios wit
 <br>
 
 
-# [Read the Docs !](https://eslam-gomaa.github.io/Flexible-Network/) 
+# [📝 Read the Docs !](https://eslam-gomaa.github.io/Flexible-Network/)
+
+# [👉 Backlog](https://shiny-pruner-f62.notion.site/Flexible-Network-Project-8a037585793a4405acf892e66e6a4132)
+
+<br>
+
+<br>
