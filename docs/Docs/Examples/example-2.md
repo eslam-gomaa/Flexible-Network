@@ -7,7 +7,10 @@ markdown: Kramdown
 kramdown:
   parse_block_html: true
   auto_ids: true
-  syntax_highlighter: rouge
+   syntax_highlighter: rouge
+   syntax_highlighter_opts:
+      # Use existing pygments syntax highlighting css
+      css_class: 'highlight'
 ---
 
 
