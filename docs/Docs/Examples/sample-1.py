@@ -1,24 +1,23 @@
 from FlexibleNetwork.Flexible_Network import Terminal_Task
 
-
-#################################
-## Excute commands
-## Store Backup In locally
-#################################
-
+# Create an instance of the class
 task  = Terminal_Task()
 
 
 cmd ='''sh vlan br
 sh ip int br'''
 
-## Execute commands & take backups
-for host in task.connected_devices_dct: 
+# Loop over the ONLY authenticated devices
+for host in task.connected_devices_dct:
+    # Get the "host dictionary" of each device (Contains device information including the SSH channel that will be used for commands execution)
     host_dct = task.connected_devices_dct[host]
     
+    # Run enable (enable password is 'cisco')
     enable = task.execute_raw(host_dct, 'enable\n' + 'cisco')
-
+    
+    # Run the following commands only if the last command was executed successfully
     if enable['exit_code'] == 0: 
+        # Execute a command, the output will be printed to the terminal
         task.execute(host_dct, 'sh ip int br')
+        # Execute a command, the output will be printed to the terminal in JSON format
         task.execute(host_dct, cmd, terminal_print='json')
-        task.backup_config(host_dct, 'Testing S3 integrations', target='local')    
