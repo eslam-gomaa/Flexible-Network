@@ -2,7 +2,7 @@
 layout: default
 nav_order: 3
 parent: Examples
-title: 1. Execute commands from a file
+title: 3. Execute commands from a file && send a connection report to RocketChat
 markdown: Kramdown
 kramdown:
   parse_block_html: true

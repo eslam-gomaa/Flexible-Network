@@ -7,7 +7,7 @@ markdown: Kramdown
 kramdown:
   parse_block_html: true
   auto_ids: true
-  syntax_highlighter: coderay
+  syntax_highlighter: rouge
 ---
 
 
