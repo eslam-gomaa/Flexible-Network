@@ -11,7 +11,7 @@ kramdown:
 ---
 
 
-Script used in this example: [example-1.py](docs/Docs/Examples/example-1/example-1.py)
+Script used in this example: [example-1.py](docs/Docs/Examples/sample-1.py)
 
 In this example we create a script that does the following:
 1. Authenticate to the selected inventory group

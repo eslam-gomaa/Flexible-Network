@@ -1,8 +1,8 @@
 ---
 layout: default
-nav_order: 2
+nav_order: 3
 parent: Examples
-title: 2. Take config backup
+title: 1. Execute commands from a file
 markdown: Kramdown
 kramdown:
   parse_block_html: true
@@ -11,13 +11,12 @@ kramdown:
 ---
 
 
-Script used in this example: [example-2.py](docs/Docs/Examples/sample-2.py)
-
+Script used in this example: [example-3.py](docs/Docs/Examples/example-1/example-3.py)
 
 In this example we create a script that does the following:
 1. Authenticate to the selected inventory group
 2. execute set of commands
-3. Take a config backup & store it in S3
+3. execute commands and the print the output in JSON format
 
 
 ---
@@ -44,8 +43,8 @@ for host in task.connected_devices_dct:
     if enable['exit_code'] == 0: 
         # Execute a command, the output will be printed to the terminal
         task.execute(host_dct, 'sh ip int br')
-        # Backup config and store the backup to S3 (In this example "Openstack object storage")
-        task.backup_config(host_dct, 'Testing S3 integrations', target='s3')
+        # Execute a command, the output will be printed to the terminal in JSON format
+        task.execute(host_dct, cmd, terminal_print='json')
 ```
 
 ---
@@ -53,10 +52,10 @@ for host in task.connected_devices_dct:
 ### Run the script
 
 ```bash
-python3.6 docs/Docs/Examples/sample-2.py -n task-1 --config ~/flexible_network.cfg  --inventory user/hots  --authenticate-group works --user orange --password cisco
+python3.6 docs/Docs/Examples/sample-1.py -n task-1 --config ~/flexible_network.cfg  --inventory user/hots  --authenticate-group works --user orange --password cisco
 ```
 
-#### OUTPUT
+### OUTPUT
 
 
 ```bash
@@ -85,10 +84,45 @@ Ethernet1/2            unassigned      YES unset  up                    up
 Ethernet1/3            unassigned      YES unset  up                    up      
 Vlan1                  unassigned      YES unset  administratively down down    
 Vlan11                 192.168.11.2    YES NVRAM  up                    up      
-backup-config-eslam-5
 
 @ 90.84.41.239
-> backup taken successfully > [ Testing S3 integrations ]
+Execution Time: 0.5 seconds
+sh vlan br
+sh ip int br
+{
+    "cmd": [
+        "sh vlan br",
+        "sh ip int br"
+    ],
+    "exit_code": 0,
+    "stderr": [],
+    "stdout": [
+        "sh vlan br",
+        "VLAN Name                             Status    Ports",
+        "---- -------------------------------- --------- -------------------------------",
+        "1    default                          active    Et1/0, Et1/1, Et1/2, Et1/3",
+        "11   mgmt                             active    Et0/0, Et0/2, Et0/3",
+        "12   internal                         active    ",
+        "13   testing                          active    ",
+        "123  testing123 TYPO2                 active    ",
+        "1002 fddi-default                     act/unsup ",
+        "1003 token-ring-default               act/unsup ",
+        "1004 fddinet-default                  act/unsup ",
+        "1005 trnet-default                    act/unsup ",
+        "sh ip int br",
+        "Interface              IP-Address      OK? Method Status                Protocol",
+        "Ethernet0/0            unassigned      YES unset  up                    up      ",
+        "Ethernet0/1            unassigned      YES unset  up                    up      ",
+        "Ethernet0/2            unassigned      YES unset  up                    up      ",
+        "Ethernet0/3            unassigned      YES unset  up                    up      ",
+        "Ethernet1/0            unassigned      YES unset  up                    up      ",
+        "Ethernet1/1            unassigned      YES unset  up                    up      ",
+        "Ethernet1/2            unassigned      YES unset  up                    up      ",
+        "Ethernet1/3            unassigned      YES unset  up                    up      ",
+        "Vlan1                  unassigned      YES unset  administratively down down    ",
+        "Vlan11                 192.168.11.2    YES NVRAM  up                    up      "
+    ]
+}
 ```
 
 ---
@@ -96,44 +130,8 @@ backup-config-eslam-5
 #### Screenshoots
 
 
-![image](https://user-images.githubusercontent.com/33789516/163047768-910992cd-035d-4996-8198-d11c294ccdca.png)
+![image](https://user-images.githubusercontent.com/33789516/163046526-51cdaab1-445e-41b1-9519-e5bf0018fc8f.png)
+
+![image](https://user-images.githubusercontent.com/33789516/163046595-af67893e-fd80-43f2-82c6-339b4097cad6.png)
 
 
----
-
-### List the backups
-
-```bash
-python3.6 docs/Docs/Examples/sample-2.py --backup --list
-```
-
-```
-| a893500c-836e-4d22-94b9-e4980be1fe00 | Testing S3 integrations  | 90.84.41.239 | s3       | 🟢 success | 29-03-2022 | 10-47-05 |
-+--------------------------------------+--------------------------+--------------+----------+------------+------------+----------+
-| 4d6fae23-8c80-417a-bafb-af617b6dd5ba | test                     | 90.84.41.239 | local    | 🔴 failed  | 01-04-2022 | 06-10-32 |
-+--------------------------------------+--------------------------+--------------+----------+------------+------------+----------+
-| 41ce52a6-0c03-4efe-a29d-07ef752c53f0 | test                     | 90.84.41.239 | local    | 🟢 success | 01-04-2022 | 06-13-12 |
-+--------------------------------------+--------------------------+--------------+----------+------------+------------+----------+
-| e02e2910-c3b3-4e25-9f1c-19fa389f1710 | test                     | 90.84.41.239 | local    | 🟢 success | 01-04-2022 | 06-14-09 |
-+--------------------------------------+--------------------------+--------------+----------+------------+------------+----------+
-| 116ba93e-4e90-4e33-9b39-0b89b37e648e | test                     | 90.84.41.239 | local    | 🟢 success | 01-04-2022 | 06-14-32 |
-+--------------------------------------+--------------------------+--------------+----------+------------+------------+----------+
-| 53a63787-6f26-4d23-89c5-18a71471bc50 | Testing S3 integrations  | 90.84.41.239 | s3       | 🟢 success | 12-04-2022 | 20-25-50 |
-+--------------------------------------+--------------------------+--------------+----------+------------+------------+----------+
-```
-
-![image](https://user-images.githubusercontent.com/33789516/163048128-21054160-d338-4475-8711-766942cdf62d.png)
-
-
----
-
-
-### Get the backup
-
-
-
-![image](https://user-images.githubusercontent.com/33789516/163049335-7dfcfc02-302c-4601-a4d0-45dce0796e66.png)
-
-**Note:** For any backup targets other than `local` you need to specify the configuration file. _(which in this case contains the credentials for S3 APIs)_
-
-![image](https://user-images.githubusercontent.com/33789516/163049627-a5ec7962-8fbf-487b-bcd9-1ac9a146cc6c.png)
