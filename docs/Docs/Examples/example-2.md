@@ -11,7 +11,14 @@ kramdown:
 ---
 
 
-Script used in this example: [example-2.py](example-2.py)
+Script used in this example: [example-2.py](docs/Docs/Examples/example-1/example-2.py)
+
+
+In this example we create a script that does the following:
+1. Authenticate to the selected inventory group
+2. execute set of commands
+3. Take a config backup & store it in S3
+
 
 ---
 
@@ -41,21 +48,16 @@ for host in task.connected_devices_dct:
         task.backup_config(host_dct, 'Testing S3 integrations', target='s3')
 ```
 
-In this example we create a script that does the following:
-1. Authenticate to the selected inventory group
-2. execute set of commands
-3. execute commands and the print the output in JSON format
-
 ---
 
 ### Run the script
 
-
-##### OUTPUT
-
 ```bash
 python3.6 docs/Docs/Examples/sample-2.py -n task-1 --config ~/flexible_network.cfg  --inventory user/hots  --authenticate-group works --user orange --password cisco
 ```
+
+#### OUTPUT
+
 
 ```bash
 > Authenticating selected devices
@@ -91,7 +93,7 @@ backup-config-eslam-5
 
 ---
 
-##### Screenshoots
+#### Screenshoots
 
 
 ![image](https://user-images.githubusercontent.com/33789516/163047768-910992cd-035d-4996-8198-d11c294ccdca.png)
@@ -99,7 +101,7 @@ backup-config-eslam-5
 
 ---
 
-#### List the backups
+### List the backups
 
 ```bash
 python3.6 docs/Docs/Examples/sample-2.py --backup --list
@@ -121,3 +123,17 @@ python3.6 docs/Docs/Examples/sample-2.py --backup --list
 ```
 
 ![image](https://user-images.githubusercontent.com/33789516/163048128-21054160-d338-4475-8711-766942cdf62d.png)
+
+
+---
+
+
+### Get the backup
+
+
+
+![image](https://user-images.githubusercontent.com/33789516/163049335-7dfcfc02-302c-4601-a4d0-45dce0796e66.png)
+
+**Note:** For any backup targets other than `local` you need to specify the configuration file. _(which in this case contains the credentials for S3 APIs)_
+
+![image](https://user-images.githubusercontent.com/33789516/163049627-a5ec7962-8fbf-487b-bcd9-1ac9a146cc6c.png)

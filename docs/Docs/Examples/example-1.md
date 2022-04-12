@@ -13,6 +13,12 @@ kramdown:
 
 Script used in this example: [example-1.py](docs/Docs/Examples/example-1/example-1.py)
 
+In this example we create a script that does the following:
+1. Authenticate to the selected inventory group
+2. execute set of commands
+3. execute commands and the print the output in JSON format
+
+
 ---
 
 ```python
@@ -41,21 +47,16 @@ for host in task.connected_devices_dct:
         task.execute(host_dct, cmd, terminal_print='json')
 ```
 
-In this example we create a script that does the following:
-1. Authenticate to the selected inventory group
-2. execute set of commands
-3. execute commands and the print the output in JSON format
-
 ---
 
 ### Run the script
 
-
-##### OUTPUT
-
 ```bash
 python3.6 docs/Docs/Examples/sample-1.py -n task-1 --config ~/flexible_network.cfg  --inventory user/hots  --authenticate-group works --user orange --password cisco
 ```
+
+### OUTPUT
+
 
 ```bash
 > Authenticating selected devices
@@ -126,7 +127,7 @@ sh ip int br
 
 ---
 
-##### Screenshoots
+#### Screenshoots
 
 
 ![image](https://user-images.githubusercontent.com/33789516/163046526-51cdaab1-445e-41b1-9519-e5bf0018fc8f.png)
