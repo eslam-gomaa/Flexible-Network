@@ -107,7 +107,7 @@ Before reading the features you need to know that the network devices are "dump"
 
 <details markdown="1" id="flexible-network-vs-ansible">
   <summary markdown='span'> 
-  <b style="font-size:20px"> <code>Why to use this project while we can use Ansible for Network automation ?</code></b>
+  <b style="font-size:20px"> <code>Why to use **Flexible-Network** while we can use Ansible for Network automation ?</code></b>
   </summary>
   Ansible & Python have different ways for doing network automation
 
