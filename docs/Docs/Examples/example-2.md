@@ -15,9 +15,9 @@ Script used in this example: [example-2.py](docs/Docs/Examples/sample-2.py)
 
 
 In this example we create a script that does the following:
-1. Authenticate to the selected inventory group
-2. execute set of commands
-3. Take a config backup & store it in S3
+1. Authenticate to the selected [inventory](https://eslam-gomaa.github.io/Flexible-Network/inventory) group (Using CLI)
+2. [execute ](https://eslam-gomaa.github.io/Flexible-Network/terminal_class_methods#execute) set of commands
+3. [Take a config backup](https://eslam-gomaa.github.io/Flexible-Network/Docs/ConfigBackup-storage/config-backup-storage/) & store it in S3
 
 
 ---

@@ -1,0 +1,3 @@
+sh ip int br 
+show vlan br
+show version

@@ -14,8 +14,8 @@ kramdown:
 Script used in this example: [example-1.py](docs/Docs/Examples/sample-1.py)
 
 In this example we create a script that does the following:
-1. Authenticate to the selected inventory group
-2. execute set of commands
+1. Authenticate to the selected [inventory](https://eslam-gomaa.github.io/Flexible-Network/inventory) group (Using CLI)
+2. [execute ](https://eslam-gomaa.github.io/Flexible-Network/terminal_class_methods#execute) set of commands
 3. execute commands and the print the output in JSON format
 
 
