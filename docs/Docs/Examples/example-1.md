@@ -11,7 +11,7 @@ kramdown:
 ---
 
 
-Script used in this example: [example-1.py](example-1.py)
+Script used in this example: [example-1.py](docs/Docs/Examples/example-1/example-1.py)
 
 ---
 
