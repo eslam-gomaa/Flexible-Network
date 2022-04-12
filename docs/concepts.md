@@ -32,8 +32,8 @@ jtd.addEvent(toggleDarkMode, 'click', function(){
 
 * This project is designed as Python Library that you import to your Python script that gives you a lot of features and integrations out of the box
 * After importing the library you can treat your script as a cli tool that that you use to run tasks, get task logs, list & get backups etc.
-[[ Check the [cli parameters](#cli_options) ]]
-{: .fs-5 .fw-300 .bg-yellow-000}
+[[ Check the [cli parameters](cli-options.md) ]]
+{: .fs-5 .fw-300 .bg-grey-lt-200}
 
 
 > This section gives an overview of how the library works internally
