@@ -10,7 +10,6 @@ kramdown:
   syntax_highlighter: rouge
 ---
 
-<script src="https://gist.github.com/eslam-gomaa/c29f3b6c04430bc676231044252fa961.js"></script>
 
 Script used in this example can be found in this directory: [Examples](https://github.com/eslam-gomaa/Flexible-Network/tree/develop/docs/Docs/Examples)
 
@@ -22,31 +21,8 @@ In this example we create a script that does the following:
 
 ---
 
-```python
-from FlexibleNetwork.Flexible_Network import Terminal_Task
+<script src="https://gist.github.com/eslam-gomaa/c29f3b6c04430bc676231044252fa961.js"></script>
 
-# Create an instance of the class
-task  = Terminal_Task()
-
-
-cmd ='''sh vlan br
-sh ip int br'''
-
-# Loop over the ONLY authenticated devices
-for host in task.connected_devices_dct:
-    # Get the "host dictionary" of each device (Contains device information including the SSH channel that will be used for commands execution)
-    host_dct = task.connected_devices_dct[host]
-    
-    # Run enable (enable password is 'cisco')
-    enable = task.execute_raw(host_dct, 'enable\n' + 'cisco')
-    
-    # Run the following commands only if the last command was executed successfully
-    if enable['exit_code'] == 0: 
-        # Execute a command, the output will be printed to the terminal
-        task.execute(host_dct, 'sh ip int br')
-        # Execute a command, the output will be printed to the terminal in JSON format
-        task.execute(host_dct, cmd, terminal_print='json')
-```
 
 ---
 
