@@ -10,6 +10,7 @@ kramdown:
   syntax_highlighter: rouge
 ---
 
+<script src="https://gist.github.com/eslam-gomaa/c29f3b6c04430bc676231044252fa961.js"></script>
 
 Script used in this example can be found in this directory: [Examples](https://github.com/eslam-gomaa/Flexible-Network/tree/develop/docs/Docs/Examples)
 
