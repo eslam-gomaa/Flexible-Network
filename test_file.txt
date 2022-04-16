@@ -1,6 +1,0 @@
-sh ip int br
-
-sh vlan br
-sh run | include hostname
-
-sh version
