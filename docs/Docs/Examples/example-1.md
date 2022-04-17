@@ -23,7 +23,6 @@ In this example we create a script that does the following:
 
 <script src="https://gist.github.com/eslam-gomaa/c29f3b6c04430bc676231044252fa961.js"></script>
 
-
 ---
 
 ### Run the script

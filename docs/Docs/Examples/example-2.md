@@ -22,31 +22,7 @@ In this example we create a script that does the following:
 
 ---
 
-```python
-from FlexibleNetwork.Flexible_Network import Terminal_Task
-
-# Create an instance of the class
-task  = Terminal_Task()
-
-
-cmd ='''sh vlan br
-sh ip int br'''
-
-# Loop over the ONLY authenticated devices
-for host in task.connected_devices_dct:
-    # Get the "host dictionary" of each device (Contains device information including the SSH channel that will be used for commands execution)
-    host_dct = task.connected_devices_dct[host]
-    
-    # Run enable (enable password is 'cisco')
-    enable = task.execute_raw(host_dct, 'enable\n' + 'cisco')
-    
-    # Run the following commands only if the last command was executed successfully
-    if enable['exit_code'] == 0: 
-        # Execute a command, the output will be printed to the terminal
-        task.execute(host_dct, 'sh ip int br')
-        # Backup config and store the backup to S3 (In this example "Openstack object storage")
-        task.backup_config(host_dct, 'Testing S3 integrations', target='s3')
-```
+<script src="https://gist.github.com/eslam-gomaa/4fdfc5e4fb21a2c562b4e47830db8f72.js"></script>
 
 ---
 
@@ -107,7 +83,7 @@ backup-config-eslam-5
 python3.6 docs/Docs/Examples/sample-2.py --backup --list
 ```
 
-{% highlight bash %}
+{% highlight bash linenos %}
 | a893500c-836e-4d22-94b9-e4980be1fe00 | Testing S3 integrations  | 90.84.41.239 | s3       | 🟢 success | 29-03-2022 | 10-47-05 |
 +--------------------------------------+--------------------------+--------------+----------+------------+------------+----------+
 | 4d6fae23-8c80-417a-bafb-af617b6dd5ba | test                     | 90.84.41.239 | local    | 🔴 failed  | 01-04-2022 | 06-10-32 |
