@@ -36,14 +36,20 @@ In this example we create a script that does the following:
 
 ---
 
-<!-- <link href="https://gist.githubusercontent.com/eslam-gomaa/c1bb41502aabea25a739d5ef12d7285a/raw/e29f05f8245689c9f28ea077f41871c0e0ba70af/gist_dark_theme1.css" rel="stylesheet" type="text/css"> -->
 
-  
-<script src="https://gist.github.com/eslam-gomaa/c29f3b6c04430bc676231044252fa961.js">
+<div>
 
 <link href="https://cdn.rawgit.com/Killercodes/281792c423a4fe5544d9a8d36a4430f2/raw/36c2eb3e0c44133880485a143717bda9d180f2c1/GistDarkCode.css" rel="stylesheet" type="text/css">
 
-</script>
+<script src="https://gist.github.com/eslam-gomaa/c29f3b6c04430bc676231044252fa961.js"></script>
+
+</div>
+
+
+<!-- <link href="https://cdn.rawgit.com/Killercodes/281792c423a4fe5544d9a8d36a4430f2/raw/36c2eb3e0c44133880485a143717bda9d180f2c1/GistDarkCode.css" rel="stylesheet" type="text/css"> -->
+
+
+<script src="https://gist.github.com/eslam-gomaa/c29f3b6c04430bc676231044252fa961.js"></script>
 
 ---
 
