@@ -10,6 +10,21 @@ kramdown:
   syntax_highlighter: rouge
 ---
 
+<button class="btn js-toggle-dark-mode">Switch to Dark Mode
+
+<script>
+const toggleDarkMode = document.querySelector('.js-toggle-dark-mode');
+
+jtd.addEvent(toggleDarkMode, 'click', function(){
+  if (jtd.getTheme() === 'dark') {
+    jtd.setTheme('light');
+    toggleDarkMode.textContent = 'Switch to Dark Mode';
+  } else {
+    jtd.setTheme('dark');
+    toggleDarkMode.textContent = 'Switch to Light Mode';
+  }
+});
+</script>
 
 Script used in this example can be found in this directory: [Examples](https://github.com/eslam-gomaa/Flexible-Network/tree/develop/docs/Docs/Examples)
 
@@ -83,7 +98,7 @@ backup-config-eslam-5
 python3.6 docs/Docs/Examples/sample-2.py --backup --list
 ```
 
-{% highlight bash linenos %}
+{% highlight bash %}
 | a893500c-836e-4d22-94b9-e4980be1fe00 | Testing S3 integrations  | 90.84.41.239 | s3       | 🟢 success | 29-03-2022 | 10-47-05 |
 +--------------------------------------+--------------------------+--------------+----------+------------+------------+----------+
 | 4d6fae23-8c80-417a-bafb-af617b6dd5ba | test                     | 90.84.41.239 | local    | 🔴 failed  | 01-04-2022 | 06-10-32 |
