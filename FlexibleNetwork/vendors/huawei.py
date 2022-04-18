@@ -1,6 +1,6 @@
 class Huawei:
     def __init__(self):
-        self._stderr_search_keyword = ['\^', '% Ambiguous command']
+        self._stderr_search_keyword = ['\^', '%']
         self._clean_output_search_keywords = ['.*#', '.*>']
         self._backup_command = """
             screen-length 0

@@ -11,5 +11,7 @@ kramdown:
   syntax_highlighter: coderay
 ---
 
+<!-- https://github.com/lonekorean/gist-syntax-themes/tree/master/stylesheets -->
+
 1. TOC
 {:toc}

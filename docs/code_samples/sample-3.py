@@ -17,8 +17,8 @@ report = task.connection_report_Table(task.devices_dct)
 rocket.send_message(['eslam.gomaa'], "``` {} ```".format(report))
 
 
-for host in task.connected_devices_dct:
-    host_dct = task.connected_devices_dct[host]
+for host, host_dct in task.connected_devices_dct.items():
+    #ost_dct = task.connected_devices_dct[host]
     
     task.execute_raw(host_dct, 'enable\n' + 'cisco')
     task.execute_from_file(host_dct, 'docs/Docs/Examples/sample_config.txt', ask_for_confirmation=True, terminal_print='json')
