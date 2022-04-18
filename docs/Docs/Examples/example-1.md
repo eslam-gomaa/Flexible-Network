@@ -36,7 +36,7 @@ In this example we create a script that does the following:
 
 ---
 
-<link href="docs/_sass/support/_variables.scss" rel="stylesheet" type="text/css">
+<link href="_sass/support/_variables.scss" rel="stylesheet" type="text/css">
 
 
 <script src="https://gist.github.com/eslam-gomaa/c29f3b6c04430bc676231044252fa961.js"></script>
