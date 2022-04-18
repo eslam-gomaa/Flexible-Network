@@ -45,7 +45,7 @@ In this example we create a script that does the following:
 
 </div> -->
 
-<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+<link rel="stylesheet" type="text/css" href="https://gist.githubusercontent.com/niubods/5575078/raw/38ff4153d5b602d9cefb72a0768cc079a1b81991/gist-darkstrap.css">
 
 
 <!-- <link href="https://gist.githubusercontent.com/Reelix/c92051efb62171e868daf57aaa1f9f88/raw/c4af67597133dc7cd808d6ac2b7cc4244d2f0542/gist-embed-dark.css" rel="stylesheet" type="text/css"> -->
