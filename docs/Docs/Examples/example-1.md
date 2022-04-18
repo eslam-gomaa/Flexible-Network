@@ -51,7 +51,7 @@ python3.6 docs/Docs/Examples/sample-1.py -n task-1 --config ~/flexible_network.c
 ### OUTPUT
 
 
-```bash
+{% highlight bash %}
 > Authenticating selected devices
    90.84.41.239  [ 1 / 1 ]          Connected [ 1 ]     Failed [ 0 ]    
 
@@ -116,7 +116,7 @@ sh ip int br
         "Vlan11                 192.168.11.2    YES NVRAM  up                    up      "
     ]
 }
-```
+{% endhighlight %}
 
 ---
 

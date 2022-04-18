@@ -52,7 +52,7 @@ python3.6 docs/Docs/Examples/sample-2.py -n task-1 --config ~/flexible_network.c
 #### OUTPUT
 
 
-```bash
+{% highlight bash %}
 > Authenticating selected devices
    90.84.41.239  [ 1 / 1 ]          Connected [ 1 ]     Failed [ 0 ]    
 
@@ -82,7 +82,7 @@ backup-config-eslam-5
 
 @ 90.84.41.239
 > backup taken successfully > [ Testing S3 integrations ]
-```
+{% endhighlight %}
 
 ---
 
