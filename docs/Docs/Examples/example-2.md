@@ -37,6 +37,8 @@ In this example we create a script that does the following:
 
 ---
 
+<link rel="stylesheet" href="{{ site.baseurl }}/css/custom.css">
+
 <script src="https://gist.github.com/eslam-gomaa/4fdfc5e4fb21a2c562b4e47830db8f72.js"></script>
 
 ---
