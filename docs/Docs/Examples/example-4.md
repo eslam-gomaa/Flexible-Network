@@ -32,16 +32,14 @@ Script used in this example can be found in this directory: [Code Samples](https
 
 **^ In this example we'll see what will happen if the connection is interrupted while the script is executing commands over the devices:**
 
-As mentioned in the [concepts section](https://eslam-gomaa.github.io/Flexible-Network/concepts/#1-connection-management) the script authenticates over the group of devices before it starts executing commands, so there is a possibility that a device's connection is interrupted due to different possible reasons {reboot, connection timeout, device went down, etc..}
+As mentioned in the [concepts section](https://eslam-gomaa.github.io/Flexible-Network/concepts/#1-connection-management) the script authenticates ALL the devices of the selected group before it starts executing commands, so there is a possibility that a device's connection is interrupted due to different possible reasons {reboot, connection timeout, device went down, etc..}
 * Before the execution of any command, the library checks if the ssh connection still active
     * And IF the ssh connection is NOT active, it tries to reconnect
-        * If reconnected successfully, the library updates ssh connection information of the device. 
+        * If reconnected successfully, the library updates ssh connection information of the device & continue to execute normally.
         * If it's NOT able to reconnect, the command will return exit_code of `-1` 
 
 
 ---
-
-We're using the same script of [Example-1](https://eslam-gomaa.github.io/Flexible-Network/Docs/Examples/example-1)
 
 
 <link rel="stylesheet" href="{{ site.baseurl }}/css/custom.css">
