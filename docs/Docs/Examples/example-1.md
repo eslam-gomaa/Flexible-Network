@@ -26,7 +26,7 @@ jtd.addEvent(toggleDarkMode, 'click', function(){
 });
 </script>
 
-Script used in this example can be found in this directory: [Examples](https://github.com/eslam-gomaa/Flexible-Network/tree/develop/docs/Docs/Examples)
+Script used in this example can be found in this directory: [Code Samples](https://github.com/eslam-gomaa/Flexible-Network/tree/develop/docs/code_samples)
 
 In this example we create a script that does the following:
 1. Authenticate to the selected [inventory](https://eslam-gomaa.github.io/Flexible-Network/inventory) group (Using CLI)

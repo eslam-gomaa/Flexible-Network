@@ -3,8 +3,10 @@ from FlexibleNetwork.Vendors import Huawei
 # Create an instance of the class
 task  = Terminal_Task()
 
-cmd ='''sh vlan br
-sh ip int br'''
+cmd ='''
+sh vlan br
+sh ip int br
+'''
 
 # Loop over the ONLY authenticated devices
 ## task.connected_devices_dct -> Is an attribute that contains all the devices that were authenticated successfully
@@ -22,3 +24,4 @@ for host, host_dct in task.connected_devices_dct.items():
         # Execute a command, the output will be printed to the terminal in JSON format
         task.execute(host_dct, cmd, terminal_print='json')
         
+# End
