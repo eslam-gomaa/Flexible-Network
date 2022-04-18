@@ -45,7 +45,7 @@ In this example we create a script that does the following:
 
 </div> -->
 
-<link rel="stylesheet" type="text/css" href="https://gist.githubusercontent.com/niubods/5575078/raw/38ff4153d5b602d9cefb72a0768cc079a1b81991/gist-darkstrap.css">
+<link rel="stylesheet" type="text/css" href="https://gist.githubusercontent.com/RomkeVdMeulen/889d44d3d4c5a11002c57ca068d295ec/raw/546625a65352e6889743e78651bfa8fa58459b87/gists-solarized-dark.css">
 
 
 <!-- <link href="https://gist.githubusercontent.com/Reelix/c92051efb62171e868daf57aaa1f9f88/raw/c4af67597133dc7cd808d6ac2b7cc4244d2f0542/gist-embed-dark.css" rel="stylesheet" type="text/css"> -->
