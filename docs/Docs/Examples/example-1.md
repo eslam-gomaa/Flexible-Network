@@ -45,8 +45,10 @@ In this example we create a script that does the following:
 
 </div> -->
 
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
 
-<link href="https://gist.githubusercontent.com/Reelix/c92051efb62171e868daf57aaa1f9f88/raw/c4af67597133dc7cd808d6ac2b7cc4244d2f0542/gist-embed-dark.css" rel="stylesheet" type="text/css">
+
+<!-- <link href="https://gist.githubusercontent.com/Reelix/c92051efb62171e868daf57aaa1f9f88/raw/c4af67597133dc7cd808d6ac2b7cc4244d2f0542/gist-embed-dark.css" rel="stylesheet" type="text/css"> -->
 
 
 <script src="https://gist.github.com/eslam-gomaa/c29f3b6c04430bc676231044252fa961.js"></script>
