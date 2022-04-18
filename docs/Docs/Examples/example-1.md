@@ -36,13 +36,7 @@ In this example we create a script that does the following:
 
 ---
 
-<link href="https://cdn.rawgit.com/Killercodes/281792c423a4fe5544d9a8d36a4430f2/raw/36c2eb3e0c44133880485a143717bda9d180f2c1/GistDarkCode.css" rel="stylesheet" type="text/css">
-
-
-<!-- <link rel="stylesheet" type="text/css" href="https://gist.githubusercontent.com/niubods/5575078/raw/38ff4153d5b602d9cefb72a0768cc079a1b81991/gist-darkstrap.css"> -->
-
-
-<!-- <link href="https://gist.githubusercontent.com/Reelix/c92051efb62171e868daf57aaa1f9f88/raw/c4af67597133dc7cd808d6ac2b7cc4244d2f0542/gist-embed-dark.css" rel="stylesheet" type="text/css"> -->
+<link href="docs/_sass/support/_variables.scss" rel="stylesheet" type="text/css">
 
 
 <script src="https://gist.github.com/eslam-gomaa/c29f3b6c04430bc676231044252fa961.js"></script>
