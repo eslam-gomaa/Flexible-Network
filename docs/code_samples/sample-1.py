@@ -1,5 +1,5 @@
 from FlexibleNetwork.Flexible_Network import Terminal_Task
-from FlexibleNetwork.Vendors import Huawei
+
 # Create an instance of the class
 task  = Terminal_Task()
 
