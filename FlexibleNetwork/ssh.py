@@ -402,6 +402,5 @@ class SSH_connection():
         """
         Take a backup of the device configurations
         """
-        channel = host_dct['channel']
-        out = self.exec(channel, self.vendor.backup_command)
+        out = self.exec(host_dct, self.vendor.backup_command)
         return out
