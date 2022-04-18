@@ -22,5 +22,3 @@ for host, host_dct in task.connected_devices_dct.items():
         # Execute a command, the output will be printed to the terminal in JSON format
         task.execute(host_dct, cmd, terminal_print='json')
         
-        print(task.vendor)
-
