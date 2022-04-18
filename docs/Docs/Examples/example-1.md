@@ -36,7 +36,7 @@ In this example we create a script that does the following:
 
 ---
 
-@import _sass/custom/custom.css;
+<link rel="stylesheet" href="/docs/_sass/custom/custom.css">
 
 <!-- <link href="{{site.baseurl}}/docs/_sass/custom/custom.css" rel="stylesheet" type="text/css"> -->
 
