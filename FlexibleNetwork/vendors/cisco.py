@@ -3,7 +3,7 @@ class Cisco:
     def __init__(self):
         # If needed check that error messgaes list
         # https://www.cisco.com/c/en/us/td/docs/security/ips/7-2/command/reference/cmdref72/crError.pdf
-        self._stderr_search_keyword = ['\^', '%']
+        self._stderr_search_keyword = ['\^', '^%']
         self._clean_output_search_keywords = ['.*#', '.*>']
         self._backup_command = """
             terminal length 0
