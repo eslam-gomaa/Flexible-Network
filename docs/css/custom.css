@@ -1,35 +1,34 @@
 body .gist .highlight {
-    background: #272822;
+    background: #1d1f21;
 }
 body .gist .blob-num,
-body .gist .blob-code-inner,
-body .gist .pl-s2,
-body .gist .pl-stj {
-    color: #f8f8f2;
-}
-body .gist .pl-c1 {
-    color: #ae81ff;
+body .gist .blob-code-inner {
+    color: #c5c8c6;
 }
 body .gist .pl-enti {
-    color: #a6e22e;
+    color: #f0c674;
     font-weight: 700;
 }
-body .gist .pl-st {
-    color: #66d9ef;
+body .gist .pl-s3 {
+    color: #81a2be;
+}
+body .gist .pl-sf {
+    color: #dad085;
 }
 body .gist .pl-mdr {
-    color: #66d9ef;
+    color: #de935f;
     font-weight: 400;
 }
 body .gist .pl-ms1 {
-    background: #fd971f;
+    background: #c5c8c6;
 }
 body .gist .pl-c,
 body .gist .pl-c span,
 body .gist .pl-pdc {
-    color: #75715e;
+    color: #969896;
     font-style: italic;
 }
+body .gist .pl-c1,
 body .gist .pl-cce,
 body .gist .pl-cn,
 body .gist .pl-coc,
@@ -38,14 +37,12 @@ body .gist .pl-ens,
 body .gist .pl-kos,
 body .gist .pl-kou,
 body .gist .pl-mh .pl-pdh,
-body .gist .pl-mp,
-body .gist .pl-mp1 .pl-sf,
 body .gist .pl-mq,
+body .gist .pl-pdc1,
 body .gist .pl-pde,
 body .gist .pl-pse,
 body .gist .pl-pse .pl-s2,
-body .gist .pl-mp .pl-s3,
-body .gist .pl-smi,
+body .gist .pl-scp,
 body .gist .pl-stp,
 body .gist .pl-sv,
 body .gist .pl-v,
@@ -54,15 +51,14 @@ body .gist .pl-vpf,
 body .gist .pl-mri,
 body .gist .pl-va,
 body .gist .pl-vpu {
-    color: #66d9ef;
+    color: #de935f;
 }
 body .gist .pl-cos,
 body .gist .pl-ml,
 body .gist .pl-pds,
-body .gist .pl-s,
 body .gist .pl-s1,
 body .gist .pl-sol {
-    color: #e6db74;
+    color: #b5bd68;
 }
 body .gist .pl-e,
 body .gist .pl-ef,
@@ -70,17 +66,9 @@ body .gist .pl-en,
 body .gist .pl-enf,
 body .gist .pl-enm,
 body .gist .pl-entc,
-body .gist .pl-entm,
-body .gist .pl-eoac,
-body .gist .pl-eoac .pl-pde,
 body .gist .pl-eoi,
-body .gist .pl-mai .pl-sf,
-body .gist .pl-mm,
-body .gist .pl-pdv,
-body .gist .pl-som,
-body .gist .pl-sr,
-body .gist .pl-vo {
-    color: #a6e22e;
+body .gist .pl-smc {
+    color: #f0c674;
 }
 body .gist .pl-ent,
 body .gist .pl-eoa,
@@ -92,54 +80,70 @@ body .gist .pl-kolp,
 body .gist .pl-mc,
 body .gist .pl-mr,
 body .gist .pl-ms,
-body .gist .pl-s3,
-body .gist .pl-smc,
-body .gist .pl-smp,
+body .gist .pl-s,
+body .gist .pl-mp .pl-s3,
 body .gist .pl-sok,
 body .gist .pl-sra,
 body .gist .pl-src,
-body .gist .pl-sre {
-    color: #f92672;
+body .gist .pl-sre,
+body .gist .pl-st {
+    color: #b294bb;
+}
+body .gist .pl-entm,
+body .gist .pl-eoac,
+body .gist .pl-eoac .pl-pde,
+body .gist .pl-mai .pl-sf,
+body .gist .pl-mm,
+body .gist .pl-pdv,
+body .gist .pl-som,
+body .gist .pl-sr,
+body .gist .pl-vo {
+    color: #c66;
 }
 body .gist .pl-mb,
 body .gist .pl-pdb {
-    color: #e6db74;
+    color: #b5bd68;
     font-weight: 700;
 }
 body .gist .pl-mi,
 body .gist .pl-pdi {
-    color: #f92672;
+    color: #b294bb;
     font-style: italic;
 }
-body .gist .pl-pdc1,
-body .gist .pl-scp {
-    color: #ae81ff;
+body .gist .pl-mp,
+body .gist .pl-mp1 .pl-sf {
+    color: #81a2be;
 }
+body .gist .pl-s2,
 body .gist .pl-sc,
-body .gist .pl-sf,
+body .gist .pl-smi,
+body .gist .pl-smp,
+body .gist .pl-stj,
 body .gist .pl-mo,
 body .gist .pl-entl {
-    color: #fd971f;
+    color: #c5c8c6;
 }
 body .gist .pl-mi1,
 body .gist .pl-mdht {
-    color: #a6e22e;
+    color: #8f9d6a;
     background: rgba(0, 64, 0, .5);
 }
 body .gist .pl-md,
 body .gist .pl-mdhf {
-    color: #f92672;
+    color: #c66;
     background: rgba(64, 0, 0, .5);
 }
 body .gist .pl-mdh,
 body .gist .pl-mdi {
-    color: #a6e22e;
+    color: #c66;
     font-weight: 400;
 }
 body .gist .pl-ib,
-body .gist .pl-id,
-body .gist .pl-ii,
 body .gist .pl-iu {
-    background: #a6e22e;
-    color: #272822;
+    background: #c66;
+}
+body .gist .pl-id,
+body .gist .pl-ii {
+    background: #c66;
+    color: #fff;
 }
