@@ -4,7 +4,7 @@ from tabulate import tabulate
 import textwrap
 import re
 import socket
-from FlexibleNetwork.vendors.cisco import Cisco
+# from FlexibleNetwork.vendors.cisco import Cisco
 
  
 
@@ -12,17 +12,7 @@ class SSH_connection():
     def __init__(self):
         self.devices_dct = {}
         self.connected_devices_dct = {}
-        self._vendor = None
-        # self.vendor = None # default vendor
-
-    @property
-    def vendor(self):
-        return self._vendor
-    
-    @vendor.setter
-    def vendor(self, vendor):
-        self._vendor = vendor
-
+        self.vendor = None # should be updated in the exec method.
 
     def authenticate(self, hosts, user, password, port, terminal_print=False):
         """
@@ -401,7 +391,5 @@ class SSH_connection():
         """
         Take a backup of the device configurations
         """
-        print(self.vendor)
-        print(self.vendor.backup_command)
         out = self.exec(host_dct, self.vendor.backup_command, self.vendor)
         return out
