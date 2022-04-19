@@ -33,6 +33,10 @@ A Python library / cli-tool to achieve advanced network automation scenarios wit
 
 <br>
 
-> This this a young project, so expect a lot of Enhancements & features to come
+🚀 This this a young project, so expect a lot of Enhancements & features to come
+
+<br>
+
+👉 I happily accept advices / recommendations, you can help by opening an issue or contact directly via [Linkedin](https://www.linkedin.com/in/eslam-gomaa)
 
 <br>
