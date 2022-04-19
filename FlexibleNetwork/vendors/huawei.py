@@ -8,6 +8,7 @@ class Huawei:
             undo screen-length
             """
 
+
     @property
     def stderr_search_keyword(self):
         return self._stderr_search_keyword
@@ -25,12 +26,12 @@ class Huawei:
 
 
     @property
-    def clean_output_search_keyword(self):
-        return self._clean_output_search_keyword
+    def clean_output_search_keywords(self):
+        return self._clean_output_search_keywords
     
-    @clean_output_search_keyword.setter
-    def clean_output_search_keyword(self, keyword):
-        self._clean_output_search_keyword = keyword
+    @clean_output_search_keywords.setter
+    def clean_output_search_keywords(self, keyword):
+        self._clean_output_search_keywords = keyword
 
     @property
     def backup_command(self):
@@ -38,7 +39,8 @@ class Huawei:
 
     @backup_command.setter
     def backup_command(self, keyword):
-        self._backup_command = keyword
+        self._stderr_search_keyword = keyword
+
 
 
 
