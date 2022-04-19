@@ -4,9 +4,7 @@ from tabulate import tabulate
 import textwrap
 import re
 import socket
-# from FlexibleNetwork.vendors.cisco import Cisco
 
- 
 
 class SSH_connection():
     def __init__(self):
