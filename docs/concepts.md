@@ -52,6 +52,8 @@ And that actually gives us more flexibility from the development perspective, be
 
 > **NOTE:** any commands you run on the devices *will be exeuted over the same ssh connection*.
 
+> **NOTE:** If the connection was interrupted before the exection for any reason, the library will to try to reconnect instead raising and error, [check that example](https://eslam-gomaa.github.io/Flexible-Network/Docs/Examples/example-4/)
+
 ![image](https://user-images.githubusercontent.com/33789516/159185347-bbee6112-39e8-4818-93a3-9cea1946fcd1.png)
 
 
