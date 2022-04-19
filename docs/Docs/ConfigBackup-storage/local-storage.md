@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_order: 1
-parent: ConfigBackup Storage options
+parent: backup_config Storage options
 title: Local Storage
 markdown: Kramdown
 kramdown:
@@ -35,4 +35,6 @@ Config backups will be saved in the local directory (Project directory)
 
 ...
 
-To be documented
+Backup will be stored in the local directory
+
+> No dependencies needed.

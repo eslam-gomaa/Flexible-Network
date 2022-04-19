@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_order: 99
-title: ConfigBackup Storage options
+title: backup_config Storage options
 has_children: true
 markdown: Kramdown
 kramdown:
@@ -10,7 +10,7 @@ kramdown:
   syntax_highlighter: coderay
 ---
 
-# ConfigBackup Storage options
+# [backup_config](https://eslam-gomaa.github.io/Flexible-Network/terminal_class_methods/#backup_config) Storage options
 {: .fs-9 }
 {: .no_toc }
 
