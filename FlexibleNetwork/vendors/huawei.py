@@ -17,14 +17,6 @@ class Huawei:
     def stderr_search_keyword(self, keyword):
         self._stderr_search_keyword = keyword
 
-    # @stderr_search_keyword.deleter
-    # def stderr_search_keyword(self):
-    #     self._stderr_search_keyword = None
-    ########### ############ ############
-    ## To delete the attribute ##
-    # del instance.stderr_search_keyword
-
-
     @property
     def clean_output_search_keywords(self):
         return self._clean_output_search_keywords
@@ -40,7 +32,6 @@ class Huawei:
     @backup_command.setter
     def backup_command(self, keyword):
         self._stderr_search_keyword = keyword
-
 
 
 
