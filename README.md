@@ -11,11 +11,11 @@ A Python library / cli-tool to achieve advanced network automation scenarios wit
 ![image](https://user-images.githubusercontent.com/33789516/159186029-8f377b31-f839-40b6-96f6-33a6a42d5317.png)
 
 * Multi-Vendor
-   * Use a unified way to automate different types of devices from different vendors [ Check the list of supported vendors (_to be documented_) ]
+   * Use a unified way to automate different types of devices from different vendors [ Check the list of [supported vendors](https://eslam-gomaa.github.io/Flexible-Network/Docs/supported-vendors/supported-vendors) ]
 
-* Backup config, with different storage options including `local storage` & `S3` (_including_ Openstack object storage) [[ Check the list of supported backup storage ]](https://eslam-gomaa.github.io/Flexible-Network/Docs/ConfigBackup-storage/config-backup-storage)
+* Backup config, with different storage options including `local storage` & `S3` (_including_ Openstack object storage) [ Check the list of the [supported backup storage](https://eslam-gomaa.github.io/Flexible-Network/Docs/ConfigBackup-storage/backup_config-storage) ]
 
-* Integrations with different external APIs that gives more flexibility & efficiency to your scripts  [[ Check the list of supported integrations ]](https://eslam-gomaa.github.io/Flexible-Network/integrations)
+* Integrations with different external APIs that gives more flexibility & efficiency to your scripts  [  Check the list of [supported integrations ](https://eslam-gomaa.github.io/Flexible-Network/integrations) ]
 
 
 ![image](https://user-images.githubusercontent.com/33789516/159433445-d040ce1a-752c-408b-b38e-1ea3ecb1e450.png)
