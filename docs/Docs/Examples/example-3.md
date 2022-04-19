@@ -160,3 +160,10 @@ show version
 {% endhighlight %}
 
 
+### Sample Screenshoots
+
+
+![image](https://user-images.githubusercontent.com/33789516/164012992-4fc6d4df-de22-4b2f-9e03-a89365ab678c.png)
+
+![image](https://user-images.githubusercontent.com/33789516/164013079-64aa4e1a-bf7c-4a3f-8ce7-f92ad6814386.png)
+
