@@ -38,3 +38,6 @@ from FlexibleNetwork.Vendors import Cisco
 
 task.vendor = Cisco()
 ```
+
+[Full Example](https://eslam-gomaa.github.io/Flexible-Network/Docs/Examples/example-5/)
+

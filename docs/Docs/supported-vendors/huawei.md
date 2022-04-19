@@ -39,3 +39,6 @@ from FlexibleNetwork.Vendors import Huawei
 
 task.vendor = Huawei()
 ```
+
+[Full Example](https://eslam-gomaa.github.io/Flexible-Network/Docs/Examples/example-5/)
+
