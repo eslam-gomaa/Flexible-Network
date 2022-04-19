@@ -1,5 +1,3 @@
-from concurrent.futures import thread
-from sqlite3 import connect
 from FlexibleNetwork.ssh_authentication import SSH_Authentication
 import time
 from tabulate import tabulate
@@ -7,15 +5,15 @@ import textwrap
 import re
 import socket
 from FlexibleNetwork.vendors.cisco import Cisco
-import concurrent.futures
 
-
+ 
 
 class SSH_connection():
     def __init__(self):
         self.devices_dct = {}
         self.connected_devices_dct = {}
-        self._vendor = Cisco()
+        self._vendor = None
+        # self.vendor = None # default vendor
 
     @property
     def vendor(self):
@@ -299,7 +297,7 @@ class SSH_connection():
             exit(1)
         
  
-    def exec(self, host_dct, cmd, reconnect_closed_socket=True):
+    def exec(self, host_dct, cmd, vendor, reconnect_closed_socket=True):
         """
         Excutes a command on a remove network device
         INPUT:
@@ -314,6 +312,7 @@ class SSH_connection():
         }
         - does NOT print to the terminal
         """
+        self.vendor = vendor
 
         def get_stderr(string, stderr_search_keyword=self.vendor.stderr_search_keyword):
             """
@@ -398,9 +397,11 @@ class SSH_connection():
             
         return out
 
-    def backup_config(self, host_dct, comment, target):
+    def backup_config(self, host_dct):
         """
         Take a backup of the device configurations
         """
-        out = self.exec(host_dct, self.vendor.backup_command)
+        print(self.vendor)
+        print(self.vendor.backup_command)
+        out = self.exec(host_dct, self.vendor.backup_command, self.vendor)
         return out

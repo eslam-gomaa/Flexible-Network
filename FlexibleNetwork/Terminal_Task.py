@@ -51,7 +51,9 @@ class Terminal_Task:
         config = Config()
         self.validate_integrations()
         inventory = Inventory()
+        self.vendor = Cisco() # Default vendor class should exist in the config
         self.ssh = SSH_connection()
+        self.ssh.vendor = self.vendor
         self.bcolors = Bcolors()
 
         
@@ -82,8 +84,6 @@ class Terminal_Task:
                                    })
 
 
-        # Should get the vendor based on conditions
-        self.vendor = Cisco() # Default vendor class should exist in the config
         # Read all inventory sections
         # self.inventory = inventory.read_inventory()
         self.inventory_groups = inventory.read_inventory()
@@ -236,7 +236,7 @@ class Terminal_Task:
         # Start the execution_time couter
         start_time = time.time()
         # Execute the command
-        result = self.ssh.exec(host_dct, cmd)
+        result = self.ssh.exec(host_dct, cmd, self.vendor)
         # Calculate the execution_time
         duration = (time.time() - start_time)
         print()
@@ -294,7 +294,7 @@ The command exited with exit_code of {result['exit_code']}
             - "exit_code": (int) 0 --> the command run successfully,  1 --> an error occurred
         - does NOT print to the terminal
         """
-        result = self.ssh.exec(host_dct, cmd)
+        result = self.ssh.exec(host_dct, cmd, self.vendor)
         return result
 
     def execute_from_file(self, host_dct, file, terminal_print='default', ask_for_confirmation=False, exit_on_fail=True):
@@ -329,7 +329,7 @@ The command exited with exit_code of {result['exit_code']}
         Take full configurations backup of the device
         """
         start_time = time.time()
-        result = self.ssh.backup_config(host_dct, comment, target)
+        result = self.ssh.backup_config(host_dct)
 
         # Inserting the DB record
         # Generate a backup ID
