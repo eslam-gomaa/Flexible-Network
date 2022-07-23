@@ -21,6 +21,9 @@ def execute_test(devices_dct, cmd, parallel=False, parallel_threads=5):
     if not parallel:
         for host in devices_dct.values():
             if host['is_connected']:
+                # Test close the connection
+                # task.close(host)
+                task.close_channel(host)
                 task.execute(host_dct=host, cmd=cmd)
             else:
                 if ReadCliOptions.debug:

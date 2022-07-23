@@ -185,19 +185,19 @@ class SSH_connection(SSH_Authentication):
     #         print("> Stopped.  See you \n")
     #         exit(1)
 
-    def close(self, authenticated_hosts_dct):
-        """
-        Close the SSH connection for a list of hosts
-        Time Complexity -> O(n)
-        """
-        for host in authenticated_hosts_dct:
-            ssh = authenticated_hosts_dct[host]['ssh']
-            data = {}
-            data['success'] = 'False'
-            if authenticated_hosts_dct[host]['is_connected']:
-                ssh.close()
-                data['success'] = 'True'
-            return data
+    # def close(self, authenticated_hosts_dct):
+    #     """
+    #     Close the SSH connection for a list of hosts
+    #     Time Complexity -> O(n)
+    #     """
+    #     for host in authenticated_hosts_dct:
+    #         ssh = authenticated_hosts_dct[host]['ssh']
+    #         data = {}
+    #         data['success'] = 'False'
+    #         if authenticated_hosts_dct[host]['is_connected']:
+    #             ssh.close()
+    #             data['success'] = 'True'
+    #         return data
 
 
     # def ask_for_confirmation(self, msg="Confirm before running the following command", cmd=""):
@@ -384,6 +384,7 @@ class SSH_connection(SSH_Authentication):
         out['exit_code'] = 0
 
         # If the socket is closed try to reconnect.
+        print(self.is_channel_closed(host_dct))
         if reconnect_closed_socket:
             result = self.reconnect_if_socket_closed(host_dct)
             # If tried to re-connect & failed -> return -1
