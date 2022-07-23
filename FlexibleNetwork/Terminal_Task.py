@@ -1,9 +1,12 @@
+from tokenize import group
+from numpy import rint
 from FlexibleNetwork.Vendors import Cisco
 from FlexibleNetwork.Flexible_Network import ReadCliOptions
 from FlexibleNetwork.Flexible_Network import CLI
 from FlexibleNetwork.Flexible_Network import Config
 from FlexibleNetwork.Flexible_Network import Inventory
 from FlexibleNetwork.Flexible_Network import SSH_connection
+from FlexibleNetwork.Flexible_Network import SSH_Authentication
 from FlexibleNetwork.Integrations import RocketChat_API
 from FlexibleNetwork.Integrations import S3_APIs
 from FlexibleNetwork.Integrations import Cyberark_APIs_v2
@@ -18,11 +21,15 @@ from pathlib import Path
 import time
 import os
 import textwrap
+import rich
 
-class Terminal_Task:
+class Terminal_Task(SSH_Authentication):
+
     task_name = None # Should be updated from a cli option. --name
 
     def __init__(self):
+        super().__init__()
+
         # Initialize the "CLI" class so that it read the cli options 
         cli = CLI()
         cli.argparse()
@@ -50,7 +57,7 @@ class Terminal_Task:
         # Initialize the "Config" class so that it checks the config file at the begining. 
         config = Config()
         self.validate_integrations()
-        inventory = Inventory()
+        self.inventory = Inventory()
         self.vendor = Cisco() # Default vendor class should exist in the config
         self.ssh = SSH_connection()
         self.ssh.vendor = self.vendor
@@ -85,31 +92,37 @@ class Terminal_Task:
 
 
         # Read all inventory sections
-        # self.inventory = inventory.read_inventory()
-        self.inventory_groups = inventory.read_inventory()
+        # self.inventory = self.inventory.read_inventory()
+        self.inventory_groups = self.inventory.read_inventory()
+        self.inventory_groups_names = []
+        for i in self.inventory_groups.keys():
+            self.inventory_groups_names.append(i)
+
         self.devices_dct = {}
         self.connected_devices_dct = {}
+        self.total_connected_devices_dct = {}
         self.connected_devices_number = 0
         self.connection_failed_devices_number = 0
+        self.group_to_authenticate_from_cli = ReadCliOptions.authenticate_group
         if ReadCliOptions.authenticate_group:
             # Get the IPs of the section to the 'self.inventory' attribute
-            self.inventory = inventory.get_section(ReadCliOptions.authenticate_group)
+            # self.inventory = self.inventory.get_section(self.group_to_authenticate_from_cli)
             # If the section not found the 'get_section' method will return None
             # Hence the script will exit with code 1
-            if self.inventory is None:
-                print("\nERROR -- Inventory section [ {} ] does NOT exist !".format(ReadCliOptions.authenticate_group))
-                exit(1)
-            # Stop if the choosen group is empty
-            if not self.inventory:
-                print("\n> The choosen group [ {} ] has no hosts .. No need to continue.".format(ReadCliOptions.authenticate_group))
-                exit(0)
+            # if self.inventory is None:
+            #     print("\nERROR -- Inventory section [ {} ] does NOT exist !".format(ReadCliOptions.authenticate_group))
+            #     exit(1)
+            # # Stop if the choosen group is empty
+            # if not self.inventory:
+            #     print("\n> The choosen group [ {} ] has no hosts .. No need to continue.".format(ReadCliOptions.authenticate_group))
+            #     exit(0)
             # Read the user, password, port 
             self.user = ReadCliOptions.auth_user
             self.password = ReadCliOptions.auth_password
             # Default port is 22 if not specified in the CLI
             self.port = ReadCliOptions.auth_port
             # Authenticate the choosen group
-            self.authenticate(hosts=self.inventory, user=self.user, password=self.password, port=self.port)
+            self.authenticate(groups=self.group_to_authenticate_from_cli, user=self.user, password=self.password, port=self.port)
             
     def validate_integrations(self):
         if ReadCliOptions.to_validate_lst is not None:
@@ -181,37 +194,77 @@ class Terminal_Task:
             else:
                 exit(1)
 
-    def authenticate(self, hosts, user, password, port, terminal_print=True):
-        self.ssh.authenticate(hosts=hosts, user=user, password=password, port=port, terminal_print=terminal_print)
-        self.devices_dct = self.ssh.devices_dct
-        self.connected_devices_dct = self.ssh.connected_devices_dct
-        self.full_devices_number = len(hosts)
-        self.connected_devices_number = self.ssh.connected_devices_number
-        self.connection_failed_devices_number = self.ssh.connection_failed_devices_number
-        self.db.update_tasks_table({'full_devices_n': self.full_devices_number}, self.task_id)
-        self.db.update_tasks_table({'authenticated_devices_n': self.connected_devices_number}, self.task_id)
-        if terminal_print:
-            if ReadCliOptions.no_confirm_auth:
-                ask_when_hosts_fail_ = False
+    def authenticate(self, groups, user, password, port=22, terminal_print=True):
+        """
+        Authenticate an inventory groups
+        INPUT:
+            1. groups (list) List of inventory groups
+            2. user (string)
+            3. password (string)
+            4. port (int) [Default: 22]
+            5. terminal_print (bool) [Default: True] whether to print the progress to the terminal
+
+        Under optimization
+        """
+
+        # If only 1 group was provided as a string, convert it to a list
+        if not isinstance(groups, list):
+            groups = [groups]
+
+        # Check if the provided groups exists in the inventory
+        for group in groups:
+            if group not in self.inventory_groups_names:
+                rich.print(f"INFO -- Group [ [bold]{group}[/bold] ] does in exist in the inventory file, available sections:\n{self.inventory_groups_names}")
+                exit(1)
+
+        # Check if the group is empty
+        for group in groups:
+            group_hosts =  self.inventory.get_section(group)
+            if not group_hosts:
+                rich.print(f"INFO -- Group [ [bold]{group}[/bold] ] has no hosts .. No need to continue.")
+                exit(0) 
+
+        # groups.append('pa4')
+
+        for group in groups:
+            # Authenticate group
+            group_hosts = self.inventory.get_section(group)
+            auth = self.authenticate_hosts(hosts=group_hosts, group=group, user=user, password=password, port=port, terminal_print=terminal_print)
+            # dct that contains each device info (where the key is the device IP)
+            self.devices_dct = {}
+            self.devices_dct = auth.get('hosts')
+            
+            self.connected_devices_dct = self.ssh.connected_devices_dct
+            self.total_connected_devices_dct = dict(self.total_connected_devices_dct, **self.connected_devices_dct)
+            self.full_devices_number = len(group_hosts)
+            self.connected_devices_number = self.ssh.connected_devices_number
+            self.connection_failed_devices_number = self.ssh.connection_failed_devices_number
+            self.db.update_tasks_table({'full_devices_n': self.full_devices_number}, self.task_id)
+            self.db.update_tasks_table({'authenticated_devices_n': self.connected_devices_number}, self.task_id)
+            if terminal_print:
+                if ReadCliOptions.no_confirm_auth:
+                    ask_when_hosts_fail_ = False
+                else:
+                    ask_when_hosts_fail_ = True
+                self.connection_report_Table(dct=self.devices_dct, terminal_print=True, ask_when_hosts_fail=ask_when_hosts_fail_)
+            # If connected_devices_number > 0 , set the log_output flag to True
+            if self.connected_devices_number > 0:
+                self.log_output = True
+                if not os.path.isdir(self.log_and_backup_dir):
+                    Path(self.log_and_backup_dir).mkdir(parents=True, exist_ok=True)
+                self.db.update_tasks_table({'log_file': self.log_file}, self.task_id)
             else:
-                ask_when_hosts_fail_ = True
-            self.ssh.connection_report_Table(dct=self.devices_dct, terminal_print=True, ask_when_hosts_fail=ask_when_hosts_fail_)
-        # If connected_devices_number > 0 , set the log_output flag to True
-        if self.connected_devices_number > 0:
-            self.log_output = True
-            if not os.path.isdir(self.log_and_backup_dir):
-                Path(self.log_and_backup_dir).mkdir(parents=True, exist_ok=True)
-            self.db.update_tasks_table({'log_file': self.log_file}, self.task_id)
-        else:
-            self.db.update_tasks_table({'log_file': None}, self.task_id)
+                self.db.update_tasks_table({'log_file': None}, self.task_id)
+
+        
 
     def update_log_file(self, data):
         with open(self.log_file, 'a') as file:
             file.write(data)
 
-    def connection_report_Table(self, dct_={}, terminal_print=False, ask_when_hosts_fail=False):
-        table = self.ssh.connection_report_Table(dct=dct_, terminal_print=terminal_print, ask_when_hosts_fail=ask_when_hosts_fail)
-        return table
+    # def connection_report_Table(self, dct_={}, terminal_print=False, ask_when_hosts_fail=False):
+    #     table = self.ssh.connection_report_Table(dct=dct_, terminal_print=terminal_print, ask_when_hosts_fail=ask_when_hosts_fail)
+    #     return table
     
     def execute(self, host_dct, cmd, terminal_print='default', ask_for_confirmation=False, exit_on_fail=True, reconnect_closed_socket=True):
         """
@@ -231,12 +284,12 @@ class Terminal_Task:
         
         date_time = datetime.today().strftime('%d-%m-%Y_%H-%M-%S')
         if ask_for_confirmation:
-            self.ssh.ask_for_confirmation(cmd=self.bcolors.OKBLUE +  cmd + self.bcolors.ENDC)
+            self.ask_for_confirmation(cmd=self.bcolors.OKBLUE +  cmd + self.bcolors.ENDC)
         
         # Start the execution_time couter
         start_time = time.time()
         # Execute the command
-        result = self.ssh.exec(host_dct, cmd, self.vendor)
+        result = self.exec(host_dct, cmd, self.vendor)
         # Calculate the execution_time
         duration = (time.time() - start_time)
         print()
