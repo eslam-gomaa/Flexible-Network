@@ -231,6 +231,9 @@ class Terminal_Task(SSH_Authentication):
             group_hosts = self.inventory.get_section(group)
             auth = self.authenticate_hosts(hosts=group_hosts, group=group, user=user, password=password, port=port, terminal_print=terminal_print)
             # dct that contains each device info (where the key is the device IP)
+            # rich.print(self.hosts_dct)
+            # rich.print(SSH_Authentication.hosts_dct)
+            # exit(1)
             self.devices_dct = {}
             self.devices_dct = auth.get('hosts')
             

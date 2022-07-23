@@ -14,7 +14,7 @@ class ReadCliOptions:
     filter_by_date = None    
     get_log = None
     get_backup = None
-    
+
     debug = False
 
     def __init__(self):

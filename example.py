@@ -24,7 +24,7 @@ def execute_test(devices_dct, cmd, parallel=False, parallel_threads=5):
                 task.execute(host_dct=host, cmd=cmd)
             else:
                 if ReadCliOptions.debug:
-                    rich.print(f"\nDEBUG -- [bold]Host:[/bold] {host['host']} skipped, [bold]REASON[/bold]: [bright_red]{host['fail_reason']}[/bright_red]")
+                    rich.print(f"\nDEBUG -- [bold]HOST:[/bold] {host['host']} skipped, [bold]REASON[/bold]: [bright_red]{host['fail_reason']}[/bright_red]")
                     rich.print(host)
 
 

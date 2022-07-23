@@ -8,6 +8,7 @@ from rich.progress import SpinnerColumn, Progress, TextColumn, BarColumn, TaskPr
 from rich.live import Live
 import tabulate
 import textwrap
+import re
 tabulate.tabulate.WIDE_CHARS_MODE = False
 
 
@@ -93,13 +94,12 @@ class SSH_Authentication():
                     time_end = datetime.datetime.now()
                     time_taken = time_end - time_start
                     # Update progress bar
-                    authentication_progress.update(task_id=task_authentication_progress, completed=self.hosts_dct['total']['n_tasks_finished'], status=f"[ {self.hosts_dct['total']['n_tasks_finished']} / {len(hosts)} ]  [ {time_taken.seconds} / {2 + (max_tries * timeout)} sec ] ")
+                    authentication_progress.update(task_id=task_authentication_progress, completed=self.hosts_dct['total']['n_tasks_finished'], status=f" HOSTS: [ {self.hosts_dct['total']['n_tasks_finished']} / {len(hosts)} ]   TIMEOUT: [ {time_taken.seconds} / {2 + (max_tries * timeout)} sec ] ")
 
                     if self.hosts_dct['total']['n_tasks_finished'] == len(hosts):
                         if self.debug:
                             rich.print(f"DEBUG: end of authentication")
                             rich.print(self.hosts_dct)
-                        
                         break
                     time.sleep(1)
 
@@ -138,7 +138,9 @@ class SSH_Authentication():
 
         # Flag to track how many hosts finished
         self.hosts_dct['total']['n_tasks_finished'] = 0
+        self.hosts_dct['total']['n_hosts_total'] = 0
         self.hosts_dct['total']['n_hosts_connected'] = 0
+        self.hosts_dct['total']['n_hosts_failed'] = 0
         
         # Note time to calculate time taken at the end
         time_start = datetime.datetime.now()
@@ -154,7 +156,6 @@ class SSH_Authentication():
                 self.hosts_dct['hosts'][host]['channel'] = self.hosts_dct['hosts'][host]['ssh'].invoke_shell()
 
                 self.hosts_dct['hosts'][host]['is_connected'] = True
-                self.hosts_dct['total']['n_hosts_connected'] +=1
                 self.hosts_dct['hosts'][host]['fail_reason'] = ""
 
                 output = self.hosts_dct['hosts'][host]['channel'].recv(9999)
@@ -194,27 +195,36 @@ class SSH_Authentication():
         self.hosts_dct['hosts'][host]['time_taken'] = time_taken.seconds
 
         if self.hosts_dct['hosts'][host]['task_finished']:
-            self.hosts_dct['total']['n_tasks_finished'] +=1        
+            self.hosts_dct['total']['n_tasks_finished'] +=1
+            self.hosts_dct['total']['n_hosts_total'] +=1
+        if self.hosts_dct['hosts'][host]['is_connected']:
+            self.hosts_dct['total']['n_hosts_connected'] +=1
+        else:
+            self.hosts_dct['total']['n_hosts_failed'] +=1
 
 
     def ask_for_confirmation(self, msg="Confirm before running the following command", cmd=""):
-        options = ['yes', 'no']
-        decision = None
-        while decision not in options:
-            confirm = input(
-            "\nWARNING -- {}: \n".format(msg)
-            + "\n"
-            + cmd  + "\n"
-            + "\nyes || no \n\n"
-            + "yes: Run & continue\n"
-            + "no:  Abort\n"
-            + "YOUR Decision: ")
-            if confirm == 'yes':
-                print("> Ok .. Let\'s continue ...\n")
-                break
-            elif confirm == 'no':
-                print("> See you \n")
-                exit(1)
+        try:
+            options = ['yes', 'no']
+            decision = None
+            while decision not in options:
+                confirm = input(
+                "\nWARNING -- {}: \n".format(msg)
+                + "\n"
+                + cmd  + "\n"
+                + "\nyes || no \n\n"
+                + "yes: Run & continue\n"
+                + "no:  Abort\n"
+                + "YOUR Decision: ")
+                if confirm == 'yes':
+                    print("> Ok .. Let\'s continue ...\n")
+                    break
+                elif confirm == 'no':
+                    print("> See you \n")
+                    exit(1)
+        except (KeyboardInterrupt):
+            rich.print("\n[bright_green]OK !")
+            exit(1)
 
     def connection_report_Table(self, dct={}, terminal_print=False, ask_when_hosts_fail=False):
         """
@@ -238,8 +248,11 @@ class SSH_Authentication():
             print()
             rich.print("[bold green on black]# Connection Report")
             print(out)
-            if (ask_when_hosts_fail and self.connection_failed_devices_number > 0) :
-                self.ask_for_confirmation(msg="Failed to connect to some devices, Please confirm to continue")
+            if (self.hosts_dct['total']['n_hosts_failed'] ==  self.hosts_dct['total']['n_hosts_total']):
+                rich.print("\n[bold]INFO -- No need to continue; All hosts of the group failed to authenticate\n")
+                exit(1)
+            if (ask_when_hosts_fail) and (self.hosts_dct['total']['n_hosts_failed'] > 0) :
+                self.ask_for_confirmation(msg=f"Failed to connect to {self.hosts_dct['total']['n_hosts_failed']} devices, Please confirm to continue")
             print()
 
         return tabulate.tabulate(table, headers='firstrow', tablefmt='grid', showindex=False)
@@ -264,10 +277,13 @@ class SSH_Authentication():
             print()
 
             # rich.print(SSH_Authentication.hosts_dct['hosts'][host_dct['host']])
+            # rich.print(host_dct)
             # exit(1)
 
             # Re-authenticate the host
-            reauth = self.authenticate(hosts=[host_dct['host']], user=self.user, password=self.password, port=self.port, terminal_print=True)
+            # reauth = self.authenticate(hosts=[host_dct], user=self.user, password=self.password, port=self.port, terminal_print=True)
+            reauth = self.connect(host=host_dct['host'], user=host_dct['user'], password=host_dct['password'], port=host_dct['port'])
+            print(reauth)
             # If the host was re-connected successfully.
             if reauth[host_dct['host']]['is_connected']:
                 # Update the channel & ssh client objects of the host (So that the channel will be used for further commands execution.)
