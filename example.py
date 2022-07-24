@@ -1,7 +1,7 @@
 import rich
 from numpy import rint
 from FlexibleNetwork.Flexible_Network import Terminal_Task
-from FlexibleNetwork.Flexible_Network import ReadCliOptions 
+from FlexibleNetwork.Flexible_Network import ReadCliOptions
 
 task = Terminal_Task()
 
@@ -11,26 +11,13 @@ task = Terminal_Task()
 
 
 # for host in task.devices_dct.values():
-
 #     task.execute(host, "sh version")
-
-# 
 # rich.print(task.devices_dct)
 
-def execute_test(devices_dct, cmd, parallel=False, parallel_threads=5):
-    if not parallel:
-        for host in devices_dct.values():
-            if host['is_connected']:
-                # Test close the connection
-                # task.close(host)
-                task.close_channel(host)
-                task.execute(host_dct=host, cmd=cmd)
-            else:
-                if ReadCliOptions.debug:
-                    rich.print(f"\nDEBUG -- [bold]HOST:[/bold] {host['host']} skipped, [bold]REASON[/bold]: [bright_red]{host['fail_reason']}[/bright_red]")
-                    rich.print(host)
 
 
 
-execute_test(task.devices_dct, "show vlan br")
+
+
+task.execute_on_group(group='pa3', cmd="show vlan br")
 

@@ -28,7 +28,7 @@ class Terminal_Task(SSH_Authentication):
     task_name = None # Should be updated from a cli option. --name
 
     def __init__(self):
-        super().__init__()
+        super().__init__(debug=ReadCliOptions.debug)
 
         # Initialize the "CLI" class so that it read the cli options 
         cli = CLI()
@@ -41,6 +41,8 @@ class Terminal_Task(SSH_Authentication):
         if ReadCliOptions.list_tasks:
             print(self.db.list_all_tasks())
             exit(0)
+
+        self.debug = ReadCliOptions.debug
 
         # If --backup is specified
         if ReadCliOptions.list_backups:
@@ -229,7 +231,7 @@ class Terminal_Task(SSH_Authentication):
         for group in groups:
             # Authenticate group
             group_hosts = self.inventory.get_section(group)
-            auth = self.authenticate_hosts(hosts=group_hosts, group_name=group, user=user, password=password, port=port, terminal_print=terminal_print)
+            auth = self.authenticate_hosts(hosts=group_hosts, group_name=group, user=user, password=password, port=port, terminal_print=terminal_print, debug=self.debug)
             # dct that contains each device info (where the key is the device IP)
             # rich.print(self.hosts_dct)
             # rich.print(SSH_Authentication.hosts_dct)
@@ -269,11 +271,11 @@ class Terminal_Task(SSH_Authentication):
     #     table = self.ssh.connection_report_Table(dct=dct_, terminal_print=terminal_print, ask_when_hosts_fail=ask_when_hosts_fail)
     #     return table
     
-    def execute(self, host_dct, cmd, terminal_print='default', ask_for_confirmation=False, exit_on_fail=True, reconnect_closed_socket=True):
+    def execute(self, host, cmd, terminal_print='default', ask_for_confirmation=False, exit_on_fail=True, reconnect_closed_socket=True):
         """
         - Excutes a command on a remove network device
         INPUT:
-            1. host_dct -> (dct) The host dictionary,  is key of the  `connected_devices_dct` attribute  (And contains information about the device including the `ssh channel` to use for the command execution )
+            1. host -> (string) The host IP
             2. cmd -> (string) The command to run on the remote device
             3. terminal_print -> (string) Print the ouput || error to the terminal, options: ['default', 'json'], default: 'default'
             4. ask_for_confirmation ->  (bool) Ask for confirmation before executing a command, default: False
@@ -292,11 +294,11 @@ class Terminal_Task(SSH_Authentication):
         # Start the execution_time couter
         start_time = time.time()
         # Execute the command
-        result = self.exec(host_dct, cmd, self.vendor)
+        result = self.exec(host, cmd, self.vendor)
         # Calculate the execution_time
         duration = (time.time() - start_time)
         print()
-        print(f"@ {host_dct['host']}")
+        print(f"@ {host}")
         print("Execution Time: {} seconds".format(float("{:.2f}".format(duration))))
         # Print the command in blue color
         print(self.bcolors.OKBLUE + '\n'.join(result['cmd']) + self.bcolors.ENDC)
@@ -310,7 +312,7 @@ class Terminal_Task(SSH_Authentication):
             command = '\n'.join(result['cmd'])
             output = '\n'.join(result['stdout'])
             error = '\n'.join(result['stderr'])
-            data = f"""\n@ {host_dct['host']}
+            data = f"""\n@ {host}
 [[ excute ]]
 Time: {date_time}
 Execution Time: {float("{:.2f}".format(duration))} seconds
@@ -338,19 +340,19 @@ The command exited with exit_code of {result['exit_code']}
                 exit(1)
         return result
 
-    def execute_raw(self, host_dct, cmd):
+    def execute_raw(self, host, cmd):
         """
         - Excutes a command on a remove network device
         INPUT:
-            1. host_dct -> The host dictionary,  is key of the  `connected_devices_dct` attribute  (And contains information about the device including the `ssh channel` to use for the command execution )
-            2. cmd -> The command to run on the remote device
+            1. host (string) -> The host IP
+            2. cmd (string) -> The command to run on the remote device
         OUTPUT: (dictionary)
             - "stdout":    (list) "The output of the command",
             - "stderr":    (list) "The error (Syntax error are detected.)",
             - "exit_code": (int) 0 --> the command run successfully,  1 --> an error occurred
         - does NOT print to the terminal
         """
-        result = self.ssh.exec(host_dct, cmd, self.vendor)
+        result = self.ssh.exec(host, cmd, self.vendor)
         return result
 
     def execute_from_file(self, host_dct, file, terminal_print='default', ask_for_confirmation=False, exit_on_fail=True):
@@ -516,3 +518,41 @@ Backup ID: {self.backup_id}
             print("ERROR -- Failed to backup config > [ {} ]".format(comment))
             raise SystemExit(self.bcolors.FAIL + '\n'.join(result['stderr']) + self.bcolors.ENDC)
 
+
+    # def execute_test(self, hosts_list, cmd, parallel=False, parallel_threads=5):
+    #     """
+    #     Testing
+    #     """
+    #     if not parallel:
+    #         for host in hosts_list.keys():
+    #             if self.hosts_dct['hosts'][host]['is_connected']:
+    #                 # Test close the connection
+    #                 self.close_channel(host)
+    #                 self.execute(host=host, cmd=cmd)
+    #             else:
+    #                 if self.debug:
+    #                     rich.print(f"\nDEBUG -- [bold]HOST:[/bold] {host} skipped, [bold]REASON[/bold]: [bright_red]{self.hosts_dct['hosts'][host]['fail_reason']}[/bright_red]")
+    #                     rich.print(self.hosts_dct['hosts'][host])
+
+
+    def execute_on_group(self, group, cmd, parallel=False, parallel_threads=5):
+        """
+        Testing
+        """
+        # Authenticate
+        self.authenticate(groups=[group], user='orange', password='cisco', port=1114, terminal_print=True)
+        
+
+        if not parallel:
+            for host in self.hosts_dct['hosts'].keys():
+                # Execute on only the authenticated devices
+                if self.hosts_dct['hosts'][host]['is_connected']:
+                    # Test close the connection
+                    # self.close_channel(host)
+                    self.execute(host=host, cmd=cmd)
+                else:
+                    if self.debug:
+                        rich.print(f"\nDEBUG -- [bold]HOST:[/bold] {host} skipped, [bold]REASON[/bold]: [bright_red]{self.hosts_dct['hosts'][host]['fail_reason']}[/bright_red]")
+                        rich.print(self.hosts_dct['hosts'][host])
+                        
+                        

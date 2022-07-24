@@ -15,7 +15,7 @@ class ReadCliOptions:
     get_log = None
     get_backup = None
 
-    debug = True
+    debug = False
 
     def __init__(self):
         pass

@@ -10,6 +10,7 @@ from rich.live import Live
 import tabulate
 import textwrap
 import re
+
 tabulate.tabulate.WIDE_CHARS_MODE = False
 
 
@@ -20,15 +21,15 @@ class SSH_Authentication():
         "total": {}
     }
 
-    def __init__(self):
-        self.devices_dct = {}
-        self.connected_devices_dct = {}
+    def __init__(self, debug=False):
+        # self.devices_dct = {}
+        # self.connected_devices_dct = {}
         self.vendor = None # should be updated in the exec method.
 
         self.connection_failed_devices_number = 0
         self.connected_devices_number = 0
 
-        self.debug = False
+        self.debug = debug
 
         self.hosts_dct = {
             "hosts": {},
@@ -37,7 +38,7 @@ class SSH_Authentication():
 
         self.threads = []
 
-    def authenticate_hosts(self, hosts, group_name, user, password, port, terminal_print=False, timeout=5, max_tries=3):
+    def authenticate_hosts(self, hosts, group_name, user, password, port, terminal_print=False, timeout=5, max_tries=3, debug=False):
         """
         Authenticate list of hosts (network devices)
             - The authentication is done In Prarallel using Threading
@@ -96,13 +97,14 @@ class SSH_Authentication():
                     time_taken = time_end - time_start
                     # Update progress bar
                     authentication_progress.update(task_id=task_authentication_progress, completed=self.hosts_dct['total']['n_tasks_finished'], status=f" HOSTS: [ {self.hosts_dct['total']['n_tasks_finished']} / {len(hosts)} ]   TIMEOUT: [ {time_taken.seconds} / {2 + (max_tries * timeout)} sec ] ")
-
                     if self.hosts_dct['total']['n_tasks_finished'] == len(hosts):
                         if self.debug:
                             rich.print(f"DEBUG: end of authentication")
                             rich.print(self.hosts_dct)
                         break
                     time.sleep(1)
+                    
+            
 
             SSH_Authentication.hosts_dct = self.hosts_dct
             return self.hosts_dct
@@ -110,38 +112,41 @@ class SSH_Authentication():
             rich.print("[bright_green]OK !")
             exit(1)
 
-    def is_channel_closed(self, host_dct):
+    def is_channel_closed(self, channel):
         """
-        Check if the channel is closed  (True if closed, False if active)
+        Check if the [pre opened] channel is closed  (True if closed, False if active)
         INPUT:
-            1. host_dct (dct) the host dictionary (host details)
+            1. channel (object) The ssh channel object
         """
-        if host_dct['channel'] is None:
-            return True
-
         # Check if explicitly the channel is closed
-        if host_dct['channel'].closed:
+        if channel.closed:
             return True
 
         try:
-            host_dct['channel'].send("\n")
+            channel.send("\n")
             time.sleep(0.1)
-            if not host_dct['channel'].recv_ready():
+            if not channel.recv_ready():
                 return True
-            transport = host_dct['ssh'].get_transport()
+            transport = channel.get_transport()
             if not transport.is_active():
                 return True
+            if channel is None:
+                # return True
+                rich.print(f"ERROR -- The channel was NOT opened before !\n > Need to handle this.")
+                exit(1)
         except (paramiko.SSHException, socket.error) as e:
             rich.print(f"ERROR -- Something went wrong !\n> [bright_red]{e}[/bright_red]")
             exit(1)
+        
                 
         return False
 
-    def reconnect(self, host_dct):
+    def reconnect(self, host_dct, debug=False):
         """
         Re-authenticate a network device (that was already authenticated)
         """
-        rich.print(f"\n[bold]🟡 Closed Socket detected @{host_dct['host']}[/bold]\n> Trying to reconnect ...\n")
+        host = host_dct['host']
+        rich.print(f"\n[bold]🟡 Closed Socket detected @{host}[/bold]\n   [grey42]Trying to reconnect ...\n")
 
 
         # Progress for updating Rates bar
@@ -159,17 +164,19 @@ class SSH_Authentication():
         #     total=1
         #     )
 
-
         time_start = datetime.now()
         # Try to re-connect and get a new dct for the host
-        new_host_dct = self.connect(host_dct['host'], host_dct['user'], host_dct['password'], host_dct['port'], host_dct['timeout'])
-        time_end = datetime.now()
-        time_taken = time_end - time_start
-        if new_host_dct['is_connected']:
-            new_host_dct['is_reconnected'] = True
-            new_host_dct['reconnection_time'] = datetime.now((timezone.utc)).strftime("%Y-%m-%d %H:%M:%S")
+        new_host_dct = self.connect(host, self.hosts_dct['hosts'][host]['user'], self.hosts_dct['hosts'][host]['password'], self.hosts_dct['hosts'][host]['port'], self.hosts_dct['hosts'][host]['timeout'], self.hosts_dct['hosts'][host]['tries'])
         # Update the host dct
         self.hosts_dct['hosts'][host_dct['host']] = new_host_dct
+
+        time_end = datetime.now()
+        time_taken = time_end - time_start
+
+        if self.hosts_dct['hosts'][host]['is_connected']:
+            self.hosts_dct['hosts'][host]['is_reconnected'] = True
+            self.hosts_dct['hosts'][host]['reconnection_time'] = datetime.now((timezone.utc)).strftime("%Y-%m-%d %H:%M:%S")
+
 
         # with Live(re_authentication_progress, auto_refresh=True, screen=False):
         #     if host_dct['task_finished']:
@@ -183,14 +190,16 @@ class SSH_Authentication():
             
         if new_host_dct['task_finished']:
             if new_host_dct['is_reconnected']:
-                print(f"[bold]🟢 Reconnected successfully to @{new_host_dct['host']}")
+                rich.print(f"[bold]🟢 Reconnected successfully to {host}")
             else:
-                print(f"[bold]🔴 FAILED to reconnect to @{new_host_dct['host']}")
-                print(self.connection_report_Table({new_host_dct['host']: new_host_dct}))
+                rich.print(f"[bold]🔴 FAILED to reconnect to {host}")
+                # In case I want to print a table
+                print(self.connection_report_Table({host: self.hosts_dct['hosts'][host]}))
+                rich.print("print markdown here.")
 
             if self.debug:
-                rich.print(f"\nDEBUG: Reconneting Host: {host_dct['host']}")
-                rich.print(new_host_dct)
+                rich.print(f"\nDEBUG: Reconneting host: {host} [underline]result:")
+                rich.print(self.hosts_dct['hosts'][host])
 
 
 
@@ -219,7 +228,7 @@ class SSH_Authentication():
             "task_finished": False,
 
             "is_reconnected": False,
-            "connection_time": datetime.now((timezone.utc)).strftime("%Y-%m-%d %H:%M:%S"),
+            "connection_time": "",
             "reconnection_time": "",
         }
 
@@ -286,39 +295,35 @@ class SSH_Authentication():
             self.hosts_dct['total']['n_hosts_total'] +=1
         if self.hosts_dct['hosts'][host]['is_connected']:
             self.hosts_dct['total']['n_hosts_connected'] +=1
+            self.hosts_dct['hosts'][host]['connection_time'] = datetime.now((timezone.utc)).strftime("%Y-%m-%d %H:%M:%S")
         else:
             self.hosts_dct['total']['n_hosts_failed'] +=1
 
         return self.hosts_dct['hosts'][host]
 
-    def close(self, host_dct,  terminal_print=True):
+    def close(self, host, terminal_print=True):
         """
         Close the SSH connection with a network device
         INPUT:
             1. host_dct (dct) the host dictionary that contains host details
             2. terminal_print (bool) whether to print INFO to the terminal
         """
-        if host_dct['is_connected']:
-            host_dct['ssh'].close()
-            host_dct['is_connected'] = False
+        if self.hosts_dct['hosts'][host]['is_connected']:
+            self.hosts_dct['hosts'][host]['ssh'].close()
+            self.hosts_dct['hosts'][host]['is_connected'] = False
             if terminal_print:
-                rich.print(f"INFO -- connection closed with {host_dct['host']}")
+                rich.print(f"INFO -- connection closed with {host}")
 
-    def close_channel(self, host_dct):
+    def close_channel(self, host):
         """
         Close the SSH Channel with a network device (For Testing.)
         INPUT:
             1. host_dct (dct) the host dictionary that contains host details
         """
+        if self.hosts_dct['hosts'][host]['is_connected']:
+            self.hosts_dct['hosts'][host]['channel'].close()
+            self.hosts_dct['hosts'][host]['is_connected'] = False
 
-        if host_dct['is_connected']:
-            host_dct['channel'].close()
-            # host_dct['is_connected'] = False
-
-            # Update the global host dct
-            self.hosts_dct['hosts'][host_dct['host']] = host_dct
-
-            
 
     def ask_for_confirmation(self, msg="Confirm before running the following command", cmd=""):
         try:
@@ -389,7 +394,7 @@ class SSH_Authentication():
             A function to try to reconnect a closed ssh connection
             - Will be triggered if a closed socket is detected.
             """
-            print(f"\n> 🟡 Closed Socket detected @{host_dct['host']}\n> Trying to reconnect ...")
+            print(f"\n> 🟡 Closed Socket detected {host_dct['host']}\n> Trying to reconnect ...")
 
             print()
 
@@ -448,11 +453,11 @@ class SSH_Authentication():
             exit(1)
         
  
-    def exec(self, host_dct, cmd, vendor, reconnect_closed_socket=True):
+    def exec(self, host, cmd, vendor, reconnect_closed_socket=True):
         """
         Excutes a command on a remove network device
         INPUT:
-            1. host_dct -> (dct) the authentication information of a host 
+            1. host -> (string) host IP address 
             2. reconnect_closed_socket -> (bool) If to try to reconnect closed sockets. (Default: True)
         
         Returns a dictionary:
@@ -492,9 +497,8 @@ class SSH_Authentication():
         out['stderr'] = []
         out['exit_code'] = 0
 
-        if self.is_channel_closed(host_dct):
-            self.reconnect(host_dct)
-
+        if self.is_channel_closed(self.hosts_dct['hosts'][host]['channel']):
+            self.reconnect(self.hosts_dct['hosts'][host])
 
         # If the socket is closed try to reconnect.
         # if reconnect_closed_socket:
@@ -511,7 +515,7 @@ class SSH_Authentication():
     
         # Run the command
         try:
-            channel = host_dct['channel']
+            channel = self.hosts_dct['hosts'][host]['channel']
             channel.send(cmd + '\n' + '\n')
             # Important to set wait time, if not set it might not be able to read full output.
             time.sleep(0.5)
@@ -556,5 +560,5 @@ class SSH_Authentication():
         """
         Take a backup of the device configurations
         """
-        out = self.exec(host_dct, self.vendor.backup_command, self.vendor)
+        out = self.exec(host_dct['host'], self.vendor.backup_command, self.vendor)
         return out
