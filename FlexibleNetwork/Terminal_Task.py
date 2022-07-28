@@ -4,6 +4,7 @@ from FlexibleNetwork.Flexible_Network import CLI
 from FlexibleNetwork.Flexible_Network import Config
 from FlexibleNetwork.Flexible_Network import Inventory
 from FlexibleNetwork.Flexible_Network import SSH_connection
+from FlexibleNetwork.Flexible_Network import SSH_Authentication
 from FlexibleNetwork.Integrations import RocketChat_API
 from FlexibleNetwork.Integrations import S3_APIs
 from FlexibleNetwork.Integrations import Cyberark_APIs_v2
@@ -18,11 +19,21 @@ from pathlib import Path
 import time
 import os
 import textwrap
+import rich
+from rich.console import Console
+from rich.markdown import Markdown
+from rich.panel import Panel
+from rich.table import Table
+from rich.console import Console, Group
+from rich.rule import Rule
 
-class Terminal_Task:
+class Terminal_Task(SSH_Authentication):
+
     task_name = None # Should be updated from a cli option. --name
 
     def __init__(self):
+        super().__init__(debug=ReadCliOptions.debug)
+
         # Initialize the "CLI" class so that it read the cli options 
         cli = CLI()
         cli.argparse()
@@ -34,6 +45,8 @@ class Terminal_Task:
         if ReadCliOptions.list_tasks:
             print(self.db.list_all_tasks())
             exit(0)
+
+        self.debug = ReadCliOptions.debug
 
         # If --backup is specified
         if ReadCliOptions.list_backups:
@@ -50,7 +63,7 @@ class Terminal_Task:
         # Initialize the "Config" class so that it checks the config file at the begining. 
         config = Config()
         self.validate_integrations()
-        inventory = Inventory()
+        self.inventory = Inventory()
         self.vendor = Cisco() # Default vendor class should exist in the config
         self.ssh = SSH_connection()
         self.ssh.vendor = self.vendor
@@ -85,31 +98,37 @@ class Terminal_Task:
 
 
         # Read all inventory sections
-        # self.inventory = inventory.read_inventory()
-        self.inventory_groups = inventory.read_inventory()
+        # self.inventory = self.inventory.read_inventory()
+        self.inventory_groups = self.inventory.read_inventory()
+        self.inventory_groups_names = []
+        for i in self.inventory_groups.keys():
+            self.inventory_groups_names.append(i)
+
         self.devices_dct = {}
         self.connected_devices_dct = {}
+        self.total_connected_devices_dct = {}
         self.connected_devices_number = 0
         self.connection_failed_devices_number = 0
+        self.group_to_authenticate_from_cli = ReadCliOptions.authenticate_group
         if ReadCliOptions.authenticate_group:
             # Get the IPs of the section to the 'self.inventory' attribute
-            self.inventory = inventory.get_section(ReadCliOptions.authenticate_group)
+            # self.inventory = self.inventory.get_section(self.group_to_authenticate_from_cli)
             # If the section not found the 'get_section' method will return None
             # Hence the script will exit with code 1
-            if self.inventory is None:
-                print("\nERROR -- Inventory section [ {} ] does NOT exist !".format(ReadCliOptions.authenticate_group))
-                exit(1)
-            # Stop if the choosen group is empty
-            if not self.inventory:
-                print("\n> The choosen group [ {} ] has no hosts .. No need to continue.".format(ReadCliOptions.authenticate_group))
-                exit(0)
+            # if self.inventory is None:
+            #     print("\nERROR -- Inventory section [ {} ] does NOT exist !".format(ReadCliOptions.authenticate_group))
+            #     exit(1)
+            # # Stop if the choosen group is empty
+            # if not self.inventory:
+            #     print("\n> The choosen group [ {} ] has no hosts .. No need to continue.".format(ReadCliOptions.authenticate_group))
+            #     exit(0)
             # Read the user, password, port 
             self.user = ReadCliOptions.auth_user
             self.password = ReadCliOptions.auth_password
             # Default port is 22 if not specified in the CLI
             self.port = ReadCliOptions.auth_port
             # Authenticate the choosen group
-            self.authenticate(hosts=self.inventory, user=self.user, password=self.password, port=self.port)
+            self.authenticate(groups=self.group_to_authenticate_from_cli, user=self.user, password=self.password, port=self.port)
             
     def validate_integrations(self):
         if ReadCliOptions.to_validate_lst is not None:
@@ -181,43 +200,86 @@ class Terminal_Task:
             else:
                 exit(1)
 
-    def authenticate(self, hosts, user, password, port, terminal_print=True):
-        self.ssh.authenticate(hosts=hosts, user=user, password=password, port=port, terminal_print=terminal_print)
-        self.devices_dct = self.ssh.devices_dct
-        self.connected_devices_dct = self.ssh.connected_devices_dct
-        self.full_devices_number = len(hosts)
-        self.connected_devices_number = self.ssh.connected_devices_number
-        self.connection_failed_devices_number = self.ssh.connection_failed_devices_number
-        self.db.update_tasks_table({'full_devices_n': self.full_devices_number}, self.task_id)
-        self.db.update_tasks_table({'authenticated_devices_n': self.connected_devices_number}, self.task_id)
-        if terminal_print:
-            if ReadCliOptions.no_confirm_auth:
-                ask_when_hosts_fail_ = False
+    def authenticate(self, groups, user, password, port=22, terminal_print=True):
+        """
+        Authenticate an inventory groups
+        INPUT:
+            1. groups (list) List of inventory groups
+            2. user (string)
+            3. password (string)
+            4. port (int) [Default: 22]
+            5. terminal_print (bool) [Default: True] whether to print the progress to the terminal
+
+        Under optimization
+        """
+
+        # If only 1 group was provided as a string, convert it to a list
+        if not isinstance(groups, list):
+            groups = [groups]
+
+        # Check if the provided groups exists in the inventory
+        for group in groups:
+            if group not in self.inventory_groups_names:
+                rich.print(f"INFO -- Group [ [bold]{group}[/bold] ] does in exist in the inventory file, available sections:\n{self.inventory_groups_names}")
+                exit(1)
+
+        # Check if the group is empty
+        for group in groups:
+            group_hosts =  self.inventory.get_section(group)
+            if not group_hosts:
+                rich.print(f"INFO -- Group [ [bold]{group}[/bold] ] has no hosts .. No need to continue.")
+                exit(0) 
+
+        # groups.append('pa4')
+
+        for group in groups:
+            # Authenticate group
+            group_hosts = self.inventory.get_section(group)
+            auth = self.authenticate_hosts(hosts=group_hosts, group_name=group, user=user, password=password, port=port, terminal_print=terminal_print, debug=self.debug)
+            # dct that contains each device info (where the key is the device IP)
+            # rich.print(self.hosts_dct)
+            # rich.print(SSH_Authentication.hosts_dct)
+            # exit(1)
+            self.devices_dct = {}
+            self.devices_dct = auth.get('hosts')
+            
+            self.connected_devices_dct = self.ssh.connected_devices_dct
+            self.total_connected_devices_dct = dict(self.total_connected_devices_dct, **self.connected_devices_dct)
+            self.full_devices_number = len(group_hosts)
+            self.connected_devices_number = self.ssh.connected_devices_number
+            self.connection_failed_devices_number = self.ssh.connection_failed_devices_number
+            self.db.update_tasks_table({'full_devices_n': self.full_devices_number}, self.task_id)
+            self.db.update_tasks_table({'authenticated_devices_n': self.connected_devices_number}, self.task_id)
+            if terminal_print:
+                if ReadCliOptions.no_confirm_auth:
+                    ask_when_hosts_fail_ = False
+                else:
+                    ask_when_hosts_fail_ = True
+                self.connection_report_Table(dct=self.devices_dct, terminal_print=True, ask_when_hosts_fail=ask_when_hosts_fail_)
+            # If connected_devices_number > 0 , set the log_output flag to True
+            if self.connected_devices_number > 0:
+                self.log_output = True
+                if not os.path.isdir(self.log_and_backup_dir):
+                    Path(self.log_and_backup_dir).mkdir(parents=True, exist_ok=True)
+                self.db.update_tasks_table({'log_file': self.log_file}, self.task_id)
             else:
-                ask_when_hosts_fail_ = True
-            self.ssh.connection_report_Table(dct=self.devices_dct, terminal_print=True, ask_when_hosts_fail=ask_when_hosts_fail_)
-        # If connected_devices_number > 0 , set the log_output flag to True
-        if self.connected_devices_number > 0:
-            self.log_output = True
-            if not os.path.isdir(self.log_and_backup_dir):
-                Path(self.log_and_backup_dir).mkdir(parents=True, exist_ok=True)
-            self.db.update_tasks_table({'log_file': self.log_file}, self.task_id)
-        else:
-            self.db.update_tasks_table({'log_file': None}, self.task_id)
+                self.db.update_tasks_table({'log_file': None}, self.task_id)
+
+        
 
     def update_log_file(self, data):
         with open(self.log_file, 'a') as file:
             file.write(data)
 
-    def connection_report_Table(self, dct_={}, terminal_print=False, ask_when_hosts_fail=False):
-        table = self.ssh.connection_report_Table(dct=dct_, terminal_print=terminal_print, ask_when_hosts_fail=ask_when_hosts_fail)
-        return table
+    # def connection_report_Table(self, dct_={}, terminal_print=False, ask_when_hosts_fail=False):
+    #     table = self.ssh.connection_report_Table(dct=dct_, terminal_print=terminal_print, ask_when_hosts_fail=ask_when_hosts_fail)
+    #     return table
     
-    def execute(self, host_dct, cmd, terminal_print='default', ask_for_confirmation=False, exit_on_fail=True, reconnect_closed_socket=True):
+    def execute(self, host, cmd, terminal_print='default', tag='',ask_for_confirmation=False, exit_on_fail=True, reconnect_closed_socket=True):
         """
         - Excutes a command on a remove network device
         INPUT:
-            1. host_dct -> (dct) The host dictionary,  is key of the  `connected_devices_dct` attribute  (And contains information about the device including the `ssh channel` to use for the command execution )
+            1. host -> (string) The host IP
             2. cmd -> (string) The command to run on the remote device
             3. terminal_print -> (string) Print the ouput || error to the terminal, options: ['default', 'json'], default: 'default'
             4. ask_for_confirmation ->  (bool) Ask for confirmation before executing a command, default: False
@@ -231,19 +293,26 @@ class Terminal_Task:
         
         date_time = datetime.today().strftime('%d-%m-%Y_%H-%M-%S')
         if ask_for_confirmation:
-            self.ssh.ask_for_confirmation(cmd=self.bcolors.OKBLUE +  cmd + self.bcolors.ENDC)
+            self.ask_for_confirmation(cmd=self.bcolors.OKBLUE +  cmd + self.bcolors.ENDC)
         
         # Start the execution_time couter
         start_time = time.time()
         # Execute the command
-        result = self.ssh.exec(host_dct, cmd, self.vendor)
+        result = self.exec(host, cmd, self.vendor)
         # Calculate the execution_time
         duration = (time.time() - start_time)
+        # print()
+        
         print()
-        print(f"@ {host_dct['host']}")
-        print("Execution Time: {} seconds".format(float("{:.2f}".format(duration))))
+        rich.print(Markdown(f"@ **{host}**"))
+        rich.print(f'[grey42]Execution time {float("{:.2f}".format(duration))} sec')
+        rich.print(f"[grey42]Finished with exit-code of {result['exit_code']}")
+        if tag is not None:
+            rich.print(f"[grey42]Tag 🏷  '{tag}'")
+
         # Print the command in blue color
         print(self.bcolors.OKBLUE + '\n'.join(result['cmd']) + self.bcolors.ENDC)
+
         if terminal_print == 'json':
                 formatted_json = json.dumps(result, indent=4, sort_keys=True, ensure_ascii=False)
                 colorful_json = highlight(formatted_json.encode('utf8'), lexers.JsonLexer(),  formatters.TerminalFormatter())
@@ -254,7 +323,7 @@ class Terminal_Task:
             command = '\n'.join(result['cmd'])
             output = '\n'.join(result['stdout'])
             error = '\n'.join(result['stderr'])
-            data = f"""\n@ {host_dct['host']}
+            data = f"""\n@ {host}
 [[ excute ]]
 Time: {date_time}
 Execution Time: {float("{:.2f}".format(duration))} seconds
@@ -282,19 +351,19 @@ The command exited with exit_code of {result['exit_code']}
                 exit(1)
         return result
 
-    def execute_raw(self, host_dct, cmd):
+    def execute_raw(self, host, cmd):
         """
         - Excutes a command on a remove network device
         INPUT:
-            1. host_dct -> The host dictionary,  is key of the  `connected_devices_dct` attribute  (And contains information about the device including the `ssh channel` to use for the command execution )
-            2. cmd -> The command to run on the remote device
+            1. host (string) -> The host IP
+            2. cmd (string) -> The command to run on the remote device
         OUTPUT: (dictionary)
             - "stdout":    (list) "The output of the command",
             - "stderr":    (list) "The error (Syntax error are detected.)",
             - "exit_code": (int) 0 --> the command run successfully,  1 --> an error occurred
         - does NOT print to the terminal
         """
-        result = self.ssh.exec(host_dct, cmd, self.vendor)
+        result = self.ssh.exec(host, cmd, self.vendor)
         return result
 
     def execute_from_file(self, host_dct, file, terminal_print='default', ask_for_confirmation=False, exit_on_fail=True):
@@ -460,3 +529,159 @@ Backup ID: {self.backup_id}
             print("ERROR -- Failed to backup config > [ {} ]".format(comment))
             raise SystemExit(self.bcolors.FAIL + '\n'.join(result['stderr']) + self.bcolors.ENDC)
 
+
+    # def execute_test(self, hosts_list, cmd, parallel=False, parallel_threads=5):
+    #     """
+    #     Testing
+    #     """
+    #     if not parallel:
+    #         for host in hosts_list.keys():
+    #             if self.hosts_dct['hosts'][host]['is_connected']:
+    #                 # Test close the connection
+    #                 self.close_channel(host)
+    #                 self.execute(host=host, cmd=cmd)
+    #             else:
+    #                 if self.debug:
+    #                     rich.print(f"\nDEBUG -- [bold]HOST:[/bold] {host} skipped, [bold]REASON[/bold]: [bright_red]{self.hosts_dct['hosts'][host]['fail_reason']}[/bright_red]")
+    #                     rich.print(self.hosts_dct['hosts'][host])
+
+
+    def execute_on_group(self, group, cmd, parallel=False, parallel_threads=5):
+        """
+        Testing
+        """
+        # Authenticate
+        self.authenticate(groups=[group], user='orange', password='cisco', port=1114, terminal_print=True)
+
+        if not isinstance(cmd, list):
+            cmd = [cmd]
+    
+        if not parallel:
+            # Execute with a loop
+            for host in self.hosts_dct['hosts'].keys():
+                # Execute on only the authenticated devices
+                if self.hosts_dct['hosts'][host]['is_connected']:
+                    # Test close the connection
+                    # self.close_channel(host)
+                    for command in cmd:
+                        self.execute(host=host, cmd=command)
+                else:
+                    if self.debug:
+                        rich.print(f"\nDEBUG -- [bold]HOST:[/bold] {host} skipped, [bold]REASON[/bold]: [bright_red]{self.hosts_dct['hosts'][host]['fail_reason']}[/bright_red]")
+                        rich.print(self.hosts_dct['hosts'][host])
+
+    
+    def sub_task(self, group, cmds=[],parallel=False, parallel_threads=5):
+        """
+        Testing
+        INPUT:
+            1. group (string) group name to authenticate
+            2. cmds (list of dcts) commands to execute        
+        """
+        # dct to store the executed commands results (of the sub task)
+        commands_executed_dct = {}
+
+        # Authenticate
+        self.authenticate(groups=[group], user='orange', password='cisco', port=1113, terminal_print=True)
+
+        if not isinstance(cmds, list):
+            cmds = [cmds]
+        
+        # Abort of there is no commands to execute
+        if len(cmds) < 1:
+            rich.print("INFO -- No commands to execute")
+            exit(0)
+        
+        if not parallel:
+            # Execute with a loop
+            for host in self.hosts_dct['hosts'].keys():
+                # Execute on only the authenticated devices
+                if self.hosts_dct['hosts'][host]['is_connected']:
+                    # Test close the connection
+                    # self.close_channel(host)
+                    for command_dct in cmds:
+                        run_command = False
+                        # Flag for the command tag name
+                        tag = None
+                        # Getting the tag name if was provided
+                        if 'tag' in command_dct:
+                            tag = command_dct['tag']
+                        
+                        # Before execution
+                        # Evaluate the when condition
+                        if 'when' in command_dct:
+                            when_condition_dct = command_dct.get('when')
+
+                            # check if the tag exists
+                            if 'operator' in when_condition_dct:
+                                if when_condition_dct['operator'] not in ['is', 'is_not']:
+                                    rich.print(f"\nERROR -- command condition operator only supports {['is', 'is_not']} You've provided ({when_condition_dct['operator']})")
+                                    exit(1)
+                            else:
+                                # set the default operator as 'is'
+                                when_condition_dct['operator'] = 'is'
+                            try:
+                                if when_condition_dct['tag'] in commands_executed_dct:
+                                    # Get the results of the commaned with the tag
+                                    condition_command = commands_executed_dct.get(when_condition_dct['tag'])
+                                    print()
+                                    # Print the command
+                                    print(self.bcolors.OKBLUE +  command_dct['command'] + self.bcolors.ENDC)
+                                    rich.print(f"[bold]⭕ command skipped due to condition:[/bold]  [ [yellow]execute only when 'exit_code' of command with tag 🏷 '{when_condition_dct['tag']}' {when_condition_dct['operator']} '{when_condition_dct['exit_code']}'[/yellow] ]")
+                                    
+                                    # rich.print(commands_executed_dct.get(when_condition_dct['tag']))
+
+                                    grid = Table.grid(expand=True)
+                                    grid.add_column(ratio=2)
+                                    grid.add_row(f"[grey42]Condition command exited with {commands_executed_dct.get(when_condition_dct['tag'])['exit_code']} ")
+                                    rich.print(Panel.fit(grid,border_style="grey42"))
+
+
+                                    if when_condition_dct.get('operator') == 'is_not':
+                                        if condition_command['exit_code'] != when_condition_dct['exit_code']:
+                                            run_command = True
+                                    else:
+                                        if condition_command['exit_code'] == when_condition_dct['exit_code']:
+                                            run_command = True
+                                else:
+                                    print()
+                                    # Print the command
+                                    print(self.bcolors.OKBLUE +  command_dct['command'] + self.bcolors.ENDC)
+                                    raise SystemExit(f"ERROR -- at 'when' condition {when_condition_dct} -> provided tag not found")
+                            except KeyError as e:
+                                rich.print(f"ERROR -- Key not found  > {e}")
+
+                            if run_command:
+                                exec_cmd = self.execute(host=host, tag=tag,cmd=command_dct['command'])
+                                # Recording commands that has ID specified
+                                try:
+                                    tag_ = command_dct['tag']
+                                    if tag:
+                                        commands_executed_dct[tag_] = {
+                                            "command": command_dct['command'],
+                                            "exit_code": exec_cmd['exit_code'],
+                                            "stderr": exec_cmd['stderr'],
+                                            "stdout": exec_cmd['stdout']
+                                        }
+                                except:
+                                    pass
+                        else:
+                            exec_cmd = self.execute(host=host, tag=tag,cmd=command_dct['command'])
+                            # Recording commands that has ID specified
+                            try:
+                                tag_ = command_dct['tag']
+                                if tag:
+                                    commands_executed_dct[tag_] = {
+                                        "command": command_dct['command'],
+                                        "exit_code": exec_cmd['exit_code'],
+                                        "stderr": exec_cmd['stderr'],
+                                        "stdout": exec_cmd['stdout']
+                                    }
+                            except:
+                                pass
+                else:
+                    if self.debug:
+                        rich.print(f"\nDEBUG -- [bold]HOST:[/bold] {host} skipped, [bold]REASON[/bold]: [bright_red]{self.hosts_dct['hosts'][host]['fail_reason']}[/bright_red]")
+                        rich.print(self.hosts_dct['hosts'][host])
+                        
+                        

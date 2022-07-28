@@ -1,5 +1,6 @@
 # The following order matters.
 from FlexibleNetwork.ssh import SSH_connection
+from FlexibleNetwork.ssh_authentication import SSH_Authentication
 from FlexibleNetwork.read_cli_options import ReadCliOptions
 from FlexibleNetwork.read_config import Config
 from FlexibleNetwork.inventory import Inventory
@@ -15,6 +16,7 @@ class Flexible_Network(
     ReadCliOptions,
     CLI,
     SSH_connection,
+    SSH_Authentication,
     Inventory,
     Config,
     Bcolors,

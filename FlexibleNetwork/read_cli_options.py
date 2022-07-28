@@ -15,11 +15,14 @@ class ReadCliOptions:
     get_log = None
     get_backup = None
 
+    debug = False
+
     def __init__(self):
-        self.task_name
-        self.inventory_file
-        self.no_confirm_auth
-        self.config_file
-        self.to_validate_lst
-        self.authenticate_group
-        self.list_tasks
+        pass
+        # self.task_name
+        # self.inventory_file
+        # self.no_confirm_auth
+        # self.config_file
+        # self.to_validate_lst
+        # self.authenticate_group
+        # self.list_tasks

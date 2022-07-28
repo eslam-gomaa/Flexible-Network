@@ -1,227 +1,275 @@
+from numpy import rint
 from FlexibleNetwork.ssh_authentication import SSH_Authentication
 import time
 from tabulate import tabulate
 import textwrap
 import re
 import socket
+import threading
+import rich
 
-
-class SSH_connection():
+class SSH_connection(SSH_Authentication):
     def __init__(self):
+        super().__init__()
+
         self.devices_dct = {}
         self.connected_devices_dct = {}
         self.vendor = None # should be updated in the exec method.
 
-    def authenticate(self, hosts, user, password, port, terminal_print=False):
-        """
-        Autenticates a List of devices and returns a dictionary of dictionaries,
-        * The key of each nested dict is the host IP and the value is the connection & authentication information.
-        # Modified copy of .. (for terminal printing.)
-        """
-        try:
-            if terminal_print:
-                print("> Authenticating selected devices")
 
-            self.connection_failed_devices_number = 0
-            self.connected_devices_number = 0
-            self.user = user
-            self.password = password
-            self.port = port
-            out = {}
-            self.authentication = SSH_Authentication()
-            cnt = 0
-            for host in hosts:
-                connection = self.authentication.connect(host, user, password, port)
-                if connection['is_connected']:
-                    self.connected_devices_number +=1
-                else:
-                    self.connection_failed_devices_number  +=1
-                out[host] = connection
-                cnt +=1
-                if terminal_print:
-                    print("   {}  [ {} / {} ]          Connected [ {} ]     Failed [ {} ]    ".format(host, cnt , len(hosts), self.connected_devices_number, self.connection_failed_devices_number), end="\r")
-            # print("                                                                                              ", end='\r')
-            print()
-            self.devices_dct = out
-            for host in self.devices_dct:
-                if self.devices_dct[host]['is_connected']:
-                    self.connected_devices_dct[host] = self.devices_dct[host]
-            return out
-        except KeyboardInterrupt:
-            print()
-            print("> Stopped.  See you \n")
-            exit(1)
-
-    def authenticate_concurrent(self, hosts, user, password, port, terminal_print=True):
-        """
-        Autenticates a List of devices and returns a dictionary of dictionaries,
-        * The key of each nested dict is the host IP and the value is the connection & authentication information.
-        # Modified copy of .. (for terminal printing.)
-        """
-        try:
-            if terminal_print:
-                print("> Authenticating selected devices")
-
-            self.connection_failed_devices_number = 0
-            self.connected_devices_number = 0
-            self.user = user
-            self.password = password
-            self.port = port
-
-            out = {}
-            self.authentication = SSH_Authentication()
-            cnt = 0
+    # def authenticate_2(self, hosts, user, password, port, terminal_print=False, parallel=True, n_parallel_connections=10):
+    #     """
+    #     Testing. Threading.
+    #     """
+    #     try:
+    #         if terminal_print:
+    #             print("> Authenticating selected devices")
             
-            with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
-                host_feature_dct = {}
+    #         self.connection_failed_devices_number = 0
+    #         self.connected_devices_number = 0
+    #         self.user = user
+    #         self.password = password
+    #         self.port = port
+    #         # out = {}
 
-                # for host in hosts:
-                #     connection = executor.map(self.authentication.connect, host, user, password, port, timeout=5)
-                #     print(host, connection)
-                #     host_feature_dct[host] = connection
+    #         # self.authentication = SSH_Authentication()
+
+
+    #         threads = []
+    #         rich.print(hosts)
+    #         for host in hosts:
+    #             print(host)
+    #             thread  = threading.Thread(target=self.connect, args=(host, user, password, port))
+    #             thread.daemon = True
+    #             threads.append(thread)
+
+    #             # thread.start()
+
+            
+    #             # connection = self.authentication.connect(host, user, password, port)
+    #             # if connection['is_connected']:
+    #             #     self.connected_devices_number +=1
+    #             # else:
+    #             #     self.connection_failed_devices_number  +=1
+    #             # out[host] = connection
+    #             # cnt +=1
+    #             # if terminal_print:
+    #             #     print("testing..")
+
+
+    #     except:
+    #         pass
+
+
+
+    # def authenticate(self, hosts, user, password, port, terminal_print=False):
+    #     """
+    #     Autenticates a List of devices and returns a dictionary of dictionaries,
+    #     * The key of each nested dict is the host IP and the value is the connection & authentication information.
+    #     # Modified copy of .. (for terminal printing.)
+    #     """
+    #     try:
+    #         if terminal_print:
+    #             print("> Authenticating selected devices")
+
+    #         self.connection_failed_devices_number = 0
+    #         self.connected_devices_number = 0
+    #         self.user = user
+    #         self.password = password
+    #         self.port = port
+    #         out = {}
+    #         self.authentication = SSH_Authentication()
+    #         cnt = 0
+    #         for host in hosts:
+    #             connection = self.authentication.connect(host, user, password, port)
+    #             if connection['is_connected']:
+    #                 self.connected_devices_number +=1
+    #             else:
+    #                 self.connection_failed_devices_number  +=1
+    #             out[host] = connection
+    #             cnt +=1
+    #             if terminal_print:
+    #                 print("   {}  [ {} / {} ]          Connected [ {} ]     Failed [ {} ]    ".format(host, cnt , len(hosts), self.connected_devices_number, self.connection_failed_devices_number), end="\r")
+    #         # print("                                                                                              ", end='\r')
+    #         print()
+    #         self.devices_dct = out
+    #         for host in self.devices_dct:
+    #             if self.devices_dct[host]['is_connected']:
+    #                 self.connected_devices_dct[host] = self.devices_dct[host]
+    #         return out
+    #     except KeyboardInterrupt:
+    #         print()
+    #         print("> Stopped.  See you \n")
+    #         exit(1)
+
+    # def authenticate_concurrent(self, hosts, user, password, port, terminal_print=True):
+    #     """
+    #     Autenticates a List of devices and returns a dictionary of dictionaries,
+    #     * The key of each nested dict is the host IP and the value is the connection & authentication information.
+    #     # Modified copy of .. (for terminal printing.)
+    #     """
+    #     try:
+    #         if terminal_print:
+    #             print("> Authenticating selected devices")
+
+    #         self.connection_failed_devices_number = 0
+    #         self.connected_devices_number = 0
+    #         self.user = user
+    #         self.password = password
+    #         self.port = port
+
+    #         out = {}
+    #         self.authentication = SSH_Authentication()
+    #         cnt = 0
+            
+    #         with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
+    #             host_feature_dct = {}
+
+    #             # for host in hosts:
+    #             #     connection = executor.map(self.authentication.connect, host, user, password, port, timeout=5)
+    #             #     print(host, connection)
+    #             #     host_feature_dct[host] = connection
                 
-                # for host, future in host_feature_dct.items():
-                #     print(str(future))
+    #             # for host, future in host_feature_dct.items():
+    #             #     print(str(future))
 
-                for host in hosts:
-                    connection = executor.submit(self.authentication.connect, host, user, password, port)
-                    time.sleep(2)
-                    print(f"> Starting parallel ssh clients:  [ {host} ]", end="\r")
-                    # results.append(connection)
-                    host_feature_dct[host] = connection
+    #             for host in hosts:
+    #                 connection = executor.submit(self.authentication.connect, host, user, password, port)
+    #                 time.sleep(2)
+    #                 print(f"> Starting parallel ssh clients:  [ {host} ]", end="\r")
+    #                 # results.append(connection)
+    #                 host_feature_dct[host] = connection
 
-                for host, future in zip(host_feature_dct.keys(), concurrent.futures.as_completed(host_feature_dct.values())):
-                    if future.result()['is_connected']:
-                        self.connected_devices_number +=1
-                    else:
-                        self.connection_failed_devices_number  +=1
-                    out[host] = future.result()
-                    cnt +=1
-                    if terminal_print:
-                        print("   {}  [ {} / {} ]          Connected [ {} ]     Failed [ {} ]    ".format(host, cnt , len(hosts), self.connected_devices_number, self.connection_failed_devices_number), end="\r")
-
-
-
-                # for host, future in host_feature_dct.items():
-                #     if future.result()['is_connected']:
-                #         self.connected_devices_number +=1
-                #     else:
-                #         self.connection_failed_devices_number  +=1
-                #     out[host] = future.result()
-                #     cnt +=1
-                #     if terminal_print:
-                #         print("   {}  [ {} / {} ]          Connected [ {} ]     Failed [ {} ]    ".format(host, cnt , len(hosts), self.connected_devices_number, self.connection_failed_devices_number), end="\r")
+    #             for host, future in zip(host_feature_dct.keys(), concurrent.futures.as_completed(host_feature_dct.values())):
+    #                 if future.result()['is_connected']:
+    #                     self.connected_devices_number +=1
+    #                 else:
+    #                     self.connection_failed_devices_number  +=1
+    #                 out[host] = future.result()
+    #                 cnt +=1
+    #                 if terminal_print:
+    #                     print("   {}  [ {} / {} ]          Connected [ {} ]     Failed [ {} ]    ".format(host, cnt , len(hosts), self.connected_devices_number, self.connection_failed_devices_number), end="\r")
 
 
-                # for f, host in zip(concurrent.futures.as_completed(results), hosts):
-                #     if f.result()['is_connected']:
-                #         self.connected_devices_number +=1
-                #     else:
-                #         self.connection_failed_devices_number  +=1
-                #     out[host] = f.result()
-                #     cnt +=1
-                #     if terminal_print:
-                #         print("   {}  [ {} / {} ]          Connected [ {} ]     Failed [ {} ]    ".format(host, cnt , len(hosts), self.connected_devices_number, self.connection_failed_devices_number), end="\r")
 
-                # print("                                                                                              ", end='\r')
-            print()
-            self.devices_dct = out
-            for host in self.devices_dct:
-                if self.devices_dct[host]['is_connected']:
-                    self.connected_devices_dct[host] = self.devices_dct[host]
-            return out
-        except KeyboardInterrupt:
-            print()
-            print("> Stopped.  See you \n")
-            exit(1)
-
-    def close(self, authenticated_hosts_dct):
-        """
-        Close the SSH connection for a list of hosts
-        Time Complexity -> O(n)
-        """
-        for host in authenticated_hosts_dct:
-            ssh = authenticated_hosts_dct[host]['ssh']
-            data = {}
-            data['success'] = 'False'
-            if authenticated_hosts_dct[host]['is_connected']:
-                ssh.close()
-                data['success'] = 'True'
-            return data
+    #             # for host, future in host_feature_dct.items():
+    #             #     if future.result()['is_connected']:
+    #             #         self.connected_devices_number +=1
+    #             #     else:
+    #             #         self.connection_failed_devices_number  +=1
+    #             #     out[host] = future.result()
+    #             #     cnt +=1
+    #             #     if terminal_print:
+    #             #         print("   {}  [ {} / {} ]          Connected [ {} ]     Failed [ {} ]    ".format(host, cnt , len(hosts), self.connected_devices_number, self.connection_failed_devices_number), end="\r")
 
 
-    def ask_for_confirmation(self, msg="Confirm before running the following command", cmd=""):
-        options = ['yes', 'no']
-        decision = None
-        while decision not in options:
-            confirm = input(
-            "\nWARNING -- {}: \n".format(msg)
-            + "\n"
-            + cmd  + "\n"
-            + "\nyes || no \n\n"
-            + "yes: Run & continue\n"
-            + "no:  Abort\n"
-            + "YOUR Decision: ")
-            if confirm == 'yes':
-                print("> Ok .. Let\'s continue ...\n")
-                break
-            elif confirm == 'no':
-                print("> See you \n")
-                exit(1)
+    #             # for f, host in zip(concurrent.futures.as_completed(results), hosts):
+    #             #     if f.result()['is_connected']:
+    #             #         self.connected_devices_number +=1
+    #             #     else:
+    #             #         self.connection_failed_devices_number  +=1
+    #             #     out[host] = f.result()
+    #             #     cnt +=1
+    #             #     if terminal_print:
+    #             #         print("   {}  [ {} / {} ]          Connected [ {} ]     Failed [ {} ]    ".format(host, cnt , len(hosts), self.connected_devices_number, self.connection_failed_devices_number), end="\r")
+
+    #             # print("                                                                                              ", end='\r')
+    #         print()
+    #         self.devices_dct = out
+    #         for host in self.devices_dct:
+    #             if self.devices_dct[host]['is_connected']:
+    #                 self.connected_devices_dct[host] = self.devices_dct[host]
+    #         return out
+    #     except KeyboardInterrupt:
+    #         print()
+    #         print("> Stopped.  See you \n")
+    #         exit(1)
+
+    # def close(self, authenticated_hosts_dct):
+    #     """
+    #     Close the SSH connection for a list of hosts
+    #     Time Complexity -> O(n)
+    #     """
+    #     for host in authenticated_hosts_dct:
+    #         ssh = authenticated_hosts_dct[host]['ssh']
+    #         data = {}
+    #         data['success'] = 'False'
+    #         if authenticated_hosts_dct[host]['is_connected']:
+    #             ssh.close()
+    #             data['success'] = 'True'
+    #         return data
 
 
-    def connection_report_Table(self, dct={}, terminal_print=False, ask_when_hosts_fail=False):
-        """
-        Takes an dict generated from the "authenticate_devices" Method
-        And prints them in a an organized table
-        """
-        table = [['Host', 'Connection Status', 'Comment', 'N of tries', 'Max Retries', 'Time tring in seconds', 'Fail Reason']]
-        tabulate.WIDE_CHARS_MODE = False
-        for host, info in dct.items():
+    # def ask_for_confirmation(self, msg="Confirm before running the following command", cmd=""):
+    #     options = ['yes', 'no']
+    #     decision = None
+    #     while decision not in options:
+    #         confirm = input(
+    #         "\nWARNING -- {}: \n".format(msg)
+    #         + "\n"
+    #         + cmd  + "\n"
+    #         + "\nyes || no \n\n"
+    #         + "yes: Run & continue\n"
+    #         + "no:  Abort\n"
+    #         + "YOUR Decision: ")
+    #         if confirm == 'yes':
+    #             print("> Ok .. Let\'s continue ...\n")
+    #             break
+    #         elif confirm == 'no':
+    #             print("> See you \n")
+    #             exit(1)
+
+
+    # def connection_report_Table(self, dct={}, terminal_print=False, ask_when_hosts_fail=False):
+    #     """
+    #     Takes an dict generated from the "authenticate_devices" Method
+    #     And prints them in a an organized table
+    #     """
+    #     table = [['Host', 'Connection Status', 'N of tries', 'Max Retries', 'Time tring in seconds', 'Fail Reason']]
+    #     tabulate.WIDE_CHARS_MODE = False
+    #     for host, info in dct.items():
             
-            if info['is_connected']:
-                connection_status = "🟢"
-                comment = "connected"
-            else:
-                connection_status = "🔴"
-                comment = "Fail to connect"
-            fail_reason = "\n".join(textwrap.wrap(info['Fail_Reason'], width=22, replace_whitespace=False))
+    #         if info['is_connected']:
+    #             connection_status = "🟢 connected"
+    #         else:
+    #             connection_status = "🔴 Fail to connect"
+    #         fail_reason = "\n".join(textwrap.wrap(info['fail_reason'], width=32, replace_whitespace=False))
             
-            row = [host, connection_status, comment, info['tries'], info['max_tries'], info['time_to_connect_seconds'], fail_reason]
-            table.append(row)
-        out = tabulate(table, headers='firstrow', tablefmt='grid', showindex=False)
-        if terminal_print:
-            print()
-            print("> Connection Report   ")
-            print(out)
-            if (ask_when_hosts_fail and self.connection_failed_devices_number > 0) :
-                self.ask_for_confirmation(msg="Failed to connect to some devices, Please confirm to continue")
-            print()
+    #         row = [host, connection_status, info['tries'], info['max_tries'], info['time_taken'], fail_reason]
+    #         table.append(row)
+    #     out = tabulate(table, headers='firstrow', tablefmt='grid', showindex=False)
+    #     if terminal_print:
+    #         print()
+    #         rich.print("[bold green on black]# Connection Report")
+    #         print(out)
+    #         if (ask_when_hosts_fail and self.connection_failed_devices_number > 0) :
+    #             self.ask_for_confirmation(msg="Failed to connect to some devices, Please confirm to continue")
+    #         print()
 
-        return tabulate(table, headers='firstrow', tablefmt='grid', showindex=False)
+    #     return tabulate(table, headers='firstrow', tablefmt='grid', showindex=False)
 
     
-    def connection_report_to_csv(self, dct={}):
-        """
-        Takes an dict generated from the "authenticate_devices" Method
-        And prints them in a an organized table
-        """
-        table = [['Host', 'Connection Status', 'Comment', 'N of tries', 'Max Retries', 'Time tring in seconds', 'Fail Reason']]
-        tabulate.WIDE_CHARS_MODE = False
-        for host, info in dct.items():
+    # def connection_report_to_csv(self, dct={}):
+    #     """
+    #     Takes an dict generated from the "authenticate_devices" Method
+    #     And prints them in a an organized table
+    #     """
+    #     table = [['Host', 'Connection Status', 'Comment', 'N of tries', 'Max Retries', 'Time taken in seconds', 'Fail Reason']]
+    #     tabulate.WIDE_CHARS_MODE = False
+    #     for host, info in dct.items():
             
-            if info['is_connected']:
-                connection_status = "🟢"
-                comment = "connected"
-            else:
-                connection_status = "🔴"
-                comment = "Fail to connect"
-            fail_reason = "\n".join(textwrap.wrap(info['Fail_Reason'], width=22, replace_whitespace=False))
+    #         if info['is_connected']:
+    #             connection_status = "🟢"
+    #             comment = "connected"
+    #         else:
+    #             connection_status = "🔴"
+    #             comment = "Fail to connect"
+    #         fail_reason = "\n".join(textwrap.wrap(info['fail_reason'], width=22, replace_whitespace=False))
             
-            row = [host, connection_status, comment, info['tries'], info['max_tries'], info['time_to_connect_seconds'], fail_reason]
-            table.append(row)
-        output_data = tabulate(table, headers='firstrow', tablefmt='tsv', showindex=False)
-        # Need to Figure out how to write these these data to a csv or Excel file. 
+    #         row = [host, connection_status, comment, info['tries'], info['max_tries'], info['time_taken'], fail_reason]
+    #         table.append(row)
+    #     output_data = tabulate(table, headers='firstrow', tablefmt='tsv', showindex=False)
+    #     # Need to Figure out how to write these these data to a csv or Excel file. 
 
     def reconnect_if_socket_closed(self, host_dct):
         """
@@ -239,6 +287,12 @@ class SSH_connection():
             - Will be triggered if a closed socket is detected.
             """
             print(f"\n> 🟡 Closed Socket detected @{host_dct['host']}\n> Trying to reconnect ...")
+
+            print()
+
+            # rich.print(SSH_Authentication.hosts_dct['hosts'][host_dct['host']])
+            # exit(1)
+
             # Re-authenticate the host
             reauth = self.authenticate(hosts=[host_dct['host']], user=self.user, password=self.password, port=self.port, terminal_print=True)
             # If the host was re-connected successfully.
@@ -330,6 +384,7 @@ class SSH_connection():
         out['exit_code'] = 0
 
         # If the socket is closed try to reconnect.
+        print(self.is_channel_closed(host_dct))
         if reconnect_closed_socket:
             result = self.reconnect_if_socket_closed(host_dct)
             # If tried to re-connect & failed -> return -1
