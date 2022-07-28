@@ -1,4 +1,3 @@
-from numpy import rint
 import paramiko
 import time
 import socket
@@ -148,22 +147,6 @@ class SSH_Authentication():
         host = host_dct['host']
         rich.print(f"\n[bold]🟡 Closed Socket detected @{host}[/bold]\n   [grey42]Trying to reconnect ...\n")
 
-
-        # Progress for updating Rates bar
-        # re_authentication_progress = Progress(
-        #     SpinnerColumn(),
-        #     TextColumn("[progress.description]{task.description}"),
-        #     BarColumn(),
-        #     TextColumn("[progress.percentage]{task.percentage:>3.0f}%"),
-        #     TextColumn("{task.fields[status]}"),
-        # )
-
-        # task_authentication_progress = re_authentication_progress.add_task(
-        #     description=f"[bold]Re-connecting Host: [ {host_dct['host']} ]",
-        #     status=f"[ 0 / 1 ] ",
-        #     total=1
-        #     )
-
         time_start = datetime.now()
         # Try to re-connect and get a new dct for the host
         new_host_dct = self.connect(host, self.hosts_dct['hosts'][host]['user'], self.hosts_dct['hosts'][host]['password'], self.hosts_dct['hosts'][host]['port'], self.hosts_dct['hosts'][host]['timeout'], self.hosts_dct['hosts'][host]['tries'])
@@ -177,17 +160,6 @@ class SSH_Authentication():
             self.hosts_dct['hosts'][host]['is_reconnected'] = True
             self.hosts_dct['hosts'][host]['reconnection_time'] = datetime.now((timezone.utc)).strftime("%Y-%m-%d %H:%M:%S")
 
-
-        # with Live(re_authentication_progress, auto_refresh=True, screen=False):
-        #     if host_dct['task_finished']:
-        #         completed = 1
-        #     else:
-        #          completed = 0
-
-        #     time_end = datetime.now()
-        #     time_taken = time_end - time_start
-        #     re_authentication_progress.update(task_id=task_authentication_progress, completed=completed, status=f" HOSTS: [ {completed} / 1 ]   TIMEOUT: [ {time_taken.seconds} / {2 + (host_dct['max_tries'] * host_dct['timeout'])} sec ] ")
-            
         if new_host_dct['task_finished']:
             if new_host_dct['is_reconnected']:
                 rich.print(f"[bold]🟢 Reconnected successfully to {host}")
@@ -399,11 +371,6 @@ class SSH_Authentication():
             print(f"\n> 🟡 Closed Socket detected {host_dct['host']}\n> Trying to reconnect ...")
 
             print()
-
-            # rich.print(SSH_Authentication.hosts_dct['hosts'][host_dct['host']])
-            # rich.print(host_dct)
-            # exit(1)
-
             # Re-authenticate the host
             # reauth = self.authenticate(hosts=[host_dct], user=self.user, password=self.password, port=self.port, terminal_print=True)
             reauth = self.connect(host=host_dct['host'], user=host_dct['user'], password=host_dct['password'], port=host_dct['port'])
@@ -518,7 +485,18 @@ class SSH_Authentication():
     
         # Run the command
         try:
+            # Probably channel will be None in case "Connection reset by peer" (host sent a RST packet " indicates an immediate dropping of the connection")
+            # https://stackoverflow.com/a/1434506
             channel = self.hosts_dct['hosts'][host]['channel']
+            if channel is None:
+                err = {
+                    "stdout": "",
+                    "stderr": self.hosts_dct['hosts'][host]['fail_reason'],
+                    "exit_code": -1
+                }
+                rich.print(self.hosts_dct['hosts'][host])
+                return err
+            
             channel.send(cmd + '\n' + '\n')
             # Important to set wait time, if not set it might not be able to read full output.
             time.sleep(0.5)

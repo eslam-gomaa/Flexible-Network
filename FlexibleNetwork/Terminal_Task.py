@@ -1,6 +1,3 @@
-from curses import panel
-from tokenize import group
-from numpy import rint
 from FlexibleNetwork.Vendors import Cisco
 from FlexibleNetwork.Flexible_Network import ReadCliOptions
 from FlexibleNetwork.Flexible_Network import CLI
@@ -306,27 +303,6 @@ class Terminal_Task(SSH_Authentication):
         duration = (time.time() - start_time)
         # print()
         
-        cmd_to_print = '\n'.join(result['cmd'])
-        # rich.print(Panel(cmd_to_print))  
-
-        md = Markdown(f"""> **{host}**
->
-> Execution time {float("{:.2f}".format(duration))} sec
->
-> Finished with exit-code of {result['exit_code']}""")
-
-        # grid = Table.grid(expand=False,)
-        # grid.add_column(ratio=2)
-        # grid.add_row(Markdown(f"**{host}**"))
-        # grid.add_row(f'Execution time {float("{:.2f}".format(duration))} sec')
-        # grid.add_row(f"Finished with exit-code of {result['exit_code']}")
-        # if tag is not None:
-        #     grid.add_row(f"🏷 {tag}")
-        # grid.add_row(cmd_to_print)
-        # grid.add_row(Rule(style='#AAAAAA'),)
-        
-        # rich.print(Panel.fit(grid,border_style=None))
-
         print()
         rich.print(Markdown(f"@ **{host}**"))
         rich.print(f'[grey42]Execution time {float("{:.2f}".format(duration))} sec')
@@ -334,28 +310,8 @@ class Terminal_Task(SSH_Authentication):
         if tag is not None:
             rich.print(f"[grey42]Tag 🏷  '{tag}'")
 
-        # console = Console()
-
-
-        # group = Group(
-        #     Rule(style='#AAAAAA'),
-        #     md,
-        #     f"[blue]{cmd_to_print}"
-        # )
-
-        # rich.print(group)
-
-        # print(f"@ {host}")
-        # print("Execution Time: {} seconds".format(float("{:.2f}".format(duration))))
         # Print the command in blue color
         print(self.bcolors.OKBLUE + '\n'.join(result['cmd']) + self.bcolors.ENDC)
-
-        # rich.print(md)
-        # print(self.bcolors.OKBLUE + '\n'.join(result['cmd']) + self.bcolors.ENDC)
-        # if tag is not None:
-            # rich.print(f"🏷 {tag}")
-        # rich.print(Rule(style='#AAAAAA'))
-
 
         if terminal_print == 'json':
                 formatted_json = json.dumps(result, indent=4, sort_keys=True, ensure_ascii=False)
@@ -671,7 +627,16 @@ Backup ID: {self.backup_id}
                                     print()
                                     # Print the command
                                     print(self.bcolors.OKBLUE +  command_dct['command'] + self.bcolors.ENDC)
-                                    rich.print(f"[bold]> command skipped due to condition => [yellow]execute only when 'exit_code' of command with tag '{when_condition_dct['tag']}' {when_condition_dct['operator']} {when_condition_dct['exit_code']}")
+                                    rich.print(f"[bold]⭕ command skipped due to condition:[/bold]  [ [yellow]execute only when 'exit_code' of command with tag 🏷 '{when_condition_dct['tag']}' {when_condition_dct['operator']} '{when_condition_dct['exit_code']}'[/yellow] ]")
+                                    
+                                    # rich.print(commands_executed_dct.get(when_condition_dct['tag']))
+
+                                    grid = Table.grid(expand=True)
+                                    grid.add_column(ratio=2)
+                                    grid.add_row(f"[grey42]Condition command exited with {commands_executed_dct.get(when_condition_dct['tag'])['exit_code']} ")
+                                    rich.print(Panel.fit(grid,border_style="grey42"))
+
+
                                     if when_condition_dct.get('operator') == 'is_not':
                                         if condition_command['exit_code'] != when_condition_dct['exit_code']:
                                             run_command = True
@@ -682,7 +647,7 @@ Backup ID: {self.backup_id}
                                     print()
                                     # Print the command
                                     print(self.bcolors.OKBLUE +  command_dct['command'] + self.bcolors.ENDC)
-                                    raise SystemExit(f"ERROR -- at when condition {when_condition_dct} -> provided tag '{tag}' not found")
+                                    raise SystemExit(f"ERROR -- at 'when' condition {when_condition_dct} -> provided tag not found")
                             except KeyError as e:
                                 rich.print(f"ERROR -- Key not found  > {e}")
 
