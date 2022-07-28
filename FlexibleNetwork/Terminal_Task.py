@@ -1,3 +1,4 @@
+from curses import panel
 from tokenize import group
 from numpy import rint
 from FlexibleNetwork.Vendors import Cisco
@@ -22,6 +23,12 @@ import time
 import os
 import textwrap
 import rich
+from rich.console import Console
+from rich.markdown import Markdown
+from rich.panel import Panel
+from rich.table import Table
+from rich.console import Console, Group
+from rich.rule import Rule
 
 class Terminal_Task(SSH_Authentication):
 
@@ -271,7 +278,7 @@ class Terminal_Task(SSH_Authentication):
     #     table = self.ssh.connection_report_Table(dct=dct_, terminal_print=terminal_print, ask_when_hosts_fail=ask_when_hosts_fail)
     #     return table
     
-    def execute(self, host, cmd, terminal_print='default', ask_for_confirmation=False, exit_on_fail=True, reconnect_closed_socket=True):
+    def execute(self, host, cmd, terminal_print='default', tag='',ask_for_confirmation=False, exit_on_fail=True, reconnect_closed_socket=True):
         """
         - Excutes a command on a remove network device
         INPUT:
@@ -297,11 +304,59 @@ class Terminal_Task(SSH_Authentication):
         result = self.exec(host, cmd, self.vendor)
         # Calculate the execution_time
         duration = (time.time() - start_time)
+        # print()
+        
+        cmd_to_print = '\n'.join(result['cmd'])
+        # rich.print(Panel(cmd_to_print))  
+
+        md = Markdown(f"""> **{host}**
+>
+> Execution time {float("{:.2f}".format(duration))} sec
+>
+> Finished with exit-code of {result['exit_code']}""")
+
+        # grid = Table.grid(expand=False,)
+        # grid.add_column(ratio=2)
+        # grid.add_row(Markdown(f"**{host}**"))
+        # grid.add_row(f'Execution time {float("{:.2f}".format(duration))} sec')
+        # grid.add_row(f"Finished with exit-code of {result['exit_code']}")
+        # if tag is not None:
+        #     grid.add_row(f"🏷 {tag}")
+        # grid.add_row(cmd_to_print)
+        # grid.add_row(Rule(style='#AAAAAA'),)
+        
+        # rich.print(Panel.fit(grid,border_style=None))
+
         print()
-        print(f"@ {host}")
-        print("Execution Time: {} seconds".format(float("{:.2f}".format(duration))))
+        rich.print(Markdown(f"@ **{host}**"))
+        rich.print(f'[grey42]Execution time {float("{:.2f}".format(duration))} sec')
+        rich.print(f"[grey42]Finished with exit-code of {result['exit_code']}")
+        if tag is not None:
+            rich.print(f"[grey42]Tag 🏷  '{tag}'")
+
+        # console = Console()
+
+
+        # group = Group(
+        #     Rule(style='#AAAAAA'),
+        #     md,
+        #     f"[blue]{cmd_to_print}"
+        # )
+
+        # rich.print(group)
+
+        # print(f"@ {host}")
+        # print("Execution Time: {} seconds".format(float("{:.2f}".format(duration))))
         # Print the command in blue color
         print(self.bcolors.OKBLUE + '\n'.join(result['cmd']) + self.bcolors.ENDC)
+
+        # rich.print(md)
+        # print(self.bcolors.OKBLUE + '\n'.join(result['cmd']) + self.bcolors.ENDC)
+        # if tag is not None:
+            # rich.print(f"🏷 {tag}")
+        # rich.print(Rule(style='#AAAAAA'))
+
+
         if terminal_print == 'json':
                 formatted_json = json.dumps(result, indent=4, sort_keys=True, ensure_ascii=False)
                 colorful_json = highlight(formatted_json.encode('utf8'), lexers.JsonLexer(),  formatters.TerminalFormatter())
@@ -541,15 +596,124 @@ Backup ID: {self.backup_id}
         """
         # Authenticate
         self.authenticate(groups=[group], user='orange', password='cisco', port=1114, terminal_print=True)
-        
 
+        if not isinstance(cmd, list):
+            cmd = [cmd]
+    
         if not parallel:
+            # Execute with a loop
             for host in self.hosts_dct['hosts'].keys():
                 # Execute on only the authenticated devices
                 if self.hosts_dct['hosts'][host]['is_connected']:
                     # Test close the connection
                     # self.close_channel(host)
-                    self.execute(host=host, cmd=cmd)
+                    for command in cmd:
+                        self.execute(host=host, cmd=command)
+                else:
+                    if self.debug:
+                        rich.print(f"\nDEBUG -- [bold]HOST:[/bold] {host} skipped, [bold]REASON[/bold]: [bright_red]{self.hosts_dct['hosts'][host]['fail_reason']}[/bright_red]")
+                        rich.print(self.hosts_dct['hosts'][host])
+
+    
+    def sub_task(self, group, cmds=[],parallel=False, parallel_threads=5):
+        """
+        Testing
+        INPUT:
+            1. group (string) group name to authenticate
+            2. cmds (list of dcts) commands to execute        
+        """
+        # dct to store the executed commands results (of the sub task)
+        commands_executed_dct = {}
+
+        # Authenticate
+        self.authenticate(groups=[group], user='orange', password='cisco', port=1113, terminal_print=True)
+
+        if not isinstance(cmds, list):
+            cmds = [cmds]
+        
+        # Abort of there is no commands to execute
+        if len(cmds) < 1:
+            rich.print("INFO -- No commands to execute")
+            exit(0)
+        
+        if not parallel:
+            # Execute with a loop
+            for host in self.hosts_dct['hosts'].keys():
+                # Execute on only the authenticated devices
+                if self.hosts_dct['hosts'][host]['is_connected']:
+                    # Test close the connection
+                    # self.close_channel(host)
+                    for command_dct in cmds:
+                        run_command = False
+                        # Flag for the command tag name
+                        tag = None
+                        # Getting the tag name if was provided
+                        if 'tag' in command_dct:
+                            tag = command_dct['tag']
+                        
+                        # Before execution
+                        # Evaluate the when condition
+                        if 'when' in command_dct:
+                            when_condition_dct = command_dct.get('when')
+
+                            # check if the tag exists
+                            if 'operator' in when_condition_dct:
+                                if when_condition_dct['operator'] not in ['is', 'is_not']:
+                                    rich.print(f"\nERROR -- command condition operator only supports {['is', 'is_not']} You've provided ({when_condition_dct['operator']})")
+                                    exit(1)
+                            else:
+                                # set the default operator as 'is'
+                                when_condition_dct['operator'] = 'is'
+                            try:
+                                if when_condition_dct['tag'] in commands_executed_dct:
+                                    # Get the results of the commaned with the tag
+                                    condition_command = commands_executed_dct.get(when_condition_dct['tag'])
+                                    print()
+                                    # Print the command
+                                    print(self.bcolors.OKBLUE +  command_dct['command'] + self.bcolors.ENDC)
+                                    rich.print(f"[bold]> command skipped due to condition => [yellow]execute only when 'exit_code' of command with tag '{when_condition_dct['tag']}' {when_condition_dct['operator']} {when_condition_dct['exit_code']}")
+                                    if when_condition_dct.get('operator') == 'is_not':
+                                        if condition_command['exit_code'] != when_condition_dct['exit_code']:
+                                            run_command = True
+                                    else:
+                                        if condition_command['exit_code'] == when_condition_dct['exit_code']:
+                                            run_command = True
+                                else:
+                                    print()
+                                    # Print the command
+                                    print(self.bcolors.OKBLUE +  command_dct['command'] + self.bcolors.ENDC)
+                                    raise SystemExit(f"ERROR -- at when condition {when_condition_dct} -> provided tag '{tag}' not found")
+                            except KeyError as e:
+                                rich.print(f"ERROR -- Key not found  > {e}")
+
+                            if run_command:
+                                exec_cmd = self.execute(host=host, tag=tag,cmd=command_dct['command'])
+                                # Recording commands that has ID specified
+                                try:
+                                    tag_ = command_dct['tag']
+                                    if tag:
+                                        commands_executed_dct[tag_] = {
+                                            "command": command_dct['command'],
+                                            "exit_code": exec_cmd['exit_code'],
+                                            "stderr": exec_cmd['stderr'],
+                                            "stdout": exec_cmd['stdout']
+                                        }
+                                except:
+                                    pass
+                        else:
+                            exec_cmd = self.execute(host=host, tag=tag,cmd=command_dct['command'])
+                            # Recording commands that has ID specified
+                            try:
+                                tag_ = command_dct['tag']
+                                if tag:
+                                    commands_executed_dct[tag_] = {
+                                        "command": command_dct['command'],
+                                        "exit_code": exec_cmd['exit_code'],
+                                        "stderr": exec_cmd['stderr'],
+                                        "stdout": exec_cmd['stdout']
+                                    }
+                            except:
+                                pass
                 else:
                     if self.debug:
                         rich.print(f"\nDEBUG -- [bold]HOST:[/bold] {host} skipped, [bold]REASON[/bold]: [bright_red]{self.hosts_dct['hosts'][host]['fail_reason']}[/bright_red]")

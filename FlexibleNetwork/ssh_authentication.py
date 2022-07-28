@@ -191,6 +191,8 @@ class SSH_Authentication():
         if new_host_dct['task_finished']:
             if new_host_dct['is_reconnected']:
                 rich.print(f"[bold]🟢 Reconnected successfully to {host}")
+                print(self.connection_report_Table({host: self.hosts_dct['hosts'][host]}))
+                # rich.print(new_host_dct)
             else:
                 rich.print(f"[bold]🔴 FAILED to reconnect to {host}")
                 # In case I want to print a table
@@ -413,6 +415,7 @@ class SSH_Authentication():
                 host_dct['ssh']  = reauth[host_dct['host']]['ssh']
                 print(f"> 🟢 Reconnected successfully to @{host_dct['host']}")
                 self.reconnected = True
+                # rich.print(reauth)
             else:
                 print(f"> 🔴 FAILED to reconnect to @{host_dct['host']}")
                 self.reconnected = False
