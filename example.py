@@ -18,19 +18,22 @@ task = Terminal_Task()
 #                                         ])
 
 
-
-task.sub_task(group='works', cmds=[
+task.sub_task(name="Testing", group='works', cmds=[
     {
         "command": "show ip int br", 
         "tag": "123df",
     },
     {
         "command": "show vlan br", 
-        "when": {"tag": "123df", "exit_code": 1, 'operator': 'is'}
+        "when": {"tag": "123df", "exit_code": 0, 'operator': 'is'}
     },
     {
         "command": "show vlan br", 
     }
 ])
+
+
+
+
 
 

@@ -490,6 +490,7 @@ class SSH_Authentication():
             channel = self.hosts_dct['hosts'][host]['channel']
             if channel is None:
                 err = {
+                    "cmd": cmd,
                     "stdout": "",
                     "stderr": self.hosts_dct['hosts'][host]['fail_reason'],
                     "exit_code": -1
