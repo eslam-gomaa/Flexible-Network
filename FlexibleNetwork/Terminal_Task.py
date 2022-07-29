@@ -571,7 +571,7 @@ Backup ID: {self.backup_id}
                         rich.print(self.hosts_dct['hosts'][host])
 
     
-    def sub_task(self, group, cmds=[],parallel=False, parallel_threads=5):
+    def sub_task(self, group, cmds=[], name="", parallel=False, parallel_threads=5):
         """
         Testing
         INPUT:
@@ -591,6 +591,10 @@ Backup ID: {self.backup_id}
         if len(cmds) < 1:
             rich.print("INFO -- No commands to execute")
             exit(0)
+        
+        if name:
+            rich.print(Markdown(f"### Sub-Task: {name}", style="bold"))
+            rich.print(Rule(style='#AAAAAA'))
         
         if not parallel:
             # Execute with a loop
@@ -627,14 +631,12 @@ Backup ID: {self.backup_id}
                                     print()
                                     # Print the command
                                     print(self.bcolors.OKBLUE +  command_dct['command'] + self.bcolors.ENDC)
-                                    rich.print(f"[bold]⭕ command skipped due to condition:[/bold]  [ [yellow]execute only when 'exit_code' of command with tag 🏷 '{when_condition_dct['tag']}' {when_condition_dct['operator']} '{when_condition_dct['exit_code']}'[/yellow] ]")
                                     
                                     # rich.print(commands_executed_dct.get(when_condition_dct['tag']))
 
                                     grid = Table.grid(expand=True)
                                     grid.add_column(ratio=2)
                                     grid.add_row(f"[grey42]Condition command exited with {commands_executed_dct.get(when_condition_dct['tag'])['exit_code']} ")
-                                    rich.print(Panel.fit(grid,border_style="grey42"))
 
 
                                     if when_condition_dct.get('operator') == 'is_not':
@@ -665,6 +667,11 @@ Backup ID: {self.backup_id}
                                         }
                                 except:
                                     pass
+                            else:
+                                rich.print(f"[bold]⭕ command skipped due to condition:[/bold]  [ [yellow]execute only when 'exit_code' of command with tag 🏷 '{when_condition_dct['tag']}' {when_condition_dct['operator']} '{when_condition_dct['exit_code']}'[/yellow] ]")
+                                rich.print(Panel.fit(grid,border_style="grey42"))
+
+
                         else:
                             exec_cmd = self.execute(host=host, tag=tag,cmd=command_dct['command'])
                             # Recording commands that has ID specified
