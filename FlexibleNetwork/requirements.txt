@@ -8,3 +8,5 @@ tabulate[widechars]
 tinydb
 pygments
 boto3
+pyyaml
+cerberus
