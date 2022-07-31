@@ -1,3 +1,4 @@
+from email.policy import default
 from requests import options
 from FlexibleNetwork.Flexible_Network import Terminal_Task
 task = Terminal_Task()
@@ -73,7 +74,8 @@ class YamlParser:
                                 },
                                 'label': {
                                     'type': 'string',
-                                    'required': False
+                                    'required': False,
+                                    'default': ""
                                 },
                                 'parallel': {
                                     'type': 'boolean',
@@ -85,11 +87,17 @@ class YamlParser:
                                     'schema': {
                                         'group': {
                                             'type': 'string',
-                                            'required': True
+                                            'required': False,
+                                            'default': ''
+                                        },
+                                        'host': {
+                                            'type': 'string',
+                                            'required': False,
+                                            'default': ''
                                         },
                                         'port': {
                                             'type': 'integer',
-                                            'required': True,
+                                            'required': False,
                                             'default': 22
                                         },
                                         'username': {
@@ -98,7 +106,8 @@ class YamlParser:
                                         },
                                         'password': {
                                             'type': 'string',
-                                            'required': False
+                                            'required': False,
+                                            'default': ''
                                         },
                                         'reconnect': {
                                             'type': 'boolean',
@@ -138,7 +147,7 @@ class YamlParser:
                                     'schema': {
                                         'comment': {
                                             'type': 'string',
-                                            'required': True
+                                            'required': True,
                                         },
                                         'after_commands': {
                                             'type': 'boolean',
@@ -153,11 +162,13 @@ class YamlParser:
                                         },
                                         'onlyOn': {
                                             'type': 'list',
-                                            'required': False
+                                            'required': False,
+                                            'default': []
                                         },
                                         'skip': {
                                             'type': 'list',
-                                            'required': False
+                                            'required': False,
+                                            'default': []
                                         }
                                     }
                                 },
@@ -173,7 +184,8 @@ class YamlParser:
                                             },
                                             'tag': {
                                                 'type': 'string',
-                                                'required': False
+                                                'required': False,
+                                                'default': ''
                                             },
                                             'exit_on_fail': {
                                                 'type': 'boolean',
@@ -187,19 +199,23 @@ class YamlParser:
                                             },
                                             'onlyOn': {
                                                 'type': 'list',
-                                                'required': False
+                                                'required': False,
+                                                'default': []
                                             },
                                             'skip': {
                                                 'type': 'list',
-                                                'required': False
+                                                'required': False,
+                                                'default': []
                                             },
                                             'when': {
                                                 'type': 'dict',
                                                 'required': False,
+                                                'default': {},
                                                 'schema': {
                                                     'tag': {
                                                         'type': 'string',
-                                                        'required': False
+                                                        'required': False,
+                                                        'default': ''
                                                     },
                                                     'operator': {
                                                         'type': 'string',
@@ -210,7 +226,7 @@ class YamlParser:
                                                     'exit_code': {
                                                         'type': 'integer',
                                                         'required': False,
-                                                        'default': None
+                                                        'default': 100 # indication of non-user-input 
                                                     }
                                                 }
                                             }
@@ -268,9 +284,24 @@ y = YamlParser('test.yaml')
 validated_docs = y.validate_yaml(print_msg=False)
 for doc in validated_docs:
     rich.print(doc)
+    rich.print(f"TASK: {doc.get('Task').get('name')}")
+    for subtask in doc.get('Task').get('subTask'):
+        # print(subtask.get('name'))
+        task.sub_task(name=subtask.get('name'), group=subtask.get('authenticate').get('group'), cmds=[
+            {
+                "command": "show ip int br", 
+                "tag": "123df",
+            },
+            {
+                "command": "show vlan br", 
+                "when": {"tag": "123df", "exit_code": 1, 'operator': 'is'}
+            },
+            {
+                "command": "show vlan br", 
+            }
+        ])
 
 # parsed_dct = y.parse_yaml()
 # rich.print(parsed_dct)
-
 
 
