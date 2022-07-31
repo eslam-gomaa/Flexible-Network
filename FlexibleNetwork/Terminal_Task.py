@@ -628,16 +628,10 @@ Backup ID: {self.backup_id}
                                 if when_condition_dct['tag'] in commands_executed_dct:
                                     # Get the results of the commaned with the tag
                                     condition_command = commands_executed_dct.get(when_condition_dct['tag'])
-                                    print()
-                                    # Print the command
-                                    print(self.bcolors.OKBLUE +  command_dct['command'] + self.bcolors.ENDC)
                                     
-                                    # rich.print(commands_executed_dct.get(when_condition_dct['tag']))
-
                                     grid = Table.grid(expand=True)
                                     grid.add_column(ratio=2)
                                     grid.add_row(f"[grey42]Condition command exited with {commands_executed_dct.get(when_condition_dct['tag'])['exit_code']} ")
-
 
                                     if when_condition_dct.get('operator') == 'is_not':
                                         if condition_command['exit_code'] != when_condition_dct['exit_code']:
@@ -668,6 +662,10 @@ Backup ID: {self.backup_id}
                                 except:
                                     pass
                             else:
+                                print()
+                                # Print the command
+                                rich.print(Markdown(f"@ **{host}**"))
+                                print(self.bcolors.OKBLUE +  command_dct['command'] + self.bcolors.ENDC)
                                 rich.print(f"[bold]⭕ command skipped due to condition:[/bold]  [ [yellow]execute only when 'exit_code' of command with tag 🏷 '{when_condition_dct['tag']}' {when_condition_dct['operator']} '{when_condition_dct['exit_code']}'[/yellow] ]")
                                 rich.print(Panel.fit(grid,border_style="grey42"))
 

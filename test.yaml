@@ -1,0 +1,33 @@
+Task:
+  name: New change
+  subTask:
+    - name: love1
+      vendor: huawei
+      parallel: false
+      authenticate:
+        # host: 192.168.1.16
+        # label: switches 
+        group: pa3
+        # port: 1113
+        username: orange
+        password: cisco
+        reconnect: false
+      configBackup:
+        comment: "Test backup"
+        after_commands: false
+        target: local
+        onlyOn:
+          - 192.168.1.11
+          - 192.168.1.12
+      commands:
+        - command: show ip int br
+          tag: show1
+          exit_on_fail: false
+          onlyOn:
+            - 192.168.1.11
+        - command: shw vlan br
+          ask_for_confirmation: true
+          when:
+            tag: show1
+            operator: is
+            exit_code: 0
