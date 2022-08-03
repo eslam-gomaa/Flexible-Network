@@ -1,4 +1,3 @@
-from numpy import rint
 from FlexibleNetwork.ssh_authentication import SSH_Authentication
 import time
 from tabulate import tabulate

@@ -275,7 +275,7 @@ class Terminal_Task(SSH_Authentication):
     #     table = self.ssh.connection_report_Table(dct=dct_, terminal_print=terminal_print, ask_when_hosts_fail=ask_when_hosts_fail)
     #     return table
     
-    def execute(self, host, cmd, terminal_print='default', tag='',ask_for_confirmation=False, exit_on_fail=True, reconnect_closed_socket=True):
+    def execute(self, host, cmd, terminal_print='default', tag='',ask_for_confirmation=False, exit_on_fail=True, vendor=None,reconnect_closed_socket=True):
         """
         - Excutes a command on a remove network device
         INPUT:
@@ -298,7 +298,10 @@ class Terminal_Task(SSH_Authentication):
         # Start the execution_time couter
         start_time = time.time()
         # Execute the command
-        result = self.exec(host, cmd, self.vendor)
+        vendor_ = self.vendor
+        if vendor is not None:
+            vendor_ = vendor
+        result = self.exec(host=host, cmd=cmd, vendor=vendor_,reconnect_closed_socket=reconnect_closed_socket)
         # Calculate the execution_time
         duration = (time.time() - start_time)
         # print()
@@ -307,7 +310,7 @@ class Terminal_Task(SSH_Authentication):
         rich.print(Markdown(f"@ **{host}**"))
         rich.print(f'[grey42]Execution time {float("{:.2f}".format(duration))} sec')
         rich.print(f"[grey42]Finished with exit-code of {result['exit_code']}")
-        if tag is not None:
+        if (tag is not None) and (tag):
             rich.print(f"[grey42]Tag 🏷  '{tag}'")
 
         # Print the command in blue color
@@ -342,11 +345,11 @@ The command exited with exit_code of {result['exit_code']}
                 # Print STDOUT in green color
                 print(self.bcolors.OKGREEN + '\n'.join(result['stdout']) + self.bcolors.ENDC)     
         else:
+            print()
+            # Print STDERR in red color
+            print(self.bcolors.FAIL + '\n'.join(result['stderr']) + self.bcolors.ENDC)
+            print()
             if exit_on_fail:
-                print()
-                # Print STDERR in red color
-                print(self.bcolors.FAIL + '\n'.join(result['stderr']) + self.bcolors.ENDC)
-                print()
                 print("> Stopped due to the previous error.")
                 exit(1)
         return result
@@ -571,7 +574,7 @@ Backup ID: {self.backup_id}
                         rich.print(self.hosts_dct['hosts'][host])
 
     
-    def sub_task(self, group, cmds=[], name="", parallel=False, parallel_threads=5):
+    def sub_task(self, group, username, password, port=22,reconnect=False, cmds=[], name="", vendor='cisco', parallel=False):
         """
         Testing
         INPUT:
@@ -613,7 +616,7 @@ Backup ID: {self.backup_id}
                         
                         # Before execution
                         # Evaluate the when condition
-                        if 'when' in command_dct:
+                        if ('when' in command_dct) and (command_dct['when']['tag']):
                             when_condition_dct = command_dct.get('when')
 
                             # check if the tag exists
@@ -648,7 +651,7 @@ Backup ID: {self.backup_id}
                                 rich.print(f"ERROR -- Key not found  > {e}")
 
                             if run_command:
-                                exec_cmd = self.execute(host=host, tag=tag,cmd=command_dct['command'])
+                                exec_cmd = self.execute(host=host, tag=tag,cmd=command_dct['command'], reconnect_closed_socket=reconnect, exit_on_fail=command_dct['exit_on_fail'], ask_for_confirmation=command_dct['ask_for_confirmation'])
                                 # Recording commands that has ID specified
                                 try:
                                     tag_ = command_dct['tag']
@@ -667,11 +670,11 @@ Backup ID: {self.backup_id}
                                 rich.print(Markdown(f"@ **{host}**"))
                                 print(self.bcolors.OKBLUE +  command_dct['command'] + self.bcolors.ENDC)
                                 rich.print(f"[bold]⭕ command skipped due to condition:[/bold]  [ [yellow]execute only when 'exit_code' of command with tag 🏷 '{when_condition_dct['tag']}' {when_condition_dct['operator']} '{when_condition_dct['exit_code']}'[/yellow] ]")
-                                rich.print(Panel.fit(grid,border_style="grey42"))
+                                # rich.print(Panel.fit(grid,border_style="grey42"))
 
 
                         else:
-                            exec_cmd = self.execute(host=host, tag=tag,cmd=command_dct['command'])
+                            exec_cmd = self.execute(host=host, tag=tag,cmd=command_dct['command'], reconnect_closed_socket=reconnect, exit_on_fail=command_dct['exit_on_fail'], ask_for_confirmation=command_dct['ask_for_confirmation'])
                             # Recording commands that has ID specified
                             try:
                                 tag_ = command_dct['tag']
