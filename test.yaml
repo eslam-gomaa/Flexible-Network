@@ -1,14 +1,14 @@
 Task:
   name: New change
   subTask:
-    - name: love1
+    - name: Love forever
       vendor: huawei
       parallel: false
       authenticate:
         # host: 192.168.1.16
         # label: switches 
-        group: pa3
-        # port: 1113
+        group: works
+        port: 1113
         username: orange
         password: cisco
         reconnect: false
@@ -20,13 +20,13 @@ Task:
           - 192.168.1.11
           - 192.168.1.12
       commands:
-        - command: show ip int br
+        - command: show ip int br1
           tag: show1
+          ask_for_confirmation: false
           exit_on_fail: false
-          onlyOn:
-            - 192.168.1.11
-        - command: shw vlan br
-          ask_for_confirmation: true
+          # onlyOn:
+            # - 192.168.1.11
+        - command: sh vlan br
           when:
             tag: show1
             operator: is

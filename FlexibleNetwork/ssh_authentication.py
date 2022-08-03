@@ -466,9 +466,10 @@ class SSH_Authentication():
         out['stdout'] = []
         out['stderr'] = []
         out['exit_code'] = 0
-
-        if self.is_channel_closed(self.hosts_dct['hosts'][host]['channel']):
-            self.reconnect(self.hosts_dct['hosts'][host])
+        
+        if reconnect_closed_socket:
+            if self.is_channel_closed(self.hosts_dct['hosts'][host]['channel']):
+                self.reconnect(self.hosts_dct['hosts'][host])
 
         # If the socket is closed try to reconnect.
         # if reconnect_closed_socket:
