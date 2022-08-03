@@ -11,7 +11,7 @@ class CLI:
     def argparse(self):
         parser = argparse.ArgumentParser(description='A Python tool that to automate network devices with much flexibility & lots of integrations')
         
-        parser.add_argument('-n', '--name', type=str, required=False, metavar='', help='The Task Name')
+        parser.add_argument('-n', '--name', type=str,required=False, metavar='', help='The Task Name')
         parser.add_argument('-i', '--inventory', type=str, required=False, metavar='', help='The inventory file')
         parser.add_argument('-V', '--validate-integration', nargs='+',choices=['cyberArk', 'rocketChat', 's3'], help='Test API Integrations')
         parser.add_argument('-x', '--no-confirm-auth', action='store_true', help='Skip Asking for confirmation if failed to connect to some deivces')
@@ -53,15 +53,15 @@ class CLI:
         
         # If nothting from the main options are specified
         # Should add validate_integration as well as a main option.
-        elif (not results.backup and not results.task and not results.name and not results.validate_integration):
-            print("> Supported options:")
-            print("  --name                     Run a new task")
-            print("  --task                     List tasks or get task log")
-            print("  --backup                   List backups or get a backup")
-            print("  --validate-integration     Validate the integrations with external apis")
-            print("\n\t\t\t* * *\n")
-            print(parser.print_help(sys.stderr))
-            exit(1)
+        # elif (not results.backup and not results.task and not results.name and not results.validate_integration):
+        #     print("> Supported options:")
+        #     print("  --name                     Run a new task")
+        #     print("  --task                     List tasks or get task log")
+        #     print("  --backup                   List backups or get a backup")
+        #     print("  --validate-integration     Validate the integrations with external apis")
+        #     print("\n\t\t\t* * *\n")
+        #     print(parser.print_help(sys.stderr))
+        #     exit(1)
 
         # If only --task is specified
         elif (results.task) and not (results.list or results.get_log):
