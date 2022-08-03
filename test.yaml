@@ -16,18 +16,19 @@ Task:
         comment: "Test backup"
         after_commands: false
         target: local
-        onlyOn:
+        skip:
           - 192.168.1.11
           - 192.168.1.12
       commands:
-        - command: show ip int br1
+        - command: show ip int br
           tag: show1
           ask_for_confirmation: false
           exit_on_fail: false
-          # onlyOn:
-            # - 192.168.1.11
+          onlyOn:
+            - 90.84.41.239
+            
         - command: sh vlan br
-          when:
-            tag: show1
-            operator: is
-            exit_code: 0
+          # when:
+          #   tag: show1
+          #   operator: is
+          #   exit_code: 0

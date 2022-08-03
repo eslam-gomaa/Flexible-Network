@@ -275,6 +275,7 @@ class YamlParser:
                     exit(1)
             else:
                 print ("ERROR -- Something went wrong while parsing yaml file")
+                
 
 
 y = YamlParser('test.yaml')
