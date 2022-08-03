@@ -1,6 +1,4 @@
 from FlexibleNetwork.Flexible_Network import Terminal_Task
-task = Terminal_Task()
-
 # python3 example.py -n test -i user/hosts -c user/flexible_network.cfg --authenticate-group cisco_switches  --user orange --password cisco --port 1114
 
 # python3 example.py -n test -i user/hosts -c user/flexible_network.cfg --authenticate-group pa3  --user orange --password cisco --port 1114
@@ -284,6 +282,7 @@ validated_docs = y.validate_yaml(print_msg=False)
 for doc in validated_docs:
     rich.print(doc)
     rich.print(f"TASK: {doc.get('Task').get('name')}")
+    task = Terminal_Task(task_name=doc.get('Task').get('name'))
     for subtask in doc.get('Task').get('subTask'):
         # print(subtask.get('name'))
         task.sub_task(name=subtask.get('name'), group=subtask.get('authenticate').get('group'), username=subtask.get('authenticate').get('username'), password=subtask.get('authenticate').get('password'), port=subtask.get('authenticate').get('port'), cmds=subtask.get('commands'), reconnect=subtask.get('authenticate').get('reconnect'))

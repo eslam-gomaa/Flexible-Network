@@ -32,8 +32,10 @@ class Terminal_Task(SSH_Authentication):
 
     task_name = None # Should be updated from a cli option. --name
 
-    def __init__(self):
+    def __init__(self, task_name=""):
         super().__init__(debug=ReadCliOptions.debug)
+        
+        self.task_name = task_name
 
         # Initialize the "CLI" class so that it read the cli options 
         cli = CLI()
@@ -48,7 +50,6 @@ class Terminal_Task(SSH_Authentication):
             exit(0)
 
         self.debug = ReadCliOptions.debug
-
         # If --backup is specified
         if ReadCliOptions.list_backups:
             print(self.db.list_all_backups())
@@ -76,8 +77,14 @@ class Terminal_Task(SSH_Authentication):
         # Gernate the task id
         self.task_id = str(uuid.uuid4())
         self.log_file = self.log_and_backup_dir + '/' + self.task_id + '.txt'
-        # Get the task name
-        self.task_name = str(ReadCliOptions.task_name)
+        ### Get the task name ###
+        # If task name is provided via CLI
+        if ReadCliOptions.task_name is not None:
+            self.task_name = str(ReadCliOptions.task_name)
+        # If task name is NOT provided (via CLI or at Class initialization)
+        if not self.task_name:
+            print("ERROR -- The task name must be provided")
+            exit(1)
         # By default do NOT log the output,
         # this will be set to True if number_of_authenticated_devices > 0
         self.log_output = False
@@ -691,7 +698,7 @@ Backup ID: {self.backup_id}
                                 # Print the command
                                 rich.print(Markdown(f"@ **{host}**"))
                                 print(self.bcolors.OKBLUE +  command_dct['command'] + self.bcolors.ENDC)
-                                rich.print(f"[bold]🔲 command skip_hostsped due to condition:[/bold]  [ [yellow]execute only when 'exit_code' of command with tag 🏷 '{when_condition_dct['tag']}' {when_condition_dct['operator']} '{when_condition_dct['exit_code']}'[/yellow] ]")
+                                rich.print(f"[bold]✋ command execution skipped due to condition:[/bold]  \n   => Execute only when 'exit_code' of command with tag 🏷 '{when_condition_dct['tag']}' {when_condition_dct['operator']} '{when_condition_dct['exit_code']}'")
                                 # rich.print(Panel.fit(grid,border_style="grey42"))
 
 

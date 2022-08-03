@@ -28,7 +28,7 @@ Task:
             - 90.84.41.239
             
         - command: sh vlan br
-          # when:
-          #   tag: show1
-          #   operator: is
-          #   exit_code: 0
+          when:
+            tag: show1
+            operator: is
+            exit_code: 0
