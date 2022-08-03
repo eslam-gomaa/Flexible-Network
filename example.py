@@ -285,7 +285,7 @@ for doc in validated_docs:
     rich.print(f"TASK: {doc.get('Task').get('name')}")
     for subtask in doc.get('Task').get('subTask'):
         # print(subtask.get('name'))
-        task.sub_task(name=subtask.get('name'), group=subtask.get('authenticate').get('group'), username=subtask.get('authenticate').get('username'), password=subtask.get('authenticate').get('password'), port=subtask.get('authenticate').get('port'), cmds=subtask.get('commands'))
+        task.sub_task(name=subtask.get('name'), group=subtask.get('authenticate').get('group'), username=subtask.get('authenticate').get('username'), password=subtask.get('authenticate').get('password'), port=subtask.get('authenticate').get('port'), cmds=subtask.get('commands'), reconnect=subtask.get('authenticate').get('reconnect'))
 
 # parsed_dct = y.parse_yaml()
 # rich.print(parsed_dct)
