@@ -1,3 +1,4 @@
+from pytest import skip
 from FlexibleNetwork.Vendors import Cisco
 from FlexibleNetwork.Flexible_Network import ReadCliOptions
 from FlexibleNetwork.Flexible_Network import CLI
@@ -275,7 +276,7 @@ class Terminal_Task(SSH_Authentication):
     #     table = self.ssh.connection_report_Table(dct=dct_, terminal_print=terminal_print, ask_when_hosts_fail=ask_when_hosts_fail)
     #     return table
     
-    def execute(self, host, cmd, terminal_print='default', tag='',ask_for_confirmation=False, exit_on_fail=True, vendor=None,reconnect_closed_socket=True):
+    def execute(self, host, cmd, only_on_hosts, skip_hosts, terminal_print='default', tag='',ask_for_confirmation=False, exit_on_fail=True, vendor=None,reconnect_closed_socket=True):
         """
         - Excutes a command on a remove network device
         INPUT:
@@ -301,7 +302,28 @@ class Terminal_Task(SSH_Authentication):
         vendor_ = self.vendor
         if vendor is not None:
             vendor_ = vendor
-        result = self.exec(host=host, cmd=cmd, vendor=vendor_,reconnect_closed_socket=reconnect_closed_socket)
+
+        if (len(only_on_hosts) >= 1) and (len(skip_hosts) >= 1):
+            rich.print("> You can not use 'onlyOn' and 'skip' together")
+            exit(1)
+        
+        if (len(only_on_hosts) >= 1) and (host in only_on_hosts):
+            result = self.exec(host=host, cmd=cmd, vendor=vendor_,reconnect_closed_socket=reconnect_closed_socket)
+        
+        elif (len(skip_hosts) >= 1) and (host not in skip_hosts):
+            result = self.exec(host=host, cmd=cmd, vendor=vendor_,reconnect_closed_socket=reconnect_closed_socket)
+        else:
+            result = {
+                "cmd": [cmd],
+                "stdout": [""],
+                "stderr": [f"Command execution skipped on {host}, Execute only on: {only_on_hosts} | Skip on: {skip_hosts} "],
+                "exit_code": -2
+            }
+
+        if (len(only_on_hosts) == 0) and (len(skip_hosts) == 0):
+            result = self.exec(host=host, cmd=cmd, vendor=vendor_,reconnect_closed_socket=reconnect_closed_socket)
+
+
         # Calculate the execution_time
         duration = (time.time() - start_time)
         # print()
@@ -545,7 +567,7 @@ Backup ID: {self.backup_id}
     #                 self.execute(host=host, cmd=cmd)
     #             else:
     #                 if self.debug:
-    #                     rich.print(f"\nDEBUG -- [bold]HOST:[/bold] {host} skipped, [bold]REASON[/bold]: [bright_red]{self.hosts_dct['hosts'][host]['fail_reason']}[/bright_red]")
+    #                     rich.print(f"\nDEBUG -- [bold]HOST:[/bold] {host} skip_hostsped, [bold]REASON[/bold]: [bright_red]{self.hosts_dct['hosts'][host]['fail_reason']}[/bright_red]")
     #                     rich.print(self.hosts_dct['hosts'][host])
 
 
@@ -570,7 +592,7 @@ Backup ID: {self.backup_id}
                         self.execute(host=host, cmd=command)
                 else:
                     if self.debug:
-                        rich.print(f"\nDEBUG -- [bold]HOST:[/bold] {host} skipped, [bold]REASON[/bold]: [bright_red]{self.hosts_dct['hosts'][host]['fail_reason']}[/bright_red]")
+                        rich.print(f"\nDEBUG -- [bold]HOST:[/bold] {host} skip_hostsped, [bold]REASON[/bold]: [bright_red]{self.hosts_dct['hosts'][host]['fail_reason']}[/bright_red]")
                         rich.print(self.hosts_dct['hosts'][host])
 
     
@@ -651,7 +673,7 @@ Backup ID: {self.backup_id}
                                 rich.print(f"ERROR -- Key not found  > {e}")
 
                             if run_command:
-                                exec_cmd = self.execute(host=host, tag=tag,cmd=command_dct['command'], reconnect_closed_socket=reconnect, exit_on_fail=command_dct['exit_on_fail'], ask_for_confirmation=command_dct['ask_for_confirmation'])
+                                exec_cmd = self.execute(host=host, tag=tag,cmd=command_dct['command'], reconnect_closed_socket=reconnect, exit_on_fail=command_dct['exit_on_fail'], ask_for_confirmation=command_dct['ask_for_confirmation'], only_on_hosts=command_dct['onlyOn'], skip_hosts=command_dct['skip'])
                                 # Recording commands that has ID specified
                                 try:
                                     tag_ = command_dct['tag']
@@ -669,12 +691,12 @@ Backup ID: {self.backup_id}
                                 # Print the command
                                 rich.print(Markdown(f"@ **{host}**"))
                                 print(self.bcolors.OKBLUE +  command_dct['command'] + self.bcolors.ENDC)
-                                rich.print(f"[bold]⭕ command skipped due to condition:[/bold]  [ [yellow]execute only when 'exit_code' of command with tag 🏷 '{when_condition_dct['tag']}' {when_condition_dct['operator']} '{when_condition_dct['exit_code']}'[/yellow] ]")
+                                rich.print(f"[bold]🔲 command skip_hostsped due to condition:[/bold]  [ [yellow]execute only when 'exit_code' of command with tag 🏷 '{when_condition_dct['tag']}' {when_condition_dct['operator']} '{when_condition_dct['exit_code']}'[/yellow] ]")
                                 # rich.print(Panel.fit(grid,border_style="grey42"))
 
 
                         else:
-                            exec_cmd = self.execute(host=host, tag=tag,cmd=command_dct['command'], reconnect_closed_socket=reconnect, exit_on_fail=command_dct['exit_on_fail'], ask_for_confirmation=command_dct['ask_for_confirmation'])
+                            exec_cmd = self.execute(host=host, tag=tag,cmd=command_dct['command'], reconnect_closed_socket=reconnect, exit_on_fail=command_dct['exit_on_fail'], ask_for_confirmation=command_dct['ask_for_confirmation'], only_on_hosts=command_dct['onlyOn'], skip_hosts=command_dct['skip'])
                             # Recording commands that has ID specified
                             try:
                                 tag_ = command_dct['tag']
@@ -689,7 +711,7 @@ Backup ID: {self.backup_id}
                                 pass
                 else:
                     if self.debug:
-                        rich.print(f"\nDEBUG -- [bold]HOST:[/bold] {host} skipped, [bold]REASON[/bold]: [bright_red]{self.hosts_dct['hosts'][host]['fail_reason']}[/bright_red]")
+                        rich.print(f"\nDEBUG -- [bold]HOST:[/bold] {host} skip_hostsped, [bold]REASON[/bold]: [bright_red]{self.hosts_dct['hosts'][host]['fail_reason']}[/bright_red]")
                         rich.print(self.hosts_dct['hosts'][host])
                         
                         
