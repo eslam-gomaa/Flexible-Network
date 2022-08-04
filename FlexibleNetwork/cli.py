@@ -1,12 +1,11 @@
 import argparse
-from asyncio import tasks
 from FlexibleNetwork.Flexible_Network import ReadCliOptions
 import sys
 
 
 class CLI:
     def __init__(self):
-        pass
+        self.parser = None
 
     def argparse(self):
         parser = argparse.ArgumentParser(description='A Python tool that to automate network devices with much flexibility & lots of integrations')
@@ -30,7 +29,7 @@ class CLI:
         parser.add_argument('-l', '--list', action='store_true', help='List tasks Or backups')
         
         results = parser.parse_args()
-
+        self.parser = parser
 
         # If --name & --task & --backup are specified
         if (results.backup) and (results.task) and (results.name):

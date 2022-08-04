@@ -1,3 +1,4 @@
+from tokenize import group
 from pytest import skip
 from FlexibleNetwork.Vendors import Cisco
 from FlexibleNetwork.Flexible_Network import ReadCliOptions
@@ -83,7 +84,8 @@ class Terminal_Task(SSH_Authentication):
             self.task_name = str(ReadCliOptions.task_name)
         # If task name is NOT provided (via CLI or at Class initialization)
         if not self.task_name:
-            print("ERROR -- The task name must be provided")
+            rich.print("[bold]ERROR -- The task name must be provided\n")
+            cli.parser.print_help()
             exit(1)
         # By default do NOT log the output,
         # this will be set to True if number_of_authenticated_devices > 0
@@ -237,8 +239,6 @@ class Terminal_Task(SSH_Authentication):
             if not group_hosts:
                 rich.print(f"INFO -- Group [ [bold]{group}[/bold] ] has no hosts .. No need to continue.")
                 exit(0) 
-
-        # groups.append('pa4')
 
         for group in groups:
             # Authenticate group
@@ -395,8 +395,16 @@ The command exited with exit_code of {result['exit_code']}
             - "exit_code": (int) 0 --> the command run successfully,  1 --> an error occurred
         - does NOT print to the terminal
         """
-        result = self.ssh.exec(host, cmd, self.vendor)
-        return result
+        result = self.exec(host, cmd, self.vendor)
+        class Output:
+            def __init__(self):
+                self.host = host
+                self.cmd = result['cmd']
+                self.stdout = result['stdout']
+                self.stderr = result['stderr']
+                self.exit_code = result['exit_code']
+        output = Output()
+        return output
 
     def execute_from_file(self, host_dct, file, terminal_print='default', ask_for_confirmation=False, exit_on_fail=True):
         """
