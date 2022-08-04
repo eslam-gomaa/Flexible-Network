@@ -283,7 +283,7 @@ class Terminal_Task(SSH_Authentication):
     #     table = self.ssh.connection_report_Table(dct=dct_, terminal_print=terminal_print, ask_when_hosts_fail=ask_when_hosts_fail)
     #     return table
     
-    def execute(self, host, cmd, only_on_hosts, skip_hosts, terminal_print='default', tag='',ask_for_confirmation=False, exit_on_fail=True, vendor=None,reconnect_closed_socket=True):
+    def execute(self, host, cmd, only_on_hosts=[], skip_hosts=[], terminal_print='default', tag='',ask_for_confirmation=False, exit_on_fail=True, vendor=None,reconnect_closed_socket=True):
         """
         - Excutes a command on a remove network device
         INPUT:
@@ -298,7 +298,15 @@ class Terminal_Task(SSH_Authentication):
             - "exit_code": (int) 0 --> the command run successfully,  1 --> an error occurred
         - does NOT print to the terminal
         """
-        
+        class Output:
+            def __init__(self):
+                self.host = host
+                self.cmd = cmd
+                self.stdout = None
+                self.stderr = None
+                self.exit_code = None
+        output = Output()
+
         date_time = datetime.today().strftime('%d-%m-%Y_%H-%M-%S')
         if ask_for_confirmation:
             self.ask_for_confirmation(cmd=self.bcolors.OKBLUE +  cmd + self.bcolors.ENDC)
@@ -381,7 +389,12 @@ The command exited with exit_code of {result['exit_code']}
             if exit_on_fail:
                 print("> Stopped due to the previous error.")
                 exit(1)
-        return result
+        output.cmd = result['cmd']
+        output.stdout = result['stdout']
+        output.stderr = result['stderr']
+        output.exit_code = result['exit_code']
+        return output
+        # return result
 
     def execute_raw(self, host, cmd):
         """
@@ -406,7 +419,7 @@ The command exited with exit_code of {result['exit_code']}
         output = Output()
         return output
 
-    def execute_from_file(self, host_dct, file, terminal_print='default', ask_for_confirmation=False, exit_on_fail=True):
+    def execute_from_file(self, host, file, terminal_print='default', ask_for_confirmation=False, exit_on_fail=True):
         """
         """
         # Check if the file exists
@@ -430,7 +443,7 @@ The command exited with exit_code of {result['exit_code']}
             self.ssh.ask_for_confirmation(cmd=self.bcolors.OKBLUE +  file_content + self.bcolors.ENDC)
         
         for cmd in file_content_lines:
-            self.execute(host_dct=host_dct, cmd=cmd, terminal_print=terminal_print, ask_for_confirmation=False, exit_on_fail=exit_on_fail)
+            self.execute(host=host, cmd=cmd, terminal_print=terminal_print, ask_for_confirmation=False, exit_on_fail=exit_on_fail)
 
 
     def backup_config(self, host_dct, comment, target='local'):

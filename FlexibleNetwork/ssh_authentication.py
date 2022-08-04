@@ -531,7 +531,7 @@ class SSH_Authentication():
             # Remove empty lines in stdout
             if len(out['stdout']) > 0:
                 out['stdout'] = [i for i in out['stdout'] if i]
-        
+
         # If the connection is interrupted during execution
         except (socket.error)  as e:
             out['stderr'] = [str(e)]
