@@ -222,6 +222,15 @@ class Terminal_Task(SSH_Authentication):
 
         Under optimization
         """
+        class Output:
+            def __init__(self):
+                self.hosts_total = [] 
+                self.hosts_connected = []
+                self.hosts_failed =  []
+                self.hosts_total_number = 0
+                self.hosts_connected_number = 0
+                self.hosts_failed_number = 0
+        output = Output()
 
         # If only 1 group was provided as a string, convert it to a list
         if not isinstance(groups, list):
@@ -240,40 +249,51 @@ class Terminal_Task(SSH_Authentication):
                 rich.print(f"INFO -- Group [ [bold]{group}[/bold] ] has no hosts .. No need to continue.")
                 exit(0) 
 
+        output.hosts_total = []
+        output.hosts_connected = []
+        output.hosts_failed = []
+        # Getting the hosts of all groups, and then authenticate them at once
         for group in groups:
-            # Authenticate group
+            # Getting the hosts of the group (dct)
             group_hosts = self.inventory.get_section(group)
-            auth = self.authenticate_hosts(hosts=group_hosts, group_name=group, user=user, password=password, port=port, terminal_print=terminal_print, debug=self.debug)
-            # dct that contains each device info (where the key is the device IP)
-            # rich.print(self.hosts_dct)
-            # rich.print(SSH_Authentication.hosts_dct)
-            # exit(1)
-            self.devices_dct = {}
-            self.devices_dct = auth.get('hosts')
-            
-            self.connected_devices_dct = self.ssh.connected_devices_dct
-            self.total_connected_devices_dct = dict(self.total_connected_devices_dct, **self.connected_devices_dct)
-            self.full_devices_number = len(group_hosts)
-            self.connected_devices_number = self.ssh.connected_devices_number
-            self.connection_failed_devices_number = self.ssh.connection_failed_devices_number
-            self.db.update_tasks_table({'full_devices_n': self.full_devices_number}, self.task_id)
-            self.db.update_tasks_table({'authenticated_devices_n': self.connected_devices_number}, self.task_id)
-            if terminal_print:
-                if ReadCliOptions.no_confirm_auth:
-                    ask_when_hosts_fail_ = False
+            # Concatenate the group hosts to output.hosts_total
+            output.hosts_total = output.hosts_total + list(group_hosts.keys())
+
+        # Authenticate group
+        # => The output is a dct of 2 dcts, one is "hosts" (contains dct for each host, where the ip is the key and the value is the information) ad another "total" (general information about the hosts)
+        auth = self.authenticate_hosts(hosts=output.hosts_total, group_name=group, user=user, password=password, port=port, terminal_print=terminal_print, debug=self.debug)
+
+        if len(auth.get('hosts')) > 1:
+            for host_ip, host_info in auth.get('hosts').items():
+                if host_info['is_connected']:
+                    output.hosts_connected.append(host_ip)
                 else:
-                    ask_when_hosts_fail_ = True
-                self.connection_report_Table(dct=self.devices_dct, terminal_print=True, ask_when_hosts_fail=ask_when_hosts_fail_)
-            # If connected_devices_number > 0 , set the log_output flag to True
-            if self.connected_devices_number > 0:
-                self.log_output = True
-                if not os.path.isdir(self.log_and_backup_dir):
-                    Path(self.log_and_backup_dir).mkdir(parents=True, exist_ok=True)
-                self.db.update_tasks_table({'log_file': self.log_file}, self.task_id)
-            else:
-                self.db.update_tasks_table({'log_file': None}, self.task_id)
+                    output.hosts_failed.append(host_ip)
 
         
+        output.hosts_total_number = auth.get('total').get('n_hosts_total')
+        output.hosts_connected_number = auth.get('total').get('n_hosts_connected')
+        output.hosts_failed_number = auth.get('total').get('n_hosts_failed')
+
+        self.db.update_tasks_table({'full_devices_n': output.hosts_total_number}, self.task_id)
+        self.db.update_tasks_table({'authenticated_devices_n': output.hosts_connected_number}, self.task_id)
+        if terminal_print:
+            if ReadCliOptions.no_confirm_auth:
+                ask_when_hosts_fail_ = False
+            else:
+                ask_when_hosts_fail_ = True
+            self.connection_report_Table(dct=auth.get('hosts'), terminal_print=True, ask_when_hosts_fail=ask_when_hosts_fail_)
+        # If connected_devices_number > 0 , set the log_output flag to True
+        if self.connected_devices_number > 0:
+            self.log_output = True
+            if not os.path.isdir(self.log_and_backup_dir):
+                Path(self.log_and_backup_dir).mkdir(parents=True, exist_ok=True)
+            self.db.update_tasks_table({'log_file': self.log_file}, self.task_id)
+        else:
+            self.db.update_tasks_table({'log_file': None}, self.task_id)
+        
+        return output
+
 
     def update_log_file(self, data):
         with open(self.log_file, 'a') as file:
@@ -599,29 +619,29 @@ Backup ID: {self.backup_id}
     #                     rich.print(self.hosts_dct['hosts'][host])
 
 
-    def execute_on_group(self, group, cmd, parallel=False, parallel_threads=5):
-        """
-        Testing
-        """
-        # Authenticate
-        self.authenticate(groups=[group], user='orange', password='cisco', port=1114, terminal_print=True)
+    # def execute_on_group(self, group, cmd, parallel=False, parallel_threads=5):
+    #     """
+    #     Testing
+    #     """
+    #     # Authenticate
+    #     self.authenticate(groups=[group], user='orange', password='cisco', port=1114, terminal_print=True)
 
-        if not isinstance(cmd, list):
-            cmd = [cmd]
+    #     if not isinstance(cmd, list):
+    #         cmd = [cmd]
     
-        if not parallel:
-            # Execute with a loop
-            for host in self.hosts_dct['hosts'].keys():
-                # Execute on only the authenticated devices
-                if self.hosts_dct['hosts'][host]['is_connected']:
-                    # Test close the connection
-                    # self.close_channel(host)
-                    for command in cmd:
-                        self.execute(host=host, cmd=command)
-                else:
-                    if self.debug:
-                        rich.print(f"\nDEBUG -- [bold]HOST:[/bold] {host} skip_hostsped, [bold]REASON[/bold]: [bright_red]{self.hosts_dct['hosts'][host]['fail_reason']}[/bright_red]")
-                        rich.print(self.hosts_dct['hosts'][host])
+    #     if not parallel:
+    #         # Execute with a loop
+    #         for host in self.hosts_dct['hosts'].keys():
+    #             # Execute on only the authenticated devices
+    #             if self.hosts_dct['hosts'][host]['is_connected']:
+    #                 # Test close the connection
+    #                 # self.close_channel(host)
+    #                 for command in cmd:
+    #                     self.execute(host=host, cmd=command)
+    #             else:
+    #                 if self.debug:
+    #                     rich.print(f"\nDEBUG -- [bold]HOST:[/bold] {host} skip_hostsped, [bold]REASON[/bold]: [bright_red]{self.hosts_dct['hosts'][host]['fail_reason']}[/bright_red]")
+    #                     rich.print(self.hosts_dct['hosts'][host])
 
     
     def sub_task(self, group, username, password, port=22,reconnect=False, cmds=[], name="", vendor='cisco', parallel=False):
