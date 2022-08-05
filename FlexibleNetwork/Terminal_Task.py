@@ -1,5 +1,3 @@
-from genericpath import isfile
-from tkinter import ON
 from FlexibleNetwork.Vendors import Cisco
 from FlexibleNetwork.Flexible_Network import ReadCliOptions
 from FlexibleNetwork.Flexible_Network import CLI
@@ -11,7 +9,6 @@ from FlexibleNetwork.Integrations import RocketChat_API
 from FlexibleNetwork.Integrations import S3_APIs
 from FlexibleNetwork.Integrations import Cyberark_APIs_v2
 from FlexibleNetwork.yaml_parser import YamlParser
-
 from tabulate import tabulate
 import uuid
 from FlexibleNetwork.Flexible_Network import TinyDB_db
@@ -24,9 +21,9 @@ import time
 import os
 import textwrap
 import rich
-from rich.console import Console
 from rich.markdown import Markdown
-from rich.panel import Panel
+# from rich.panel import Panel
+# from rich.console import Console
 from rich.table import Table
 from rich.console import Console, Group
 from rich.rule import Rule
@@ -710,6 +707,7 @@ Backup ID: {self.backup_id}
             rich.print(Markdown(f"### Sub-Task: {name}", style="bold"))
             rich.print(Rule(style='#AAAAAA'))
         
+        # Use a loop to execute the commands on the hosts
         if not parallel:
             # Execute with a loop
             for host in self.hosts_dct['hosts'].keys():
@@ -726,11 +724,11 @@ Backup ID: {self.backup_id}
                             tag = command_dct['tag']
                         
                         # Before execution
-                        # Evaluate the when condition
+                        # Evaluate the "when" condition
                         if ('when' in command_dct) and (command_dct['when']['tag']):
                             when_condition_dct = command_dct.get('when')
-
-                            # check if the tag exists
+                            
+                            # Check the provided operator
                             if 'operator' in when_condition_dct:
                                 if when_condition_dct['operator'] not in ['is', 'is_not']:
                                     rich.print(f"\nERROR -- command condition operator only supports {['is', 'is_not']} You've provided ({when_condition_dct['operator']})")
@@ -739,6 +737,7 @@ Backup ID: {self.backup_id}
                                 # set the default operator as 'is'
                                 when_condition_dct['operator'] = 'is'
                             try:
+                                # check if the "tag" exists
                                 if when_condition_dct['tag'] in commands_executed_dct:
                                     # Get the results of the commaned with the tag
                                     condition_command = commands_executed_dct.get(when_condition_dct['tag'])
@@ -765,13 +764,12 @@ Backup ID: {self.backup_id}
                                 exec_cmd = self.execute(host=host, tag=tag,cmd=command_dct['command'], reconnect_closed_socket=reconnect, exit_on_fail=command_dct['exit_on_fail'], ask_for_confirmation=command_dct['ask_for_confirmation'], only_on_hosts=command_dct['onlyOn'], skip_hosts=command_dct['skip'])
                                 # Recording commands that has ID specified
                                 try:
-                                    tag_ = command_dct['tag']
                                     if tag:
-                                        commands_executed_dct[tag_] = {
+                                        commands_executed_dct[tag] = {
                                             "command": command_dct['command'],
-                                            "exit_code": exec_cmd['exit_code'],
-                                            "stderr": exec_cmd['stderr'],
-                                            "stdout": exec_cmd['stdout']
+                                            "exit_code": exec_cmd.exit_code,
+                                            "stderr": exec_cmd.stderr,
+                                            "stdout": exec_cmd.stdout
                                         }
                                 except:
                                     pass
@@ -780,24 +778,22 @@ Backup ID: {self.backup_id}
                                 # Print the command
                                 rich.print(Markdown(f"@ **{host}**"))
                                 print(self.bcolors.OKBLUE +  command_dct['command'] + self.bcolors.ENDC)
-                                rich.print(f"[bold]✋ command execution skipped due to condition:[/bold]  \n   => Execute only when 'exit_code' of command with tag 🏷 '{when_condition_dct['tag']}' {when_condition_dct['operator']} '{when_condition_dct['exit_code']}'")
+                                rich.print(Markdown("> command execution skipped due to condition:") ,
+                                           Markdown(f" - Execute only when 'exit_code' of command with tag 🏷 '{when_condition_dct['tag']}' {when_condition_dct['operator']} '{when_condition_dct['exit_code']}'"))
+                                print()
+                                # rich.print(f"[bold]✋ command execution skipped due to condition:[/bold]  \n   => Execute only when 'exit_code' of command with tag 🏷 '{when_condition_dct['tag']}' {when_condition_dct['operator']} '{when_condition_dct['exit_code']}'")
                                 # rich.print(Panel.fit(grid,border_style="grey42"))
-
 
                         else:
                             exec_cmd = self.execute(host=host, tag=tag,cmd=command_dct['command'], reconnect_closed_socket=reconnect, exit_on_fail=command_dct['exit_on_fail'], ask_for_confirmation=command_dct['ask_for_confirmation'], only_on_hosts=command_dct['onlyOn'], skip_hosts=command_dct['skip'])
                             # Recording commands that has ID specified
-                            try:
-                                tag_ = command_dct['tag']
-                                if tag:
-                                    commands_executed_dct[tag_] = {
-                                        "command": command_dct['command'],
-                                        "exit_code": exec_cmd['exit_code'],
-                                        "stderr": exec_cmd['stderr'],
-                                        "stdout": exec_cmd['stdout']
-                                    }
-                            except:
-                                pass
+                            if tag:
+                                commands_executed_dct[tag] = {
+                                    "command": command_dct['command'],
+                                    "exit_code": exec_cmd.exit_code,
+                                    "stderr": exec_cmd.stderr,
+                                    "stdout": exec_cmd.stdout
+                                }
                 else:
                     if self.debug:
                         rich.print(f"\nDEBUG -- [bold]HOST:[/bold] {host} skip_hostsped, [bold]REASON[/bold]: [bright_red]{self.hosts_dct['hosts'][host]['fail_reason']}[/bright_red]")
