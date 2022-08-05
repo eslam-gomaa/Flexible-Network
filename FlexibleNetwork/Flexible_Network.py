@@ -10,7 +10,6 @@ from FlexibleNetwork.colors import Bcolors
 from FlexibleNetwork.Terminal_Task import Terminal_Task
 
 
-
 class Flexible_Network(
     Terminal_Task,
     ReadCliOptions,

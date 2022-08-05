@@ -1,5 +1,5 @@
-from tokenize import group
-from pytest import skip
+from genericpath import isfile
+from tkinter import ON
 from FlexibleNetwork.Vendors import Cisco
 from FlexibleNetwork.Flexible_Network import ReadCliOptions
 from FlexibleNetwork.Flexible_Network import CLI
@@ -10,6 +10,8 @@ from FlexibleNetwork.Flexible_Network import SSH_Authentication
 from FlexibleNetwork.Integrations import RocketChat_API
 from FlexibleNetwork.Integrations import S3_APIs
 from FlexibleNetwork.Integrations import Cyberark_APIs_v2
+from FlexibleNetwork.yaml_parser import YamlParser
+
 from tabulate import tabulate
 import uuid
 from FlexibleNetwork.Flexible_Network import TinyDB_db
@@ -36,6 +38,7 @@ class Terminal_Task(SSH_Authentication):
     def __init__(self, task_name=""):
         super().__init__(debug=ReadCliOptions.debug)
         
+        self.yaml_file = None
         self.task_name = task_name
 
         # Initialize the "CLI" class so that it read the cli options 
@@ -62,7 +65,6 @@ class Terminal_Task(SSH_Authentication):
         if ReadCliOptions.get_backup is not None:
             print(self.db.return_backup(ReadCliOptions.get_backup))
 
-
         # Initialize the "Config" class so that it checks the config file at the begining. 
         config = Config()
         self.validate_integrations()
@@ -82,11 +84,13 @@ class Terminal_Task(SSH_Authentication):
         # If task name is provided via CLI
         if ReadCliOptions.task_name is not None:
             self.task_name = str(ReadCliOptions.task_name)
+
         # If task name is NOT provided (via CLI or at Class initialization)
-        if not self.task_name:
-            rich.print("[bold]ERROR -- The task name must be provided\n")
-            cli.parser.print_help()
-            exit(1)
+        if ReadCliOptions.yaml_file is None:
+            if not self.task_name:
+                rich.print("[bold]ERROR -- The task name must be provided\n")
+                cli.parser.print_help()
+                exit(1)
         # By default do NOT log the output,
         # this will be set to True if number_of_authenticated_devices > 0
         self.log_output = False
@@ -120,6 +124,43 @@ class Terminal_Task(SSH_Authentication):
         self.connected_devices_number = 0
         self.connection_failed_devices_number = 0
         self.group_to_authenticate_from_cli = ReadCliOptions.authenticate_group
+
+        # Check YAML file input
+        if ReadCliOptions.yaml_file is not None:
+            self.yaml_file = ReadCliOptions.yaml_file
+            if not os.path.exists(self.yaml_file):
+                print(f"ERROR -- File '{self.yaml_file}' does NOT exist")
+                exit(1)
+            if not os.path.isfile(self.yaml_file):
+                print(f"ERROR -- File '{self.yaml_file}' is NOT a file")
+                exit(1)
+            
+            # Check the YAML file extension
+            filename, file_extension = os.path.splitext(self.yaml_file)
+            if file_extension not in ['.yaml', '.yml']:
+                print("ERROR -- Invalid file extension .. supported extensions are .yaml AND .yml ")
+                exit(1)
+
+            # Parse the YAML file
+            yamlParser = YamlParser(self.yaml_file)
+
+            # Validate the YAML file and print a message
+            if ReadCliOptions.yaml_file_check:
+                # With print_msg=True, it will only validate and exit
+                yamlParser.validate_yaml(print_msg=True)
+
+            # Validate the YAML file and parse it
+            validated_docs = yamlParser.validate_yaml()
+            # Run it
+            for doc in validated_docs:
+                # rich.print(f"[bold]TASK > {doc.get('Task').get('name')}")
+                self.task_name = doc.get('Task').get('name')
+                for subtask in doc.get('Task').get('subTask'):
+                    # print(subtask.get('name'))
+                    self.sub_task(name=subtask.get('name'), group=subtask.get('authenticate').get('group'), username=subtask.get('authenticate').get('username'), password=subtask.get('authenticate').get('password'), port=subtask.get('authenticate').get('port'), cmds=subtask.get('commands'), reconnect=subtask.get('authenticate').get('reconnect'))
+
+            exit(0)
+
         if ReadCliOptions.authenticate_group:
             # Get the IPs of the section to the 'self.inventory' attribute
             # self.inventory = self.inventory.get_section(self.group_to_authenticate_from_cli)
@@ -460,7 +501,7 @@ The command exited with exit_code of {result['exit_code']}
             raise SystemExit(f"ERROR -- execute_from_file >> {e}")
 
         if ask_for_confirmation:
-            self.ssh.ask_for_confirmation(cmd=self.bcolors.OKBLUE +  file_content + self.bcolors.ENDC)
+            self.ask_for_confirmation(cmd=self.bcolors.OKBLUE +  file_content + self.bcolors.ENDC)
         
         for cmd in file_content_lines:
             self.execute(host=host, cmd=cmd, terminal_print=terminal_print, ask_for_confirmation=False, exit_on_fail=exit_on_fail)
@@ -471,7 +512,7 @@ The command exited with exit_code of {result['exit_code']}
         Take full configurations backup of the device
         """
         start_time = time.time()
-        result = self.ssh.backup_config(host_dct)
+        result = self.backup_config(host_dct)
 
         # Inserting the DB record
         # Generate a backup ID

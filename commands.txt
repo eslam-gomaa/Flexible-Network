@@ -1,0 +1,5 @@
+sho ip int br 
+
+sh vlan br
+sh version
+
