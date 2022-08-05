@@ -15,6 +15,9 @@ class ReadCliOptions:
     get_log = None
     get_backup = None
 
+    yaml_file = None
+    yaml_file_check = False
+
     debug = False
 
     def __init__(self):

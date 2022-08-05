@@ -1,5 +1,5 @@
 Task:
-  name: New change
+  name: New Task
   subTask:
     - name: Love forever
       vendor: huawei
@@ -7,7 +7,7 @@ Task:
       authenticate:
         # host: 192.168.1.16
         # label: switches 
-        group: works
+        group: pa3
         port: 1113
         username: orange
         password: cisco
@@ -20,15 +20,14 @@ Task:
           - 192.168.1.11
           - 192.168.1.12
       commands:
-        - command: show ip int br
+        - command: show ip int br2
           tag: show1
           ask_for_confirmation: false
           exit_on_fail: false
           onlyOn:
-            - 90.84.41.239
-            
+            - 90.84.41.239            
         - command: sh vlan br
-          when:
-            tag: show1
-            operator: is
-            exit_code: 0
+          # when:
+          #   tag: show1
+          #   operator: is
+          #   exit_code: 0

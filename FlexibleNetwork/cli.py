@@ -19,6 +19,7 @@ class CLI:
         parser.add_argument('-u', '--user', type=str, required=False, metavar='', help='The user to authenticate the group')
         parser.add_argument('-p', '--password', type=str, required=False, metavar='', help='The password to authenticate the group')
         parser.add_argument('-P', '--port', type=int, required=False, default=22, metavar='', help='The port to connect to the group')
+        parser.add_argument('-f', '--file', type=str, required=False, metavar='', help='YAML manifest file  .yaml OR .yml')
 
         parser.add_argument('-b', '--backup', action='store_true', help='Deal with Backups')
         parser.add_argument('-gb', '--get-backup', type=str,help='Returns the configuuration backup')
@@ -27,6 +28,7 @@ class CLI:
         parser.add_argument('-gl', '--get-log', type=str, help='Returns the task log')
 
         parser.add_argument('-l', '--list', action='store_true', help='List tasks Or backups')
+        parser.add_argument('-C', '--check', action='store_true', help='Validates the YAML file for errors')
         
         results = parser.parse_args()
         self.parser = parser
@@ -97,6 +99,12 @@ class CLI:
 
         if results.inventory is not None:
             ReadCliOptions.inventory_file = results.inventory
+
+        if results.file:
+            ReadCliOptions.yaml_file = results.file
+        
+        if results.check:
+            ReadCliOptions.yaml_file_check = results.check
 
         if results.name is not None:
             ReadCliOptions.task_name = results.name
