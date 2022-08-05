@@ -45,13 +45,15 @@ class Terminal_Task(SSH_Authentication):
         # Initialize the DB because we'll need it if '--task list' or '--backup list' are specified
         self.db = TinyDB_db()
 
-        # If --task is specified
+        # List tasks (--task)
         if ReadCliOptions.list_tasks:
             print(self.db.list_all_tasks())
             exit(0)
 
+        # Read the "debug" flag from cli 
         self.debug = ReadCliOptions.debug
-        # If --backup is specified
+
+        # List backups (--backup)
         if ReadCliOptions.list_backups:
             print(self.db.list_all_backups())
             exit(0)
@@ -64,19 +66,24 @@ class Terminal_Task(SSH_Authentication):
 
         # Initialize the "Config" class so that it checks the config file at the begining. 
         config = Config()
+        # Need to organize
         self.validate_integrations()
         self.inventory = Inventory()
         self.vendor = Cisco() # Default vendor class should exist in the config
-        self.ssh = SSH_connection()
-        self.ssh.vendor = self.vendor
+        # self.ssh = SSH_connection()
+        # self.ssh.vendor = self.vendor
         self.bcolors = Bcolors()
 
         
         self.local_db_dir = self.db.local_db_dir
-        self.log_and_backup_dir = self.local_db_dir +  '/' + datetime.today().strftime('%d-%m-%Y')
+        self.log_and_backup_dir = self.local_db_dir +  '/' + datetime.today().strftime('%Y') + '/' + datetime.today().strftime('%m') + '/' + datetime.today().strftime('%d')
+        # Create the dir if doesn't exist
+        if not os.path.isdir(self.log_and_backup_dir):
+            Path(self.log_and_backup_dir).mkdir(parents=True, exist_ok=True)
         # Gernate the task id
         self.task_id = str(uuid.uuid4())
         self.log_file = self.log_and_backup_dir + '/' + self.task_id + '.txt'
+        
         ### Get the task name ###
         # If task name is provided via CLI
         if ReadCliOptions.task_name is not None:
@@ -95,6 +102,7 @@ class Terminal_Task(SSH_Authentication):
         # create a row in the tasks table & add the id & name
         date = datetime.today().strftime('%d-%m-%Y')
         time = datetime.today().strftime('%H-%M-%S')
+        # Insert an entry in the DB for the Task
         self.db.insert_tasks_table({'id': self.task_id, 
                                    'name': self.task_name,
                                    'comment': 'to be done >> as a cli option.',
@@ -115,11 +123,8 @@ class Terminal_Task(SSH_Authentication):
         for i in self.inventory_groups.keys():
             self.inventory_groups_names.append(i)
 
-        self.devices_dct = {}
-        self.connected_devices_dct = {}
-        self.total_connected_devices_dct = {}
-        self.connected_devices_number = 0
-        self.connection_failed_devices_number = 0
+        self.hosts_connected_total_number = 0
+
         self.group_to_authenticate_from_cli = ReadCliOptions.authenticate_group
 
         # Check YAML file input
@@ -313,6 +318,9 @@ class Terminal_Task(SSH_Authentication):
         output.hosts_connected_number = auth.get('total').get('n_hosts_connected')
         output.hosts_failed_number = auth.get('total').get('n_hosts_failed')
 
+        # Update the connected devices number
+        self.hosts_connected_total_number += output.hosts_total_number
+
         self.db.update_tasks_table({'full_devices_n': output.hosts_total_number}, self.task_id)
         self.db.update_tasks_table({'authenticated_devices_n': output.hosts_connected_number}, self.task_id)
         if terminal_print:
@@ -322,10 +330,10 @@ class Terminal_Task(SSH_Authentication):
                 ask_when_hosts_fail_ = True
             self.connection_report_Table(dct=auth.get('hosts'), terminal_print=True, ask_when_hosts_fail=ask_when_hosts_fail_)
         # If connected_devices_number > 0 , set the log_output flag to True
-        if self.connected_devices_number > 0:
+        if self.hosts_connected_total_number > 0:
             self.log_output = True
-            if not os.path.isdir(self.log_and_backup_dir):
-                Path(self.log_and_backup_dir).mkdir(parents=True, exist_ok=True)
+            # if not os.path.isdir(self.log_and_backup_dir):
+            #     Path(self.log_and_backup_dir).mkdir(parents=True, exist_ok=True)
             self.db.update_tasks_table({'log_file': self.log_file}, self.task_id)
         else:
             self.db.update_tasks_table({'log_file': None}, self.task_id)
@@ -419,7 +427,7 @@ class Terminal_Task(SSH_Authentication):
         # Update Log file
         if self.log_output:
             command = '\n'.join(result['cmd'])
-            output = '\n'.join(result['stdout'])
+            out = '\n'.join(result['stdout'])
             error = '\n'.join(result['stderr'])
             data = f"""\n@ {host}
 [[ excute ]]
@@ -428,7 +436,7 @@ Execution Time: {float("{:.2f}".format(duration))} seconds
 The command exited with exit_code of {result['exit_code']}
 >> {command}
 
-{output}
+{out}
 {error}
 
 --------------------------------------------------------
