@@ -426,18 +426,28 @@ class Terminal_Task(SSH_Authentication):
 
         # Update Log file
         if self.log_output:
-            command = '\n'.join(result['cmd'])
+            command = '\n\n'.join(result['cmd'])
             out = '\n'.join(result['stdout'])
             error = '\n'.join(result['stderr'])
-            data = f"""\n@ {host}
-[[ excute ]]
-Time: {date_time}
-Execution Time: {float("{:.2f}".format(duration))} seconds
-The command exited with exit_code of {result['exit_code']}
->> {command}
+            data = f"""
+- **[[ excute ]] on {host}**
+    - Time: {datetime.today().strftime('%d-%m-%Y %H:%M:%S')}
+    - Execution Time: {float("{:.2f}".format(duration))} seconds
+    - The command exited with exit_code of {result['exit_code']}
 
+> command
+```bash
+{command}
+```
+
+> stdout
+```bash
 {out}
+```
+> stderr
+```bash
 {error}
+```
 
 --------------------------------------------------------
 """
@@ -557,7 +567,7 @@ The command exited with exit_code of {result['exit_code']}
                 data = f"""\n@ {host_dct['host']}
 [[ backup_config ]]
 @ {host_dct['host']}
-Time: {date_time}
+Time: {datetime.today().strftime('%d-%m-%Y %H:%M:%S')}
 Execution Time: {float("{:.2f}".format(duration))} seconds
 The backup taken successfully
 Backup Comment: {comment}

@@ -88,7 +88,9 @@ class TinyDB_db:
             print(f"ERROR -- Could NOT find log file [ {log_file} ]")
             exit(1)
         with open(log_file, 'r') as file:
-            print(file.read())
+            import rich
+            from rich.markdown import Markdown
+            rich.print(Markdown(file.read()))
             exit(0)
 
     ### Backups Table ###
