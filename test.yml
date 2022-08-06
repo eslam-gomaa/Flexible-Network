@@ -1,5 +1,6 @@
 Task:
   name: New Task
+  log_format: markdown
   subTask:
     - name: Love forever
       vendor: huawei
@@ -7,7 +8,7 @@ Task:
       authenticate:
         # host: 192.168.1.16
         # label: switches 
-        group: pa3
+        group: works
         port: 1113
         username: orange
         password: cisco
@@ -20,14 +21,17 @@ Task:
           - 192.168.1.11
           - 192.168.1.12
       commands:
-        - command: show ip int br2
+        - command: show ip int br
           tag: show1
           ask_for_confirmation: false
           exit_on_fail: false
           onlyOn:
             - 90.84.41.239            
-        - command: sh vlan br
-          # when:
-          #   tag: show1
-          #   operator: is
-          #   exit_code: 0
+        - command: |
+            sh vlan br
+            show version
+            show ip int
+          when:
+            tag: show1
+            operator: is
+            exit_code: 0

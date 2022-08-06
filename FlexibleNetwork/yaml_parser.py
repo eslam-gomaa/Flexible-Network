@@ -17,6 +17,12 @@ class YamlParser:
                         "type": "string",
                         'required': True,
                     },
+                    'log_format' : {
+                    'type': 'string',
+                    'required': False,
+                    'default': 'markdown',
+                    'allowed': ['txt', 'markdown']
+                    },
                     'subTask': {
                         'type': 'list',
                         'required': True,

@@ -5,7 +5,8 @@ import os
 from pathlib import Path
 import textwrap
 from FlexibleNetwork.Integrations import S3_APIs
-
+import rich
+from rich.markdown import Markdown
 
 
 class TinyDB_db:
@@ -77,7 +78,9 @@ class TinyDB_db:
         """
         try:
             Task = Query()
-            log_file = self.tasks_table.search(Task.id == task_id)[0]['log_file']
+            task_entry_dct = self.tasks_table.search(Task.id == task_id)[0]
+            log_file = task_entry_dct['log_file']
+            print()
         except IndexError:
             print("Error -- Could NOT find the task log >> Invalid task ID")
             exit(1)
@@ -88,7 +91,10 @@ class TinyDB_db:
             print(f"ERROR -- Could NOT find log file [ {log_file} ]")
             exit(1)
         with open(log_file, 'r') as file:
-            print(file.read())
+            if task_entry_dct['format'] == 'markdown':
+                rich.print(Markdown(file.read()))
+            elif task_entry_dct['format'] == 'txt':
+                print(file.read())
             exit(0)
 
     ### Backups Table ###
@@ -122,17 +128,17 @@ class TinyDB_db:
 
     def list_all_tasks(self, wide=False):
         # The table header
-        table = [['id', 'name', 'comment', 'n_of_backups', 'date', 'time']]
+        table = [['id', 'name', 'format', 'n_of_backups', 'date', 'time']]
         if wide:
-            table = [['id', 'name', 'comment', 'n_of_backups', 'date', 'time', 'full_devices_n', 'authenticated_devices_n']]
+            table = [['id', 'name', 'format', 'n_of_backups', 'date', 'time', 'full_devices_n', 'authenticated_devices_n']]
         # Get list of all the tasks from the DB
         all_tasks_lst =  self.tasks_table.all()
         for task in all_tasks_lst:
-            comment = "\n".join(textwrap.wrap(task['comment'], width=30, replace_whitespace=False))
+            # comment = "\n".join(textwrap.wrap(task['format'], width=30, replace_whitespace=False))
             task_name = "\n".join(textwrap.wrap(task['name'], width=26, replace_whitespace=False))
-            row = [task['id'], task_name, comment, task['n_of_backups'], task['date'], task['time']]
+            row = [task['id'], task_name, task['format'], task['n_of_backups'], task['date'], task['time']]
             if wide:
-                row = [task['id'], task_name, comment, task['n_of_backups'], task['date'], task['time'], task['full_devices_n'], task['authenticated_devices_n']]
+                row = [task['id'], task_name, task['format'], task['n_of_backups'], task['date'], task['time'], task['full_devices_n'], task['authenticated_devices_n']]
             table.append(row)
         out = tabulate(table, headers='firstrow', tablefmt='grid', showindex=False)
         return out
