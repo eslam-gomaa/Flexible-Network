@@ -4,7 +4,9 @@
 from FlexibleNetwork.Flexible_Network import Terminal_Task
 task = Terminal_Task()
 
-auth = task.authenticate('pa3', 'orange', 'cisco', 1113)
+auth = task.authenticate('works', 'orange', 'cisco', 1113)
+
+print(auth.connection_report_table)
 
 print("hosts total", auth.hosts_total)
 print("hosts connected", auth.hosts_connected)

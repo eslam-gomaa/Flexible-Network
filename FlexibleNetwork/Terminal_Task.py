@@ -284,6 +284,7 @@ class Terminal_Task(SSH_Authentication):
         """
         class Output:
             def __init__(self):
+                self.connection_report_table = ""
                 self.hosts_total = [] 
                 self.hosts_connected = []
                 self.hosts_failed =  []
@@ -334,6 +335,7 @@ class Terminal_Task(SSH_Authentication):
         output.hosts_total_number = auth.get('total').get('n_hosts_total')
         output.hosts_connected_number = auth.get('total').get('n_hosts_connected')
         output.hosts_failed_number = auth.get('total').get('n_hosts_failed')
+        output.connection_report_table = self.connection_report_Table(dct=auth.get('hosts'), terminal_print=False, ask_when_hosts_fail=False)
 
         # Update the connected devices number
         self.hosts_connected_total_number += output.hosts_total_number
