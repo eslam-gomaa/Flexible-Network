@@ -1,4 +1,5 @@
 from FlexibleNetwork.Vendors import Cisco
+from FlexibleNetwork.Vendors import Huawei
 from FlexibleNetwork.Flexible_Network import ReadCliOptions
 from FlexibleNetwork.Flexible_Network import CLI
 from FlexibleNetwork.Flexible_Network import Config
@@ -32,7 +33,7 @@ class Terminal_Task(SSH_Authentication):
 
     task_name = None # Should be updated from a cli option. --name
 
-    def __init__(self, task_name="", task_log_format='txt'):
+    def __init__(self, task_name="", task_log_format='markdown'):
         super().__init__(debug=ReadCliOptions.debug)
         
         self.yaml_file = None
@@ -160,13 +161,24 @@ class Terminal_Task(SSH_Authentication):
             validated_docs = yamlParser.validate_yaml()
             # Run it
             for doc in validated_docs:
-                # rich.print(f"[bold]TASK > {doc.get('Task').get('name')}")
                 self.task_name = doc.get('Task').get('name')
+                self.task_log_format = doc.get('Task').get('log_format')
+                # Update the DB
+                self.db.update_tasks_table(task_id=self.task_id, 
+                                           dct={
+                                            'name': self.task_name,
+                                            'format': self.task_log_format
+                                            })
+                # Setting the choosen vendor
+                if doc.get('Task').get('vendor') == 'cisco':
+                    self.vendor = Cisco
+                elif doc.get('Task').get('vendor') == 'huawei':
+                    self.vendor = Huawei
+                # Running each sub-task
                 for subtask in doc.get('Task').get('subTask'):
                     # print(subtask.get('name'))
                     self.sub_task(name=subtask.get('name'), group=subtask.get('authenticate').get('group'), username=subtask.get('authenticate').get('username'), password=subtask.get('authenticate').get('password'), port=subtask.get('authenticate').get('port'), cmds=subtask.get('commands'), reconnect=subtask.get('authenticate').get('reconnect'))
-
-            exit(0)
+            # exit(0)
 
         if ReadCliOptions.authenticate_group:
             # Get the IPs of the section to the 'self.inventory' attribute
@@ -473,9 +485,12 @@ The command exited with exit_code of {result['exit_code']}
 
 --------------------------------------------------------
 """
+            print(self.task_log_format)
             if self.task_log_format == 'txt':
+                print(1)
                 self.update_log_file(data_text)
             elif self.task_log_format == 'markdown':
+                print(2)
                 self.update_log_file(data_md)
 
         if result['exit_code'] == 0:
