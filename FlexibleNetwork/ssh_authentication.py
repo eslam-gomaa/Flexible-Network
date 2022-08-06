@@ -539,9 +539,9 @@ class SSH_Authentication():
             
         return out
 
-    def backup_config(self, host_dct):
-        """
-        Take a backup of the device configurations
-        """
-        out = self.exec(host_dct['host'], self.vendor.backup_command, self.vendor)
-        return out
+    # def backup_config(self, host):
+    #     """
+    #     Take a backup of the device configurations
+    #     """
+    #     out = self.exec(host, self.vendor.backup_command, self.vendor)
+    #     return out

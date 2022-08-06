@@ -1,3 +1,4 @@
+from unittest import result
 from FlexibleNetwork.Vendors import Cisco
 from FlexibleNetwork.Vendors import Huawei
 from FlexibleNetwork.Flexible_Network import ReadCliOptions
@@ -35,6 +36,8 @@ class Terminal_Task(SSH_Authentication):
 
     def __init__(self, task_name="", task_log_format='markdown'):
         super().__init__(debug=ReadCliOptions.debug)
+
+        self.bcolors = Bcolors()
         
         self.yaml_file = None
         self.task_name = task_name
@@ -47,7 +50,7 @@ class Terminal_Task(SSH_Authentication):
         # Initialize the "CLI" class so that it read the cli options 
         cli = CLI()
         cli.argparse()
-        
+
         # Initialize the DB because we'll need it if '--task list' or '--backup list' are specified
         self.db = TinyDB_db()
 
@@ -68,7 +71,15 @@ class Terminal_Task(SSH_Authentication):
             print(self.db.get_task_log(ReadCliOptions.get_log))
 
         if ReadCliOptions.get_backup is not None:
-            print(self.db.return_backup(ReadCliOptions.get_backup))
+            # Get the backup with the backup-id
+            result = self.db.return_backup(ReadCliOptions.get_backup)
+            if result.exit_code == 0:
+                print(result.text)
+                exit(0)
+            else:
+                print(f"ERROR -- {result.stderr}")
+                print(self.bcolors.FAIL + result.text + self.bcolors.ENDC)
+                exit(1)
 
         # Initialize the "Config" class so that it checks the config file at the begining. 
         config = Config()
@@ -78,7 +89,6 @@ class Terminal_Task(SSH_Authentication):
         self.vendor = Cisco() # Default vendor class should exist in the config
         # self.ssh = SSH_connection()
         # self.ssh.vendor = self.vendor
-        self.bcolors = Bcolors()
 
         
         self.local_db_dir = self.db.local_db_dir
@@ -90,6 +100,14 @@ class Terminal_Task(SSH_Authentication):
         self.task_id = str(uuid.uuid4())
         self.log_file = self.log_and_backup_dir + '/' + self.task_id + '.txt'
         
+        # By default do NOT log the output,
+        # this will be set to True if number_of_authenticated_devices > 0
+        self.log_output = False
+        self.log_output_file = None
+        # create a row in the tasks table & add the id & name
+        date = datetime.today().strftime('%d-%m-%Y')
+        time = datetime.today().strftime('%H:%M:%S')
+
         ### Get the task name ###
         # If task name is provided via CLI
         if ReadCliOptions.task_name is not None:
@@ -101,13 +119,7 @@ class Terminal_Task(SSH_Authentication):
                 rich.print("[bold]ERROR -- The task name must be provided\n")
                 cli.parser.print_help()
                 exit(1)
-        # By default do NOT log the output,
-        # this will be set to True if number_of_authenticated_devices > 0
-        self.log_output = False
-        self.log_output_file = None
-        # create a row in the tasks table & add the id & name
-        date = datetime.today().strftime('%d-%m-%Y')
-        time = datetime.today().strftime('%H:%M:%S')
+
         # Insert an entry in the DB for the Task
         self.db.insert_tasks_table({'id': self.task_id, 
                                    'name': self.task_name,
@@ -560,23 +572,51 @@ The command exited with exit_code of {result['exit_code']}
         for cmd in file_content_lines:
             self.execute(host=host, cmd=cmd, terminal_print=terminal_print, ask_for_confirmation=False, exit_on_fail=exit_on_fail)
 
+    def get_config_backup(self, backup_id):
+        """
+        Method to return config backup
+        INPUT:
+            - backup_id (string)
+        RETURN:
+            - file path of the backup (string)
+        """
+        return self.db.return_backup(backup_id)
 
-    def backup_config(self, host_dct, comment, target='local'):
+
+    def take_config_backup(self, host, comment, privileged_mode_password="", exit_on_fail=False, target='local'):
         """
         Take full configurations backup of the device
         """
         start_time = time.time()
-        result = self.backup_config(host_dct)
+        
+        if not privileged_mode_password:
+            print("INFO -- No 'privileged_mode_password' provided, skipping taking the backup")
+            if exit_on_fail:
+                    exit(1)
+            return "Return here ...."
+        else:
+            # Enter the priviled mode eg. (enable command in Cisco)
+            enter_privileged_mode_cmd_result = self.execute_raw(host=host, cmd='enable\n' + privileged_mode_password)
+            if enter_privileged_mode_cmd_result.exit_code == 1:
+                print(f"ERROR -- Failed to enter the priviled mode while getting config backup with comment: {comment}")
+                print(self.bcolors.FAIL + enter_privileged_mode_cmd_result.stderr + self.bcolors.ENDC)
+                if exit_on_fail:
+                    exit(1)
+                return "Return here ...."
+
+        backup_cmd_result = self.execute_raw(host=host, cmd=self.vendor.backup_command,)
+
+        # result = self.backup_config(host_dct)
 
         # Inserting the DB record
         # Generate a backup ID
         self.backup_id = str(uuid.uuid4())
         date = datetime.today().strftime('%d-%m-%Y')
-        time_ = datetime.today().strftime('%H-%M-%S')
+        time_ = datetime.today().strftime('%H:%M:%S')
         self.db.insert_backups_table({'id': self.backup_id, 
                                    'comment': comment,
                                    'task': self.task_id,
-                                   'host': host_dct['host'],
+                                   'host': host,
                                    'target': target,
                                    'location': '',
                                    'date': date, 
@@ -587,25 +627,25 @@ The command exited with exit_code of {result['exit_code']}
 
         # Start storing the backup
         # If the backup commaned executed successfully
-        if result['exit_code'] == 0:
+        if backup_cmd_result.exit_code == 0:
             # Clean the backup output [ Remove the backup commands ]
-            backup_output = '\n'.join(result['stdout'])
+            backup_output = '\n'.join(backup_cmd_result.stdout)
             for c in self.vendor.backup_command.split("\n"):
                 backup_output = backup_output.replace(c.lstrip().strip(), '')
                 backup_output = backup_output.strip()
 
-            backup_file = host_dct['host'] + '-{}.txt'.format(uuid.uuid4().hex.upper()[0:10])
+            backup_file = str(host) + '-{}.txt'.format(uuid.uuid4().hex.upper()[0:10])
 
             
             # Update Log file
             date_time = datetime.today().strftime('%d-%m-%Y_%H-%M-%S')
             duration = (time.time() - start_time)
             if self.log_output:
-                output = '\n'.join(result['stdout'])
-                error = '\n'.join(result['stderr'])
-                data = f"""\n@ {host_dct['host']}
+                output = '\n'.join(backup_cmd_result.stdout)
+                error = '\n'.join(backup_cmd_result.stderr)
+                data = f"""\n@ {host}
 [[ backup_config ]]
-@ {host_dct['host']}
+@ {host}
 Time: {datetime.today().strftime('%d-%m-%Y %H:%M:%S')}
 Execution Time: {float("{:.2f}".format(duration))} seconds
 The backup taken successfully
@@ -629,10 +669,9 @@ Backup ID: {self.backup_id}
                         # Writing the backup to a file
                         file.write(backup_output)
                 except FileNotFoundError as e:
-                    print("ERROR -- Failed to backup config > [ {} ]".format(comment))
+                    rich.print("ERROR -- Failed to backup config with comment [ {} ]".format(comment))
                     print("ERROR -- Failed to write backup to file \n> {}".format(e))
                     exit(1)
-
             if target == 'local':
                 save_backup_locally(b_dir=self.log_and_backup_dir)
                 # Updating the loaction key with the backup location
@@ -672,13 +711,13 @@ Backup ID: {self.backup_id}
                     self.db.update_backups_table({'location': [s3.bucket, datetime.today().strftime('%d-%m-%Y') + '/' + backup_file]}, self.backup_id)
   
                 else:
-                    print("ERROR -- Failed to backup config > [ {} ]".format(comment))
+                    print("ERROR -- Failed to backup config with comment [ {} ]".format(comment))
                     # Update the DB with the fail_reason
                     self.db.update_backups_table({'fail_reason': upload_backup_file['fail_reason']}, self.backup_id)
                     # Remove the temp backup file
                     os.remove('/tmp/' + backup_file)
                     raise SystemExit(f"> Failed to upload the backup to S3 >> {upload_backup_file['fail_reason']}")
-                    
+
 
         # Update the backup to the task table .. Add the backup ID to the 
         self.db.append_backups_ids_tasks_table('backups_ids', self.backup_id, self.task_id)
@@ -686,16 +725,19 @@ Backup ID: {self.backup_id}
         self.db.increment_key_tasks_table('n_of_backups', self.task_id)
 
         ## Terminal printing ##
-        print("\n@ {}".format(host_dct['host']))
-        if result['exit_code'] == 0:
-            print("> backup taken successfully > [ {} ]".format(comment))
+        print("\n@ {}".format(host))
+        if backup_cmd_result.exit_code == 0:
+            print("INFO -- backup taken successfully > [ {} ]".format(comment))
             self.db.update_backups_table({'success': True}, self.backup_id)
         else:
             self.db.update_backups_table({'success': False}, self.backup_id)
-            self.db.update_backups_table({'failed_reason': result['stderr']}, self.backup_id)
+            self.db.update_backups_table({'failed_reason': backup_cmd_result.stderr}, self.backup_id)
 
-            print("ERROR -- Failed to backup config > [ {} ]".format(comment))
-            raise SystemExit(self.bcolors.FAIL + '\n'.join(result['stderr']) + self.bcolors.ENDC)
+            print("ERROR -- Failed to backup config with comment [ {} ]".format(comment))
+            print(self.bcolors.FAIL + '\n'.join(backup_cmd_result.stderr) + self.bcolors.ENDC)
+            if exit_on_fail:
+                exit(1)
+            # raise SystemExit(self.bcolors.FAIL + '\n'.join(backup_cmd_result.stderr) + self.bcolors.ENDC)
 
 
     # def execute_test(self, hosts_list, cmd, parallel=False, parallel_threads=5):

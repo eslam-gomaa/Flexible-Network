@@ -157,7 +157,8 @@ class TinyDB_db:
         out = tabulate(table, headers='firstrow', tablefmt='grid', showindex=False)
         return out
 
-    def return_backup(self, backup_id):
+
+    def return_backup2(self, backup_id, print=True):
         try:
             Backup = Query()
             target = self.backups_table.search(Backup.id == backup_id)[0]['target']
@@ -183,6 +184,63 @@ class TinyDB_db:
             print("ERROR -- Could NOT find the backup >> Invalid backup ID")
             exit(1)
 
+
+    def return_backup(self, backup_id):
+        class Output:
+            def __init__(self):
+                self.exit_code = 1
+                self.stderr = ""
+                self.stdout = ""
+                self.target = ""
+                self.location = ""
+                self.text = ""
+        output = Output()
+
+        try:
+            Backup = Query()
+            target = self.backups_table.search(Backup.id == backup_id)[0]['target']
+            output.target = target
+            location = self.backups_table.search(Backup.id == backup_id)[0]['location']
+            output.location = location
+
+            # If the backup was faild, no need to try to get it.
+            if not self.backups_table.search(Backup.id == backup_id)[0]['success']:
+                output.exit_code = 1
+                output.stderr = "There was an Error while taking this backup !"
+                output.text = "\n".join(self.backups_table.search(Backup.id == backup_id)[0]['failed_reason'])
+                output.stdout = "failed"
+                return output
+
+            if target == 'local':
+                if not os.path.isfile(location):
+                    output.stderr = f"Could NOT find Backup file [ {location} ]"
+                    output.exit_code = 1
+                try:
+                    with open(location, 'r') as file:
+                        output.text = file.read()
+                        output.exit_code = 0
+                        output.stdout = "success"
+                except FileNotFoundError  as e:
+                    output.stderr = f"Backup file is not found, {e}"
+                    output.exit_code = 1
+
+            if target == 's3':
+                # get the config from S3
+                s3 = S3_APIs()
+                get_backup_file = s3.get_object(bucket=location[0], file_name=location[1])
+                if get_backup_file['success']:
+                    output.text = get_backup_file['output']
+                    # print(f"[ Bucket: {location[0]}, Key: {location[1]} ]")
+                    # exit(0)
+                else:
+                    output.stderr = f"Failed to get the backup form S3 [ Bucket: {location[0]}, Key: {location[1]} ]\n> {get_backup_file['fail_reason']}"
+                    output.exit_code = 1
+        except IndexError:
+            output.exit_code = 1
+            output.stderr = "Could NOT find the backup >> Invalid backup ID"
+            # print("ERROR -- Could NOT find the backup >> Invalid backup ID")
+            # exit(1)
+        return output
 
 
 
