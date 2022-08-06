@@ -487,12 +487,9 @@ The command exited with exit_code of {result['exit_code']}
 
 --------------------------------------------------------
 """
-            print(self.task_log_format)
             if self.task_log_format == 'txt':
-                print(1)
                 self.update_log_file(data_text)
             elif self.task_log_format == 'markdown':
-                print(2)
                 self.update_log_file(data_md)
 
         if result['exit_code'] == 0:
