@@ -32,11 +32,16 @@ class Terminal_Task(SSH_Authentication):
 
     task_name = None # Should be updated from a cli option. --name
 
-    def __init__(self, task_name=""):
+    def __init__(self, task_name="", task_log_format='txt'):
         super().__init__(debug=ReadCliOptions.debug)
         
         self.yaml_file = None
         self.task_name = task_name
+        self.task_log_format = task_log_format
+        # Check task_log_format
+        if self.task_log_format not in ['txt', 'markdown']:
+            print(f"ERROR -- unsupported log format '{self.task_log_format}' , supported: {['txt', 'markdown']}")
+            exit(1)
 
         # Initialize the "CLI" class so that it read the cli options 
         cli = CLI()
@@ -101,11 +106,11 @@ class Terminal_Task(SSH_Authentication):
         self.log_output_file = None
         # create a row in the tasks table & add the id & name
         date = datetime.today().strftime('%d-%m-%Y')
-        time = datetime.today().strftime('%H-%M-%S')
+        time = datetime.today().strftime('%H:%M:%S')
         # Insert an entry in the DB for the Task
         self.db.insert_tasks_table({'id': self.task_id, 
                                    'name': self.task_name,
-                                   'comment': 'to be done >> as a cli option.',
+                                   'format': self.task_log_format,
                                    'n_of_backups': 0, 
                                    'backups_ids': [],
                                    'log_file': None,
@@ -429,9 +434,26 @@ class Terminal_Task(SSH_Authentication):
             command = '\n\n'.join(result['cmd'])
             out = '\n'.join(result['stdout'])
             error = '\n'.join(result['stderr'])
-            data = f"""
-- **[[ excute ]] on {host}**
-    - Time: {datetime.today().strftime('%d-%m-%Y %H:%M:%S')}
+
+            data_text = f"""
+[ {datetime.today().strftime('%d-%m-%Y %H:%M:%S')} ] [[ excute ]] on {host}
+Execution Time: {float("{:.2f}".format(duration))} seconds
+The command exited with exit_code of {result['exit_code']}
+
+> command
+{command}
+
+> stdout
+{out}
+
+> stderr
+{error}
+
+--------------------------------------------------------
+"""
+
+            data_md = f"""
+- [ {datetime.today().strftime('%d-%m-%Y %H:%M:%S')} ] **[[ excute ]] on {host}**
     - Execution Time: {float("{:.2f}".format(duration))} seconds
     - The command exited with exit_code of {result['exit_code']}
 
@@ -451,7 +473,10 @@ class Terminal_Task(SSH_Authentication):
 
 --------------------------------------------------------
 """
-            self.update_log_file(data)
+            if self.task_log_format == 'txt':
+                self.update_log_file(data_text)
+            elif self.task_log_format == 'markdown':
+                self.update_log_file(data_md)
 
         if result['exit_code'] == 0:
             if terminal_print == 'default':
