@@ -20,6 +20,7 @@ class CLI:
         parser.add_argument('-p', '--password', type=str, required=False, metavar='', help='The password to authenticate the group')
         parser.add_argument('-P', '--port', type=int, required=False, default=22, metavar='', help='The port to connect to the group')
         parser.add_argument('-f', '--file', type=str, required=False, metavar='', help='YAML manifest file  .yaml OR .yml')
+        parser.add_argument('-d', '--debug', action='store_true', help='Print debug outputs')
 
         parser.add_argument('-b', '--backup', action='store_true', help='Deal with Backups')
         parser.add_argument('-gb', '--get-backup', type=str,help='Returns the configuuration backup')
@@ -99,6 +100,9 @@ class CLI:
 
         if results.inventory is not None:
             ReadCliOptions.inventory_file = results.inventory
+
+        if results.debug:
+            ReadCliOptions.debug = results.debug
 
         if results.file:
             ReadCliOptions.yaml_file = results.file
