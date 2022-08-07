@@ -17,6 +17,12 @@ print("hostsjhh failed", auth.hosts_failed)
 
 # Only 1 host connected
 for host in auth.hosts_total:
+
+    # task.execute_raw(host, "enable\n" + "cisco")
+    # task.execute(host, """
+    # conf t
+    # do sh ip int br
+    # """)
     
     backup = task.take_config_backup(host, "Test", privileged_mode_password='cisco', target='local')
 

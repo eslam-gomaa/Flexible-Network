@@ -10,6 +10,12 @@ class Cisco:
             show run
             term no len 0
             """
+        self.backup_command_config_mode = """
+            do terminal length 0
+            do show run
+            do term no len 0
+            """
+        self.priviliged_mode_command = "enable"
 
 
     @property

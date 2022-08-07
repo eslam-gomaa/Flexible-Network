@@ -587,30 +587,57 @@ The command exited with exit_code of {result['exit_code']}
         """
         Take full configurations backup of the device
         """
+        class Output:
+            def __init__(self):
+                self.exit_code = 1
+                self.stderr = ""
+                self.stdout = ""
+                self.location = ""
+                self.id = ""
+        output = Output()
+
         start_time = time.time()
-        
+
         if not privileged_mode_password:
-            print("INFO -- No 'privileged_mode_password' provided, skipping taking the backup")
+            print("WARNING -- No 'privileged_mode_password' provided, skipping taking the backup")
+            output.exit_code = 1
+            output.stderr = "No 'privileged_mode_password' provided, skipping taking the backup"
+            output.stdout = "failed"
             if exit_on_fail:
                     exit(1)
-            return "Return here ...."
+            return output
         else:
-            # Enter the priviled mode eg. (enable command in Cisco)
-            enter_privileged_mode_cmd_result = self.execute_raw(host=host, cmd='enable\n' + privileged_mode_password)
-            if enter_privileged_mode_cmd_result.exit_code == 1:
-                print(f"ERROR -- Failed to enter the priviled mode while getting config backup with comment: {comment}")
-                print(self.bcolors.FAIL + enter_privileged_mode_cmd_result.stderr + self.bcolors.ENDC)
-                if exit_on_fail:
-                    exit(1)
-                return "Return here ...."
+            # - test to run the command
+            #   - If failed, try to enter the priviliged mode and run the command again
 
-        backup_cmd_result = self.execute_raw(host=host, cmd=self.vendor.backup_command,)
-
-        # result = self.backup_config(host_dct)
+            # Run the backup command
+            print("INFO -- Running the backup command")
+            backup_cmd_result = self.execute_raw(host=host, cmd=self.vendor.backup_command_config_mode,)
+            output.exit_code = 0
+            if backup_cmd_result.exit_code == 1:
+                output.exit_code = 1
+                # Enter the priviled mode eg. ('enable' command in Cisco)
+                print("INFO -- Entering priviliged mode")
+                enter_privileged_mode_cmd_result = self.execute_raw(host=host, cmd= f'{self.vendor.priviliged_mode_command}\n' + privileged_mode_password)
+                if enter_privileged_mode_cmd_result.exit_code == 1:
+                    print(f"ERROR -- Failed to enter the priviled mode while getting config backup with comment: {comment}")
+                    print(self.bcolors.FAIL + "\n".join(enter_privileged_mode_cmd_result.stderr) + self.bcolors.ENDC)
+                    output.stderr = f"Failed to enter the priviled mode while getting config backup with comment: {comment}"
+                    output.stdout = "failed"
+                    if exit_on_fail:
+                        exit(1)
+                    return output
+                else:
+                    # Run the backup command again
+                    print("INFO -- Running the backup command again")
+                    backup_cmd_result = self.execute_raw(host=host, cmd=self.vendor.backup_command,)
+                    self.execute_raw(host, "end")
+                    output.exit_code = 0
 
         # Inserting the DB record
         # Generate a backup ID
         self.backup_id = str(uuid.uuid4())
+        output.id = self.backup_id
         date = datetime.today().strftime('%d-%m-%Y')
         time_ = datetime.today().strftime('%H:%M:%S')
         self.db.insert_backups_table({'id': self.backup_id, 
@@ -635,13 +662,13 @@ The command exited with exit_code of {result['exit_code']}
                 backup_output = backup_output.strip()
 
             backup_file = str(host) + '-{}.txt'.format(uuid.uuid4().hex.upper()[0:10])
-
+            output.location = self.log_and_backup_dir + "/" + backup_file
             
             # Update Log file
             date_time = datetime.today().strftime('%d-%m-%Y_%H-%M-%S')
             duration = (time.time() - start_time)
             if self.log_output:
-                output = '\n'.join(backup_cmd_result.stdout)
+                out = '\n'.join(backup_cmd_result.stdout)
                 error = '\n'.join(backup_cmd_result.stderr)
                 data = f"""\n@ {host}
 [[ backup_config ]]
@@ -735,10 +762,14 @@ Backup ID: {self.backup_id}
 
             print("ERROR -- Failed to backup config with comment [ {} ]".format(comment))
             print(self.bcolors.FAIL + '\n'.join(backup_cmd_result.stderr) + self.bcolors.ENDC)
+            output.exit_code = 1
+            output.stderr = '\n'.join(backup_cmd_result.stderr)
+            output.stdout = "failed"
             if exit_on_fail:
                 exit(1)
             # raise SystemExit(self.bcolors.FAIL + '\n'.join(backup_cmd_result.stderr) + self.bcolors.ENDC)
-
+        # output.stdout = "success"
+        return output
 
     # def execute_test(self, hosts_list, cmd, parallel=False, parallel_threads=5):
     #     """
