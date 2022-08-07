@@ -37,7 +37,7 @@ class SSH_Authentication():
 
         self.threads = []
 
-    def authenticate_hosts(self, hosts, group_name, user, password, port, terminal_print=False, timeout=5, max_tries=3, debug=False):
+    def authenticate_hosts(self, hosts, group_name, user, password, privileged_mode_password="", port=22, terminal_print=False, timeout=5, max_tries=3, debug=False):
         """
         Authenticate list of hosts (network devices)
             - The authentication is done In Prarallel using Threading
@@ -62,7 +62,7 @@ class SSH_Authentication():
             time_start = datetime.now()
             # Start a thread for each host
             for host in hosts:
-                thread  = threading.Thread(target=self.connect, args=(host, user, password, port, timeout, max_tries))
+                thread  = threading.Thread(target=self.connect, args=(host, user, password, privileged_mode_password, port, timeout, max_tries))
                 thread.daemon = True
                 self.threads.append(thread)
                 thread.start()
@@ -177,7 +177,7 @@ class SSH_Authentication():
 
 
 
-    def connect(self, host, user, password, port=22, timeout=5, max_tries=3, allow_agent=True):
+    def connect(self, host, user, password, privileged_mode_password="", port=22, timeout=5, max_tries=3, allow_agent=True):
         """
         Authenticate a network device
         """
@@ -187,6 +187,7 @@ class SSH_Authentication():
             "host": host,
             "user": user,
             "password": password,
+            "privileged_mode_password": privileged_mode_password,
             "port": port,
             "timeout": timeout,
             "max_tries": max_tries,

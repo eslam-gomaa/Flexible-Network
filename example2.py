@@ -4,7 +4,7 @@
 from FlexibleNetwork.Flexible_Network import Terminal_Task
 task = Terminal_Task()
 
-auth = task.authenticate('works', 'orange', 'cisco', 1113)
+auth = task.authenticate('works', 'orange', 'cisco', 'cisco', 1113)
 
 # print(auth.connection_report_table)
 
