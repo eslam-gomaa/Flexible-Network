@@ -18,11 +18,16 @@ print("hostsjhh failed", auth.hosts_failed)
 # Only 1 host connected
 for host in auth.hosts_total:
     
-    backup = task.take_config_backup(host, "Test", privileged_mode_password='cisco', target='s3')
-    print(backup)
+    backup = task.take_config_backup(host, "Test", privileged_mode_password='cisco', target='local')
+
+    print(backup.exit_code)
+    print(backup.stdout)
+    print(backup.stderr)
+    print(backup.location)
+    print(backup.id)
 
 
-    test = task.execute(host, 'sho ip int br')
+    # test = task.execute(host, 'sho ip int br')
     # print("host", test.host)
     # print("command", test.cmd)
     # print("exit_code", test.exit_code)
