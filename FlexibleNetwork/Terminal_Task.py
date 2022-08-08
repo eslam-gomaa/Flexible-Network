@@ -336,7 +336,7 @@ class Terminal_Task(SSH_Authentication):
         # => The output is a dct of 2 dcts, one is "hosts" (contains dct for each host, where the ip is the key and the value is the information) ad another "total" (general information about the hosts)
         auth = self.authenticate_hosts(hosts=output.hosts_total, group_name=group, user=user, password=password, privileged_mode_password=privileged_mode_password, port=port, terminal_print=terminal_print, debug=self.debug)
 
-        if len(auth.get('hosts')) > 1:
+        if len(auth.get('hosts')) >= 1:
             for host_ip, host_info in auth.get('hosts').items():
                 if host_info['is_connected']:
                     output.hosts_connected.append(host_ip)
