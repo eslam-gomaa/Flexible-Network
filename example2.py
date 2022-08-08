@@ -23,14 +23,15 @@ print("hostsjhh failed", auth.hosts_failed)
 for host in auth.hosts_total:
 
     # task.execute_raw(host, "enable\n" + "cisco")
-    task.execute(host, """
-    conf t
-    do sh ip int br
-    """)
-
-    task.execute(host, "do sho ip int br")
+    # task.execute(host, """
+    # conf t
+    # do sh ip int br
+    # """)
+    # task.execute(host, "do sho ip int br")
     
-    # backup = task.take_config_backup(host, "Test", privileged_mode_password='cisco', target='local')
+    backup = task.take_config_backup(host, "Test", privileged_mode_password='cisco', target='local')
+
+    task.execute(host, "sho ip int br")
 
     # print(backup.exit_code)
     # print(backup.stdout)
