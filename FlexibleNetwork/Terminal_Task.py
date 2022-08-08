@@ -282,7 +282,7 @@ class Terminal_Task(SSH_Authentication):
             else:
                 exit(1)
 
-    def authenticate(self, groups, user, password, port=22, terminal_print=True):
+    def authenticate(self, groups, user, password, privileged_mode_password="", port=22, terminal_print=True):
         """
         Authenticate an inventory groups
         INPUT:
@@ -334,9 +334,9 @@ class Terminal_Task(SSH_Authentication):
 
         # Authenticate group
         # => The output is a dct of 2 dcts, one is "hosts" (contains dct for each host, where the ip is the key and the value is the information) ad another "total" (general information about the hosts)
-        auth = self.authenticate_hosts(hosts=output.hosts_total, group_name=group, user=user, password=password, port=port, terminal_print=terminal_print, debug=self.debug)
+        auth = self.authenticate_hosts(hosts=output.hosts_total, group_name=group, user=user, password=password, privileged_mode_password=privileged_mode_password, port=port, terminal_print=terminal_print, debug=self.debug)
 
-        if len(auth.get('hosts')) > 1:
+        if len(auth.get('hosts')) >= 1:
             for host_ip, host_info in auth.get('hosts').items():
                 if host_info['is_connected']:
                     output.hosts_connected.append(host_ip)
@@ -415,15 +415,19 @@ class Terminal_Task(SSH_Authentication):
         if vendor is not None:
             vendor_ = vendor
 
+        run_command = False
+
         if (len(only_on_hosts) >= 1) and (len(skip_hosts) >= 1):
             rich.print("> You can not use 'onlyOn' and 'skip' together")
             exit(1)
         
         if (len(only_on_hosts) >= 1) and (host in only_on_hosts):
-            result = self.exec(host=host, cmd=cmd, vendor=vendor_,reconnect_closed_socket=reconnect_closed_socket)
+            run_command = True
+            # result = self.exec(host=host, cmd=cmd, vendor=vendor_,reconnect_closed_socket=reconnect_closed_socket)
         
         elif (len(skip_hosts) >= 1) and (host not in skip_hosts):
-            result = self.exec(host=host, cmd=cmd, vendor=vendor_,reconnect_closed_socket=reconnect_closed_socket)
+            run_command = True
+            # result = self.exec(host=host, cmd=cmd, vendor=vendor_,reconnect_closed_socket=reconnect_closed_socket)
         else:
             result = {
                 "cmd": [cmd],
@@ -433,15 +437,36 @@ class Terminal_Task(SSH_Authentication):
             }
 
         if (len(only_on_hosts) == 0) and (len(skip_hosts) == 0):
-            result = self.exec(host=host, cmd=cmd, vendor=vendor_,reconnect_closed_socket=reconnect_closed_socket)
+            run_command = True
+            # result = self.exec(host=host, cmd=cmd, vendor=vendor_,reconnect_closed_socket=reconnect_closed_socket)
 
+        print()
+        # Print the host IP
+        rich.print(Markdown(f"@ **{host}**"))
+
+        # Enter the Privileged mode if needed
+        if run_command == True:
+            if self.hosts_dct['hosts'][host]['privileged_mode_password']:
+                if (not self.hosts_dct['hosts'][host]['privileged_mode']) and (self.hosts_dct['hosts'][host]['is_connected']):
+                        rich.print("INFO -- Entering Privileged mode   [ [yellow]...[/yellow] ]", end="\r")
+                        # Enter Privileged mode
+                        self.exec(host=host, cmd=f"{self.vendor.priviliged_mode_command}\n" + self.hosts_dct['hosts'][host]['privileged_mode_password'], vendor=vendor_,reconnect_closed_socket=reconnect_closed_socket)
+                        # Test to enter the "config mode" to test if entering the "Privileged mode" was successful
+                        test_config_mode = self.exec(host=host, cmd=f"{self.vendor.configure_mode_command}\n", vendor=vendor_,reconnect_closed_socket=reconnect_closed_socket)
+                        # Exit config mode
+                        self.exec(host=host, cmd="exit", vendor=vendor_,reconnect_closed_socket=reconnect_closed_socket)
+                        if test_config_mode['exit_code'] == 0:
+                            self.hosts_dct['hosts'][host]['privileged_mode'] = True
+                            rich.print("INFO -- Entering Privileged mode   [ [green]success[/green] ]")
+                        else:
+                            rich.print("INFO -- Entering Privileged mode   [ [red]failed[/red] ]")
+            result = self.exec(host=host, cmd=cmd, vendor=vendor_,reconnect_closed_socket=reconnect_closed_socket)
 
         # Calculate the execution_time
         duration = (time.time() - start_time)
         # print()
         
-        print()
-        rich.print(Markdown(f"@ **{host}**"))
+        # Print execution time, exit_code & tag
         rich.print(f'[grey42]Execution time {float("{:.2f}".format(duration))} sec')
         rich.print(f"[grey42]Finished with exit-code of {result['exit_code']}")
         if (tag is not None) and (tag):
@@ -523,7 +548,7 @@ The command exited with exit_code of {result['exit_code']}
         return output
         # return result
 
-    def execute_raw(self, host, cmd):
+    def execute_raw(self, host, cmd, vendor=None):
         """
         - Excutes a command on a remove network device
         INPUT:
@@ -535,7 +560,11 @@ The command exited with exit_code of {result['exit_code']}
             - "exit_code": (int) 0 --> the command run successfully,  1 --> an error occurred
         - does NOT print to the terminal
         """
-        result = self.exec(host, cmd, self.vendor)
+        vendor_ = self.vendor
+        if vendor is not None:
+            vendor_ = vendor
+
+        result = self.exec(host, cmd, vendor_)
         class Output:
             def __init__(self):
                 self.host = host
@@ -598,6 +627,21 @@ The command exited with exit_code of {result['exit_code']}
 
         start_time = time.time()
 
+        if self.hosts_dct['hosts'][host]['privileged_mode_password']:
+                if (not self.hosts_dct['hosts'][host]['privileged_mode']) and (self.hosts_dct['hosts'][host]['is_connected']):
+                        rich.print("INFO -- Entering Privileged mode   [ [yellow]...[/yellow] ]", end="\r")
+                        # Enter Privileged mode
+                        self.exec(host=host, cmd=f"{self.vendor.priviliged_mode_command}\n" + self.hosts_dct['hosts'][host]['privileged_mode_password'], vendor=self.vendor,reconnect_closed_socket=True)
+                        # Test to enter the "config mode" to test if entering the "Privileged mode" was successful
+                        test_config_mode = self.exec(host=host, cmd=f"{self.vendor.configure_mode_command}\n", vendor=self.vendor,reconnect_closed_socket=True)
+                        # Exit config mode
+                        self.exec(host=host, cmd="exit", vendor=self.vendor,reconnect_closed_socket=True)
+                        if test_config_mode['exit_code'] == 0:
+                            self.hosts_dct['hosts'][host]['privileged_mode'] = True
+                            rich.print("INFO -- Entering Privileged mode   [ [green]success[/green] ]")
+                        else:
+                            rich.print("INFO -- Entering Privileged mode   [ [red]failed[/red] ]")
+
         if not privileged_mode_password:
             print("WARNING -- No 'privileged_mode_password' provided, skipping taking the backup")
             output.exit_code = 1
@@ -612,27 +656,31 @@ The command exited with exit_code of {result['exit_code']}
 
             # Run the backup command
             print("INFO -- Running the backup command")
-            backup_cmd_result = self.execute_raw(host=host, cmd=self.vendor.backup_command_config_mode,)
+            backup_cmd_result = self.execute_raw(host=host, cmd=self.vendor.backup_command,)
+            
             output.exit_code = 0
             if backup_cmd_result.exit_code == 1:
                 output.exit_code = 1
-                # Enter the priviled mode eg. ('enable' command in Cisco)
-                print("INFO -- Entering priviliged mode")
-                enter_privileged_mode_cmd_result = self.execute_raw(host=host, cmd= f'{self.vendor.priviliged_mode_command}\n' + privileged_mode_password)
-                if enter_privileged_mode_cmd_result.exit_code == 1:
-                    print(f"ERROR -- Failed to enter the priviled mode while getting config backup with comment: {comment}")
-                    print(self.bcolors.FAIL + "\n".join(enter_privileged_mode_cmd_result.stderr) + self.bcolors.ENDC)
-                    output.stderr = f"Failed to enter the priviled mode while getting config backup with comment: {comment}"
-                    output.stdout = "failed"
-                    if exit_on_fail:
-                        exit(1)
-                    return output
-                else:
-                    # Run the backup command again
-                    print("INFO -- Running the backup command again")
-                    backup_cmd_result = self.execute_raw(host=host, cmd=self.vendor.backup_command,)
-                    self.execute_raw(host, "end")
-                    output.exit_code = 0
+                
+                #
+                #  Enter the priviled mode eg. ('enable' command in Cisco)
+                # print("INFO -- Entering priviliged mode")
+
+                # enter_privileged_mode_cmd_result = self.execute_raw(host=host, cmd= f'{self.vendor.priviliged_mode_command}\n' + privileged_mode_password)
+                # if enter_privileged_mode_cmd_result.exit_code == 1:
+                #     print(f"ERROR -- Failed to enter the priviled mode while getting config backup with comment: {comment}")
+                #     print(self.bcolors.FAIL + "\n".join(enter_privileged_mode_cmd_result.stderr) + self.bcolors.ENDC)
+                #     output.stderr = f"Failed to enter the priviled mode while getting config backup with comment: {comment}"
+                #     output.stdout = "failed"
+                #     if exit_on_fail:
+                #         exit(1)
+                #     return output
+                # else:
+                #     # Run the backup command again
+                #     print("INFO -- Running the backup command again")
+                #     backup_cmd_result = self.execute_raw(host=host, cmd=self.vendor.backup_command,)
+                #     self.execute_raw(host, "end")
+                #     output.exit_code = 0
 
         # Inserting the DB record
         # Generate a backup ID
