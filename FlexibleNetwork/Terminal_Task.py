@@ -627,6 +627,7 @@ The command exited with exit_code of {result['exit_code']}
 
         start_time = time.time()
 
+        print("\n@ {}".format(host))
         if self.hosts_dct['hosts'][host]['privileged_mode_password']:
                 if (not self.hosts_dct['hosts'][host]['privileged_mode']) and (self.hosts_dct['hosts'][host]['is_connected']):
                         rich.print("INFO -- Entering Privileged mode   [ [yellow]...[/yellow] ]", end="\r")
@@ -800,9 +801,8 @@ Backup ID: {self.backup_id}
         self.db.increment_key_tasks_table('n_of_backups', self.task_id)
 
         ## Terminal printing ##
-        print("\n@ {}".format(host))
         if backup_cmd_result.exit_code == 0:
-            print("INFO -- backup taken successfully > [ {} ]".format(comment))
+            print("INFO -- backup taken successfully  [ {} ]".format(comment))
             self.db.update_backups_table({'success': True}, self.backup_id)
         else:
             self.db.update_backups_table({'success': False}, self.backup_id)
