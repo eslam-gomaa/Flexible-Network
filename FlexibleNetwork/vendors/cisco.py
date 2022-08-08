@@ -3,9 +3,9 @@ class Cisco:
     def __init__(self):
         # If needed check that error messgaes list
         # https://www.cisco.com/c/en/us/td/docs/security/ips/7-2/command/reference/cmdref72/crError.pdf
-        self.stderr_search_keyword = ['\^', '^%', 'Translating.*(255.255.255.255)']
-        self.clean_output_search_keywords = ['.*#', '.*>']
-        self.backup_command = """
+        self._stderr_search_keyword = ['\^', '^%', 'Translating.*(255.255.255.255)']
+        self._clean_output_search_keywords = ['.*#', '.*>']
+        self._backup_command = """
             terminal length 0
             show run
             term no len 0
@@ -16,32 +16,31 @@ class Cisco:
             do term no len 0
             """
         self.priviliged_mode_command = "enable"
-        self.configure_mode_command = "configure terminal"
 
 
-    # @property
-    # def stderr_search_keyword(self):
-    #     return self._stderr_search_keyword
+    @property
+    def stderr_search_keyword(self):
+        return self._stderr_search_keyword
 
-    # @stderr_search_keyword.setter
-    # def stderr_search_keyword(self, keyword):
-    #     self._stderr_search_keyword = keyword
+    @stderr_search_keyword.setter
+    def stderr_search_keyword(self, keyword):
+        self._stderr_search_keyword = keyword
 
-    # @property
-    # def clean_output_search_keywords(self):
-    #     return self._clean_output_search_keywords
+    @property
+    def clean_output_search_keywords(self):
+        return self._clean_output_search_keywords
     
-    # @clean_output_search_keywords.setter
-    # def clean_output_search_keywords(self, keyword):
-    #     self._clean_output_search_keywords = keyword
+    @clean_output_search_keywords.setter
+    def clean_output_search_keywords(self, keyword):
+        self._clean_output_search_keywords = keyword
 
-    # @property
-    # def backup_command(self):
-    #     return self._backup_command
+    @property
+    def backup_command(self):
+        return self._backup_command
 
-    # @backup_command.setter
-    # def backup_command(self, keyword):
-    #     self._stderr_search_keyword = keyword
+    @backup_command.setter
+    def backup_command(self, keyword):
+        self._stderr_search_keyword = keyword
 
 
 
