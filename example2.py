@@ -8,7 +8,7 @@ from FlexibleNetwork.Vendors import Cisco
 task = Terminal_Task()
 task.vendor = Cisco()
 
-auth = task.authenticate(groups='works', user='orange', password='cisco', privileged_mode_password='cisco', port=1113)
+auth = task.authenticate(groups='pa3', user='orange', password='cisco', privileged_mode_password='cisco', port=1113)
 
 # print(auth.connection_report_table)
 
@@ -20,7 +20,7 @@ print("hosts failed", auth.hosts_failed)
 # print("hosts failed number", auth.hosts_failed_number)
 
 # Only 1 host connected
-for host in auth.hosts_total:
+for host in auth.hosts_connected:
 
     # task.execute_raw(host, "enable\n" + "cisco")
     # task.execute(host, """
