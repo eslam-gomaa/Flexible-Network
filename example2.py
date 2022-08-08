@@ -14,7 +14,7 @@ auth = task.authenticate(groups='works', user='orange', password='cisco', privil
 
 print("hosts total", auth.hosts_total)
 print("hosts connected", auth.hosts_connected)
-print("hostsjhh failed", auth.hosts_failed)
+print("hosts failed", auth.hosts_failed)
 # print("hosts total number", auth.hosts_total_number)
 # print("hosts connected number", auth.hosts_connected_number)
 # print("hosts failed number", auth.hosts_failed_number)
@@ -32,6 +32,7 @@ for host in auth.hosts_total:
     backup = task.take_config_backup(host, "Test", privileged_mode_password='cisco', target='local')
 
     task.execute(host, "sho ip int br")
+    task.execute(host, "show vlan br")
 
     # print(backup.exit_code)
     # print(backup.stdout)
