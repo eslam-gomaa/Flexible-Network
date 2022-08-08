@@ -148,7 +148,7 @@ class SSH_Authentication():
         # Try to re-connect and get a new dct for the host
         new_host_dct = self.connect(host, self.hosts_dct['hosts'][host]['user'], self.hosts_dct['hosts'][host]['password'], self.hosts_dct['hosts'][host]['privileged_mode_password'], self.hosts_dct['hosts'][host]['port'], self.hosts_dct['hosts'][host]['timeout'], self.hosts_dct['hosts'][host]['tries'])
         # Update the host dct
-        self.hosts_dct['hosts'][host]['host'] = new_host_dct
+        self.hosts_dct['hosts'][host] = new_host_dct
 
         time_end = datetime.now()
         time_taken = time_end - time_start
@@ -469,7 +469,7 @@ class SSH_Authentication():
         
         if reconnect_closed_socket:
             if self.is_channel_closed(self.hosts_dct['hosts'][host]['channel']):
-                self.reconnect(self.hosts_dct['hosts'][host])
+                self.reconnect(host)
 
         # If the socket is closed try to reconnect.
         # if reconnect_closed_socket:

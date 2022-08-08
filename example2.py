@@ -8,7 +8,7 @@ from FlexibleNetwork.Vendors import Cisco
 task = Terminal_Task()
 task.vendor = Cisco()
 
-auth = task.authenticate(groups='works', user='orange', password='cisco', privileged_mode_password=' ', port=1113)
+auth = task.authenticate(groups='works', user='orange', password='cisco', privileged_mode_password='cisco', port=1113)
 
 # print(auth.connection_report_table)
 
