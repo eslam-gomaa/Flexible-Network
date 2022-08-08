@@ -115,6 +115,10 @@ class SSH_Authentication():
         INPUT:
             1. channel (object) The ssh channel object
         """
+        # Check if the channel is None (means not opened before)
+        if channel is None:
+            return True
+
         # Check if explicitly the channel is closed
         if channel.closed:
             return True
@@ -167,7 +171,7 @@ class SSH_Authentication():
                 rich.print(f"[bold]🔴 FAILED to reconnect to {host}")
                 # In case I want to print a table
                 print(self.connection_report_Table({host: self.hosts_dct['hosts'][host]}))
-                rich.print("print markdown here.")
+                # rich.print("print markdown here.")
 
             if self.debug:
                 rich.print(f"\nDEBUG: Reconneting host: {host} [underline]result:")
@@ -496,7 +500,6 @@ class SSH_Authentication():
                     "stderr": [self.hosts_dct['hosts'][host]['fail_reason']],
                     "exit_code": -1
                 }
-                rich.print(self.hosts_dct['hosts'][host])
                 return err
             
             channel.send(cmd + '\n' + '\n')
