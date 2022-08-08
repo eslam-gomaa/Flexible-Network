@@ -415,15 +415,19 @@ class Terminal_Task(SSH_Authentication):
         if vendor is not None:
             vendor_ = vendor
 
+        run_command = False
+
         if (len(only_on_hosts) >= 1) and (len(skip_hosts) >= 1):
             rich.print("> You can not use 'onlyOn' and 'skip' together")
             exit(1)
         
         if (len(only_on_hosts) >= 1) and (host in only_on_hosts):
-            result = self.exec(host=host, cmd=cmd, vendor=vendor_,reconnect_closed_socket=reconnect_closed_socket)
+            run_command = True
+            # result = self.exec(host=host, cmd=cmd, vendor=vendor_,reconnect_closed_socket=reconnect_closed_socket)
         
         elif (len(skip_hosts) >= 1) and (host not in skip_hosts):
-            result = self.exec(host=host, cmd=cmd, vendor=vendor_,reconnect_closed_socket=reconnect_closed_socket)
+            run_command = True
+            # result = self.exec(host=host, cmd=cmd, vendor=vendor_,reconnect_closed_socket=reconnect_closed_socket)
         else:
             result = {
                 "cmd": [cmd],
@@ -433,15 +437,33 @@ class Terminal_Task(SSH_Authentication):
             }
 
         if (len(only_on_hosts) == 0) and (len(skip_hosts) == 0):
-            result = self.exec(host=host, cmd=cmd, vendor=vendor_,reconnect_closed_socket=reconnect_closed_socket)
+            run_command = True
+            # result = self.exec(host=host, cmd=cmd, vendor=vendor_,reconnect_closed_socket=reconnect_closed_socket)
 
+        print()
+        # Print the host IP
+        rich.print(Markdown(f"@ **{host}**"))
+
+        # Enter the Privileged mode if needed
+        if run_command == True:
+            if self.hosts_dct['hosts'][host]['privileged_mode_password']:
+                if (not self.hosts_dct['hosts'][host]['privileged_mode']) and (self.hosts_dct['hosts'][host]['is_connected']):
+                        rich.print("INFO -- Entering Privileged mode   [ [yellow]...[/yellow] ]", end="\r")
+                        privliged_mode = self.exec(host=host, cmd=f"{self.vendor.priviliged_mode_command}\n" + self.hosts_dct['hosts'][host]['privileged_mode_password'], vendor=vendor_,reconnect_closed_socket=reconnect_closed_socket)
+                        test_config_mode = self.exec(host=host, cmd=f"{self.vendor.configure_mode_command}\n", vendor=vendor_,reconnect_closed_socket=reconnect_closed_socket)
+                        exit_config_mode = self.exec(host=host, cmd="exit", vendor=vendor_,reconnect_closed_socket=reconnect_closed_socket)
+                        if test_config_mode['exit_code'] == 0:
+                            self.hosts_dct['hosts'][host]['privileged_mode'] = True
+                            rich.print("INFO -- Entering Privileged mode   [ [green]success[/green] ]")
+                        else:
+                            rich.print("INFO -- Entering Privileged mode   [ [red]failed[/red] ]")
+            result = self.exec(host=host, cmd=cmd, vendor=vendor_,reconnect_closed_socket=reconnect_closed_socket)
 
         # Calculate the execution_time
         duration = (time.time() - start_time)
         # print()
         
-        print()
-        rich.print(Markdown(f"@ **{host}**"))
+        # Print execution time, exit_code & tag
         rich.print(f'[grey42]Execution time {float("{:.2f}".format(duration))} sec')
         rich.print(f"[grey42]Finished with exit-code of {result['exit_code']}")
         if (tag is not None) and (tag):
