@@ -20,7 +20,7 @@ print("hosts failed", auth.hosts_failed)
 # print("hosts failed number", auth.hosts_failed_number)
 
 # Only 1 host connected
-for host in auth.hosts_connected:
+for host in auth.hosts_total:
 
     # task.execute_raw(host, "enable\n" + "cisco")
     # task.execute(host, """
@@ -29,10 +29,11 @@ for host in auth.hosts_connected:
     # """)
     # task.execute(host, "do sho ip int br")
     
-    backup = task.take_config_backup(host, "Test", privileged_mode_password='cisco', target='local')
+    # backup = task.take_config_backup(host, "Test", privileged_mode_password='cisco', target='local')
 
     task.execute(host, "sho ip int br")
     task.execute(host, "show vlan br")
+    task.execute(host, "show version")
 
     # print(backup.exit_code)
     # print(backup.stdout)

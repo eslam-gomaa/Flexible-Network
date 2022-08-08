@@ -423,11 +423,9 @@ class Terminal_Task(SSH_Authentication):
         
         if (len(only_on_hosts) >= 1) and (host in only_on_hosts):
             run_command = True
-            # result = self.exec(host=host, cmd=cmd, vendor=vendor_,reconnect_closed_socket=reconnect_closed_socket)
         
         elif (len(skip_hosts) >= 1) and (host not in skip_hosts):
             run_command = True
-            # result = self.exec(host=host, cmd=cmd, vendor=vendor_,reconnect_closed_socket=reconnect_closed_socket)
         else:
             result = {
                 "cmd": [cmd],
@@ -438,7 +436,6 @@ class Terminal_Task(SSH_Authentication):
 
         if (len(only_on_hosts) == 0) and (len(skip_hosts) == 0):
             run_command = True
-            # result = self.exec(host=host, cmd=cmd, vendor=vendor_,reconnect_closed_socket=reconnect_closed_socket)
 
         print()
         # Print the host IP
