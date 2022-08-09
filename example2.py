@@ -20,7 +20,7 @@ auth = task.authenticate(groups='pa3', user='orange', password='cisco', privileg
 # print("hosts failed number", auth.hosts_failed_number)
 
 # Only 1 host connected
-for host in auth.hosts_total:
+for host in auth.hosts_connected:
 
     # task.execute_raw(host, "enable\n" + "cisco")
     # task.execute(host, """

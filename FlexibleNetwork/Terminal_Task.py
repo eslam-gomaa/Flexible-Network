@@ -1,4 +1,3 @@
-from unittest import result
 from FlexibleNetwork.Vendors import Cisco
 from FlexibleNetwork.Vendors import Huawei
 from FlexibleNetwork.Flexible_Network import ReadCliOptions
@@ -653,7 +652,7 @@ The command exited with exit_code of {result['exit_code']}
             #   - If failed, try to enter the priviliged mode and run the command again
 
             # Run the backup command
-            print("INFO -- Running the backup command")
+            # print("INFO -- Running the backup command")
             backup_cmd_result = self.execute_raw(host=host, cmd=self.vendor.backup_command,)
             
             output.exit_code = 0
