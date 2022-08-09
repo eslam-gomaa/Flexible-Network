@@ -12,9 +12,9 @@ auth = task.authenticate(groups='pa3', user='orange', password='cisco', privileg
 
 # print(auth.connection_report_table)
 
-print("hosts total", auth.hosts_total)
-print("hosts connected", auth.hosts_connected)
-print("hosts failed", auth.hosts_failed)
+# print("hosts total", auth.hosts_total)
+# print("hosts connected", auth.hosts_connected)
+# print("hosts failed", auth.hosts_failed)
 # print("hosts total number", auth.hosts_total_number)
 # print("hosts connected number", auth.hosts_connected_number)
 # print("hosts failed number", auth.hosts_failed_number)
@@ -29,7 +29,7 @@ for host in auth.hosts_total:
     # """)
     # task.execute(host, "do sho ip int br")
     
-    # backup = task.take_config_backup(host, "Test", privileged_mode_password='cisco', target='local')
+    backup = task.take_config_backup(host, "Test", privileged_mode_password='cisco', target='local')
 
     task.execute(host, "sho ip int br")
     task.execute(host, "show vlan br")
