@@ -8,7 +8,7 @@ from FlexibleNetwork.Vendors import Cisco
 task = Terminal_Task()
 task.vendor = Cisco()
 
-auth = task.authenticate(groups='pa3', user='orange', password='cisco', privileged_mode_password='cisco', port=1113)
+auth = task.authenticate(groups='works', user='orange', password='cisco', privileged_mode_password='cisco', port=1113)
 
 # print(auth.connection_report_table)
 
@@ -32,8 +32,9 @@ for host in auth.hosts_connected:
     backup = task.take_config_backup(host, "Test", privileged_mode_password='cisco', target='local')
 
     task.execute(host, "sho ip int br")
-    task.execute(host, "show vlan br")
-    task.execute(host, "show version")
+    task.execute(host, """
+    show run
+    """)
 
     # print(backup.exit_code)
     # print(backup.stdout)

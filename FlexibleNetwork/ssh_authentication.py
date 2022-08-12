@@ -146,7 +146,7 @@ class SSH_Authentication():
         """
         Re-authenticate a network device (that was already authenticated)
         """
-        rich.print(f"\n[bold]🟡 Closed Socket detected @{host}[/bold]\n   [grey42]Trying to reconnect ...\n")
+        rich.print(f"\n🟡 Closed Socket detected @{host}\n   [grey42]Trying to reconnect ...")
 
         time_start = datetime.now()
         # Try to re-connect and get a new dct for the host
@@ -465,6 +465,7 @@ class SSH_Authentication():
         out = {}
         # Clean the command & turn it to a list (splitted with new lines.)
         out['cmd'] = cmd.replace("\r", '').split("\n")
+        
         # Clean the empty lines
         out['cmd'] = [i for i in out['cmd'] if i]
         out['stdout'] = []
