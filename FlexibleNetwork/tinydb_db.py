@@ -126,25 +126,29 @@ class TinyDB_db:
 
     ###
 
-    def list_all_tasks(self, wide=False):
+    def list_all_tasks(self, wide=False, all=False):
         # The table header
-        table = [['id', 'name', 'format', 'n_of_backups', 'date', 'time']]
-        if wide:
-            table = [['id', 'name', 'format', 'n_of_backups', 'date', 'time', 'full_devices_n', 'authenticated_devices_n']]
+        tasks = []
+        # if wide:
+        #     table = [['id', 'name', 'format', 'n_of_backups', 'date', 'time', 'full_devices_n', 'authenticated_devices_n']]
         # Get list of all the tasks from the DB
         all_tasks_lst =  self.tasks_table.all()
         for task in all_tasks_lst:
             # comment = "\n".join(textwrap.wrap(task['format'], width=30, replace_whitespace=False))
             task_name = "\n".join(textwrap.wrap(task['name'], width=26, replace_whitespace=False))
             row = [task['id'], task_name, task['format'], task['n_of_backups'], task['date'], task['time']]
-            if wide:
-                row = [task['id'], task_name, task['format'], task['n_of_backups'], task['date'], task['time'], task['full_devices_n'], task['authenticated_devices_n']]
-            table.append(row)
-        out = tabulate(table, headers='firstrow', tablefmt='grid', showindex=False)
+            # if wide:
+            #     row = [task['id'], task_name, task['format'], task['n_of_backups'], task['date'], task['time'], task['full_devices_n'], task['authenticated_devices_n']]
+            tasks.append(row)
+        if not all:
+            tasks = tasks[-10:]
+        table = [['id', 'name', 'format', 'n_of_backups', 'date', 'time']]
+        tasks.insert(0, table[0])
+        out = tabulate(tasks, headers='firstrow', tablefmt='grid', showindex=False)
         return out
 
-    def list_all_backups(self, wide=False):
-        table = [['id', 'comment', 'host', 'target', 'status','date', 'time']]
+    def list_all_backups(self, wide=False, all=False):
+        backups = []
         all_backups_lst =  self.backups_table.all()
         for task in all_backups_lst:
             comment = "\n".join(textwrap.wrap(task['comment'], width=30, replace_whitespace=False))
@@ -153,8 +157,12 @@ class TinyDB_db:
             else:
                 status = '🔴 failed'
             row = [task['id'], comment, task['host'], task['target'], status, task['date'], task['time']]
-            table.append(row)
-        out = tabulate(table, headers='firstrow', tablefmt='grid', showindex=False)
+            backups.append(row)
+        if not all:
+            backups = backups[-10:]
+        table = [['id', 'comment', 'host', 'target', 'status','date', 'time']]
+        backups.insert(0, table[0])
+        out = tabulate(backups, headers='firstrow', tablefmt='grid', showindex=False)
         return out
 
 
