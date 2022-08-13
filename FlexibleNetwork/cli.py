@@ -24,9 +24,9 @@ class CLI:
 
         parser.add_argument('-b', '--backup', action='store_true', help='Deal with Backups')
         parser.add_argument('-gb', '--get-backup', type=str,help='Returns the configuuration backup')
-
         parser.add_argument('-t', '--task', action='store_true', help='Deal with Lists')
         parser.add_argument('-gl', '--get-log', type=str, help='Returns the task log')
+        parser.add_argument('-A', '--all', action='store_true', help='List ALL backups or tasks, default: last 10')
 
         parser.add_argument('-l', '--list', action='store_true', help='List tasks Or backups')
         parser.add_argument('-C', '--check', action='store_true', help='Validates the YAML file for errors')
@@ -88,6 +88,9 @@ class CLI:
         # if --task --list
         if (results.task and results.list):
             ReadCliOptions.list_tasks = True
+
+        if results.all:
+            ReadCliOptions.list_all = results.all
 
         if (results.task and (results.get_log is not None)):
             ReadCliOptions.get_log = results.get_log
