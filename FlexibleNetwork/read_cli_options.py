@@ -10,12 +10,15 @@ class ReadCliOptions:
     auth_password = None
     auth_port = None
     filter_by_date = None    
-    get_log = None
-    get_backup = None
+    get_log = False
+    get_backup = False
 
+    delete = ""
     list_all = False
-    list_tasks = None
-    list_backups = None
+    list_tasks = False
+    list_backups = False
+    delete_task = False
+    delete_backup = False
 
     yaml_file = None
     yaml_file_check = False
@@ -24,10 +27,3 @@ class ReadCliOptions:
 
     def __init__(self):
         pass
-        # self.task_name
-        # self.inventory_file
-        # self.no_confirm_auth
-        # self.config_file
-        # self.to_validate_lst
-        # self.authenticate_group
-        # self.list_tasks
