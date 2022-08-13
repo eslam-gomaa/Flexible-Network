@@ -75,6 +75,11 @@ class YamlParser:
                                         'password': {
                                             'type': 'string',
                                             'required': False,
+                                            'default': '',
+                                        },
+                                        'privileged_mode_password': {
+                                            'type': 'string',
+                                            'required': False,
                                             'default': ''
                                         },
                                         'reconnect': {

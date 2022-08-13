@@ -196,7 +196,7 @@ class Terminal_Task(SSH_Authentication):
                 # Running each sub-task
                 for subtask in doc.get('Task').get('subTask'):
                     # print(subtask.get('name'))
-                    self.sub_task(name=subtask.get('name'), group=subtask.get('authenticate').get('group'), username=subtask.get('authenticate').get('username'), password=subtask.get('authenticate').get('password'), port=subtask.get('authenticate').get('port'), cmds=subtask.get('commands'), reconnect=subtask.get('authenticate').get('reconnect'))
+                    self.sub_task(name=subtask.get('name'), group=subtask.get('authenticate').get('group'), username=subtask.get('authenticate').get('username'), password=subtask.get('authenticate').get('password'), privileged_mode_password=subtask.get('authenticate').get('privileged_mode_password'), port=subtask.get('authenticate').get('port'), cmds=subtask.get('commands'), reconnect=subtask.get('authenticate').get('reconnect'))
             # exit(0)
 
         if ReadCliOptions.authenticate_group:
@@ -925,7 +925,7 @@ Backup ID: {self.backup_id}
     #                     rich.print(self.hosts_dct['hosts'][host])
 
     
-    def sub_task(self, group, username, password, port=22,reconnect=False, cmds=[], name="", vendor='cisco', parallel=False):
+    def sub_task(self, group, username, password, privileged_mode_password, port=22,reconnect=False, cmds=[], name="", vendor='cisco', parallel=False):
         """
         Testing
         INPUT:
@@ -936,7 +936,7 @@ Backup ID: {self.backup_id}
         commands_executed_dct = {}
 
         # Authenticate
-        self.authenticate(groups=[group], user='orange', password='cisco', port=1113, terminal_print=True)
+        self.authenticate(groups=[group], user=username, password=password, privileged_mode_password=privileged_mode_password, port=port, terminal_print=True)
 
         if not isinstance(cmds, list):
             cmds = [cmds]

@@ -3,7 +3,7 @@ Task:
   log_format: markdown
   subTask:
     - name: Love forever
-      vendor: huawei
+      vendor: cisco
       parallel: false
       authenticate:
         # host: 192.168.1.16
@@ -12,6 +12,7 @@ Task:
         port: 1113
         username: orange
         password: cisco
+        privileged_mode_password: cisco
         reconnect: false
       configBackup:
         comment: "Test backup"
@@ -28,9 +29,7 @@ Task:
           onlyOn:
             - 90.84.41.239            
         - command: |
-            sh vlan br
             show version
-            show ip int
           when:
             tag: show1
             operator: is
