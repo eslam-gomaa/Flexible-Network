@@ -9,11 +9,13 @@ class ReadCliOptions:
     auth_user = None
     auth_password = None
     auth_port = None
-    list_tasks = None
-    list_backups = None
     filter_by_date = None    
     get_log = None
     get_backup = None
+
+    list_all = False
+    list_tasks = None
+    list_backups = None
 
     yaml_file = None
     yaml_file_check = False

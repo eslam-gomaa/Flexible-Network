@@ -53,17 +53,17 @@ class Terminal_Task(SSH_Authentication):
         # Initialize the DB because we'll need it if '--task list' or '--backup list' are specified
         self.db = TinyDB_db()
 
-        # List tasks (--task)
-        if ReadCliOptions.list_tasks:
-            print(self.db.list_all_tasks())
-            exit(0)
-
         # Read the "debug" flag from cli 
         self.debug = ReadCliOptions.debug
 
+        # List tasks (--task)
+        if ReadCliOptions.list_tasks:
+            print(self.db.list_all_tasks(all=ReadCliOptions.list_all))
+            exit(0)
+
         # List backups (--backup)
         if ReadCliOptions.list_backups:
-            print(self.db.list_all_backups())
+            print(self.db.list_all_backups(all=ReadCliOptions.list_all))
             exit(0)
 
         if ReadCliOptions.get_log is not None:
