@@ -29,7 +29,7 @@ A Python library / cli-tool to achieve advanced network automation scenarios wit
 
 # [📝 Read the Docs !](https://eslam-gomaa.github.io/Flexible-Network/)
 
-# [👉 Current Milestone](https://github.com/users/eslam-gomaa/projects/1)
+# [👉 Milestone](https://github.com/users/eslam-gomaa/projects/1)
 
 <br>
 
