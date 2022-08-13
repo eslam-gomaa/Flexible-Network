@@ -28,7 +28,7 @@ Task:
           exit_on_fail: false
           onlyOn:
             - 90.84.41.239            
-        - command: |
+        - command: >
             show version
           when:
             tag: show1

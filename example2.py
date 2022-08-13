@@ -1,7 +1,3 @@
-
-# enhance authenticate method
-
-from tokenize import group
 from FlexibleNetwork.Flexible_Network import Terminal_Task
 from FlexibleNetwork.Vendors import Cisco
 
@@ -29,12 +25,10 @@ for host in auth.hosts_connected:
     # """)
     # task.execute(host, "do sho ip int br")
     
-    backup = task.take_config_backup(host, "Test", privileged_mode_password='cisco', target='local')
+    backup = task.take_config_backup(host, "Test", target='local')
 
     task.execute(host, "sho ip int br")
-    task.execute(host, """
-    show run
-    """)
+    task.take_config_backup(host, "test backup")
 
     # print(backup.exit_code)
     # print(backup.stdout)
