@@ -43,6 +43,7 @@ class Terminal_Task(SSH_Authentication):
         self.yaml_file = None
         self.task_name = task_name
         self.task_log_format = task_log_format
+        self.hosts_connected_total_number = 0
         # Check task_log_format
         if self.task_log_format not in ['txt', 'markdown']:
             print(f"ERROR -- unsupported log format '{self.task_log_format}' , supported: {['txt', 'markdown']}")
@@ -60,12 +61,12 @@ class Terminal_Task(SSH_Authentication):
 
         # List tasks (--task)
         if ReadCliOptions.list_tasks:
-            print(self.db.list_all_tasks(all=ReadCliOptions.list_all))
+            print(self.list_all_tasks(all=ReadCliOptions.list_all))
             exit(0)
 
         # List backups (--backup)
         if ReadCliOptions.list_backups:
-            print(self.db.list_all_backups(all=ReadCliOptions.list_all))
+            print(self.list_all_backups(all=ReadCliOptions.list_all))
             exit(0)
 
         if ReadCliOptions.delete_backup:
@@ -136,10 +137,9 @@ class Terminal_Task(SSH_Authentication):
                                    'log_file': None,
                                    'date': date, 
                                    'time': time,
-                                   'full_devices_n': 0,
-                                   'authenticated_devices_n': 0
+                                   'n_of_hosts': 0,
+                                   'n_of_connected_hosts': 0
                                    })
-
 
         # Read all inventory sections
         # self.inventory = self.inventory.read_inventory()
@@ -147,8 +147,6 @@ class Terminal_Task(SSH_Authentication):
         self.inventory_groups_names = []
         for i in self.inventory_groups.keys():
             self.inventory_groups_names.append(i)
-
-        self.hosts_connected_total_number = 0
 
         self.group_to_authenticate_from_cli = ReadCliOptions.authenticate_group
 
@@ -356,8 +354,15 @@ class Terminal_Task(SSH_Authentication):
         output.hosts_failed_number = auth.get('total').get('n_hosts_failed')
         output.connection_report_table = self.connection_report_Table(dct=auth.get('hosts'), terminal_print=False, ask_when_hosts_fail=False)
 
+        self.db.update_tasks_table(
+            task_id=self.task_id,
+            dct={
+            'n_of_hosts': output.hosts_total_number,
+            'n_of_connected_hosts': output.hosts_connected_number
+            })
+
         # Update the connected devices number
-        self.hosts_connected_total_number += output.hosts_total_number
+        self.hosts_connected_total_number += output.hosts_connected_number
 
         self.db.update_tasks_table({'full_devices_n': output.hosts_total_number}, self.task_id)
         self.db.update_tasks_table({'authenticated_devices_n': output.hosts_connected_number}, self.task_id)
@@ -614,6 +619,44 @@ The command exited with exit_code of {result['exit_code']}
             - file path of the backup (string)
         """
         return self.db.return_backup(backup_id)
+
+
+    def list_all_tasks(self, all=False, number_to_list=15):
+        # The table header
+        tasks = []
+        # Get list of all the tasks from the DB
+        all_tasks_lst =  self.db.tasks_table.all()
+        for task in all_tasks_lst:
+            # comment = "\n".join(textwrap.wrap(task['format'], width=30, replace_whitespace=False))
+            task_name = "\n".join(textwrap.wrap(task['name'], width=26, replace_whitespace=False))
+            row = [task['id'], task_name, task['format'], task['n_of_backups'], task['n_of_hosts'], task['n_of_connected_hosts'], task['date'], task['time']]
+            tasks.append(row)
+        if len(tasks) > number_to_list:
+            if not all:
+                tasks = tasks[-number_to_list:]
+        table = [['id', 'name', 'format', 'n_of_backups', 'n_of_hosts', 'n_of_connected_hosts', 'date', 'time']]
+        tasks.insert(0, table[0])
+        out = tabulate(tasks, headers='firstrow', tablefmt='grid', showindex=False)
+        return out
+
+    def list_all_backups(self, wide=False, all=False, number_to_list=15):
+        backups = []
+        all_backups_lst =  self.db.backups_table.all()
+        for task in all_backups_lst:
+            comment = "\n".join(textwrap.wrap(task['comment'], width=30, replace_whitespace=False))
+            if task['success']:
+                status = '🟢 success'
+            else:
+                status = '🔴 failed'
+            row = [task['id'], comment, task['host'], task['target'], status, task['date'], task['time']]
+            backups.append(row)
+        if len(backups) > number_to_list:
+            if not all:
+                backups = backups[-number_to_list:]
+        table = [['id', 'comment', 'host', 'target', 'status','date', 'time']]
+        backups.insert(0, table[0])
+        out = tabulate(backups, headers='firstrow', tablefmt='grid', showindex=False)
+        return out
 
     def delete_task(self, task_id):
         """

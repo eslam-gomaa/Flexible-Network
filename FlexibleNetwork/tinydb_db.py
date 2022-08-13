@@ -138,75 +138,31 @@ class TinyDB_db:
         Task = Query()
         self.backups_table.update(increment(key), Task.id == backup_id)
 
-    ###
-
-    def list_all_tasks(self, wide=False, all=False, number_to_list=15):
-        # The table header
-        tasks = []
-        # if wide:
-        #     table = [['id', 'name', 'format', 'n_of_backups', 'date', 'time', 'full_devices_n', 'authenticated_devices_n']]
-        # Get list of all the tasks from the DB
-        all_tasks_lst =  self.tasks_table.all()
-        for task in all_tasks_lst:
-            # comment = "\n".join(textwrap.wrap(task['format'], width=30, replace_whitespace=False))
-            task_name = "\n".join(textwrap.wrap(task['name'], width=26, replace_whitespace=False))
-            row = [task['id'], task_name, task['format'], task['n_of_backups'], task['date'], task['time']]
-            # if wide:
-            #     row = [task['id'], task_name, task['format'], task['n_of_backups'], task['date'], task['time'], task['full_devices_n'], task['authenticated_devices_n']]
-            tasks.append(row)
-        if len(tasks) > number_to_list:
-            if not all:
-                tasks = tasks[-number_to_list:]
-        table = [['id', 'name', 'format', 'n_of_backups', 'date', 'time']]
-        tasks.insert(0, table[0])
-        out = tabulate(tasks, headers='firstrow', tablefmt='grid', showindex=False)
-        return out
-
-    def list_all_backups(self, wide=False, all=False, number_to_list=15):
-        backups = []
-        all_backups_lst =  self.backups_table.all()
-        for task in all_backups_lst:
-            comment = "\n".join(textwrap.wrap(task['comment'], width=30, replace_whitespace=False))
-            if task['success']:
-                status = '🟢 success'
-            else:
-                status = '🔴 failed'
-            row = [task['id'], comment, task['host'], task['target'], status, task['date'], task['time']]
-            backups.append(row)
-        if len(backups) > number_to_list:
-            if not all:
-                backups = backups[-number_to_list:]
-        table = [['id', 'comment', 'host', 'target', 'status','date', 'time']]
-        backups.insert(0, table[0])
-        out = tabulate(backups, headers='firstrow', tablefmt='grid', showindex=False)
-        return out
-
-
-    def return_backup2(self, backup_id, print=True):
-        try:
-            Backup = Query()
-            target = self.backups_table.search(Backup.id == backup_id)[0]['target']
-            location = self.backups_table.search(Backup.id == backup_id)[0]['location']
-            if target == 'local':
-                if not os.path.isfile(location):
-                    print(f"ERROR -- Could NOT find Backup file [ {location} ]")
-                    exit(1)
-                with open(location, 'r') as file:
-                    print(file.read())
-                    exit(0)
-            if target == 's3':
-                # get the config from S3
-                s3 = S3_APIs()
-                get_backup_file = s3.get_object(bucket=location[0], file_name=location[1])
-                if get_backup_file['success']:
-                    print(get_backup_file['output'])
-                    # print(f"[ Bucket: {location[0]}, Key: {location[1]} ]")
-                    exit(0)
-                else:
-                    raise SystemExit(f"ERROR -- Failed to get the backup form S3 [ Bucket: {location[0]}, Key: {location[1]} ]\n> {get_backup_file['fail_reason']}")
-        except IndexError:
-            print("ERROR -- Could NOT find the backup >> Invalid backup ID")
-            exit(1)
+    # def return_backup2(self, backup_id, print=True):
+    #     try:
+    #         Backup = Query()
+    #         target = self.backups_table.search(Backup.id == backup_id)[0]['target']
+    #         location = self.backups_table.search(Backup.id == backup_id)[0]['location']
+    #         if target == 'local':
+    #             if not os.path.isfile(location):
+    #                 print(f"ERROR -- Could NOT find Backup file [ {location} ]")
+    #                 exit(1)
+    #             with open(location, 'r') as file:
+    #                 print(file.read())
+    #                 exit(0)
+    #         if target == 's3':
+    #             # get the config from S3
+    #             s3 = S3_APIs()
+    #             get_backup_file = s3.get_object(bucket=location[0], file_name=location[1])
+    #             if get_backup_file['success']:
+    #                 print(get_backup_file['output'])
+    #                 # print(f"[ Bucket: {location[0]}, Key: {location[1]} ]")
+    #                 exit(0)
+    #             else:
+    #                 raise SystemExit(f"ERROR -- Failed to get the backup form S3 [ Bucket: {location[0]}, Key: {location[1]} ]\n> {get_backup_file['fail_reason']}")
+    #     except IndexError:
+    #         print("ERROR -- Could NOT find the backup >> Invalid backup ID")
+    #         exit(1)
 
 
     def return_backup(self, backup_id):
