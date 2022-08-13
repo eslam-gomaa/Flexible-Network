@@ -46,6 +46,13 @@ class TinyDB_db:
         Task = Query()
         self.tasks_table.update(dct, Task.id == task_id)
 
+    def delete_tasks_table(self, task_id):
+        """
+        Delete backup from the 'backups' table
+        """
+        Task = Query()
+        self.tasks_table.remove(Task.id == task_id)
+
     def increment_key_tasks_table(self, key, task_id):
         """
         Updates the row if exists
@@ -100,33 +107,40 @@ class TinyDB_db:
     ### Backups Table ###
     def get_backups_table_items(self):
         """
-        Returns all rows of the 'tasks' table
+        Returns all rows of the 'backups' table
         """
         return self.backups_table.all()
 
     def insert_backups_table(self, dct):
         """
-        Insert a new task 'dictionary'  in the 'tasks' table
+        Insert a new backup 'dictionary'  in the 'backups' table
         """
         self.backups_table.insert(dct)
 
-    def update_backups_table(self, dct, task_id):
+    def update_backups_table(self, dct, backup_id):
         """
         Updates the row if exists
         """
-        Task = Query()
-        self.backups_table.update(dct, Task.id == task_id)
+        Backup = Query()
+        self.backups_table.update(dct, Backup.id == backup_id)
 
-    def increment_key_backups_table(self, key, task_id):
+    def delete_backups_table(self, backup_id):
+        """
+        Delete backup from the 'backups' table
+        """
+        Backup = Query()
+        self.backups_table.remove(Backup.id == backup_id)
+
+    def increment_key_backups_table(self, key, backup_id):
         """
         Updates the row if exists
         """
         Task = Query()
-        self.backups_table.update(increment(key), Task.id == task_id)
+        self.backups_table.update(increment(key), Task.id == backup_id)
 
     ###
 
-    def list_all_tasks(self, wide=False, all=False):
+    def list_all_tasks(self, wide=False, all=False, number_to_list=15):
         # The table header
         tasks = []
         # if wide:
@@ -140,15 +154,15 @@ class TinyDB_db:
             # if wide:
             #     row = [task['id'], task_name, task['format'], task['n_of_backups'], task['date'], task['time'], task['full_devices_n'], task['authenticated_devices_n']]
             tasks.append(row)
-        if len(tasks) > 10:
+        if len(tasks) > number_to_list:
             if not all:
-                tasks = tasks[-10:]
+                tasks = tasks[-number_to_list:]
         table = [['id', 'name', 'format', 'n_of_backups', 'date', 'time']]
         tasks.insert(0, table[0])
         out = tabulate(tasks, headers='firstrow', tablefmt='grid', showindex=False)
         return out
 
-    def list_all_backups(self, wide=False, all=False):
+    def list_all_backups(self, wide=False, all=False, number_to_list=15):
         backups = []
         all_backups_lst =  self.backups_table.all()
         for task in all_backups_lst:
@@ -159,9 +173,9 @@ class TinyDB_db:
                 status = '🔴 failed'
             row = [task['id'], comment, task['host'], task['target'], status, task['date'], task['time']]
             backups.append(row)
-        if len(backups) > 10:
+        if len(backups) > number_to_list:
             if not all:
-                backups = backups[-10:]
+                backups = backups[-number_to_list:]
         table = [['id', 'comment', 'host', 'target', 'status','date', 'time']]
         backups.insert(0, table[0])
         out = tabulate(backups, headers='firstrow', tablefmt='grid', showindex=False)

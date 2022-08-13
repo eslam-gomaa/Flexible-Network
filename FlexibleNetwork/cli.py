@@ -26,7 +26,8 @@ class CLI:
         parser.add_argument('-gb', '--get-backup', type=str,help='Returns the configuuration backup')
         parser.add_argument('-t', '--task', action='store_true', help='Deal with Lists')
         parser.add_argument('-gl', '--get-log', type=str, help='Returns the task log')
-        parser.add_argument('-A', '--all', action='store_true', help='List ALL backups or tasks, default: last 10')
+        parser.add_argument('-A', '--all', action='store_true', help='List ALL backups or tasks, default: last 15')
+        parser.add_argument('-D', '--delete', type=str, default="", help='Delete a task or backup by id')
 
         parser.add_argument('-l', '--list', action='store_true', help='List tasks Or backups')
         parser.add_argument('-C', '--check', action='store_true', help='Validates the YAML file for errors')
@@ -66,19 +67,21 @@ class CLI:
         #     exit(1)
 
         # If only --task is specified
-        elif (results.task) and not (results.list or results.get_log):
+        elif (results.task) and not (results.list or results.get_log or results.delete):
             print("> Supported options:")
             print("  --list                     List all tasks")
-            print("  --get-log                  Return the log of a task")
+            print("  --get-log                  Return task log")
+            print("  --delete                   Delete task")
             print("\n\t\t\t* * *\n")
             print(parser.print_help(sys.stderr))
             exit(1)
 
         # If only --backup is specified
-        elif (results.backup) and not (results.list or results.get_backup):
+        elif (results.backup) and not (results.list or results.get_backup or results.delete):
             print("> Supported options:")
-            print("  --list                     List all tasks")
-            print("  --get-backup               Return the log of a task")
+            print("  --list                     List all backups")
+            print("  --get-backup               Return backup")
+            print("  --delete                   Delete backup")
             print("\n\t\t\t* * *\n")
             print(parser.print_help(sys.stderr))
             exit(1)
@@ -91,6 +94,14 @@ class CLI:
 
         if results.all:
             ReadCliOptions.list_all = results.all
+
+        if (results.task and results.delete):
+            ReadCliOptions.delete_task = True
+            ReadCliOptions.delete = results.delete
+
+        if (results.backup and results.delete):
+            ReadCliOptions.delete_backup = True
+            ReadCliOptions.delete = results.delete
 
         if (results.task and (results.get_log is not None)):
             ReadCliOptions.get_log = results.get_log

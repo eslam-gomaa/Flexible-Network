@@ -28,6 +28,8 @@ from rich.markdown import Markdown
 from rich.table import Table
 from rich.console import Console, Group
 from rich.rule import Rule
+from tinydb import Query
+
 
 class Terminal_Task(SSH_Authentication):
 
@@ -66,10 +68,16 @@ class Terminal_Task(SSH_Authentication):
             print(self.db.list_all_backups(all=ReadCliOptions.list_all))
             exit(0)
 
-        if ReadCliOptions.get_log is not None:
+        if ReadCliOptions.delete_backup:
+            self.delete_config_backup(backup_id=ReadCliOptions.delete)
+
+        if ReadCliOptions.delete_task:
+            self.delete_task(task_id=ReadCliOptions.delete)
+
+        if ReadCliOptions.get_log:
             print(self.db.get_task_log(ReadCliOptions.get_log))
 
-        if ReadCliOptions.get_backup is not None:
+        if ReadCliOptions.get_backup:
             # Get the backup with the backup-id
             result = self.db.return_backup(ReadCliOptions.get_backup)
             if result.exit_code == 0:
@@ -606,6 +614,67 @@ The command exited with exit_code of {result['exit_code']}
             - file path of the backup (string)
         """
         return self.db.return_backup(backup_id)
+
+    def delete_task(self, task_id):
+        """
+        Delete a task
+        INPUT:
+            - task id (string)
+        """
+        try:
+            Task = Query()
+            task_dct = self.db.tasks_table.search(Task.id == task_id)[0]
+        except IndexError as e:
+            print("ERROR -- Could NOT find the task >> Possible invalid task ID")
+            exit(1)
+       
+        try:
+            # Remove the file
+            os.remove(task_dct['log_file'])
+        except (OSError, TypeError) as e:
+            # If the file is NOT found, just ignore it and delete the record from the DB.
+            print(f"INFO -- task file not found '{task_dct['log_file']}', deleting the record from the DB")
+        
+        # Delete the backup from the DB
+        self.db.delete_tasks_table(task_id)
+        print(f"INFO -- task with name '{task_dct['name']}' deleted successfully")
+        exit(0)
+
+        
+
+        print(Task)
+        exit(0)
+
+    def delete_config_backup(self, backup_id):
+        """
+        Delete a config backup
+        INPUT:
+            - backup id (string)
+        """
+        # Get backup file path
+        try:
+            Backup = Query()
+            backup_dct = self.db.backups_table.search(Backup.id == backup_id)[0]
+        except IndexError as e:
+            print("ERROR -- Could NOT find the backup >> Possible invalid backup ID")
+            exit(1)
+
+        if backup_dct['target'] == 'local':
+            try:
+                # Remove the file
+                os.remove(backup_dct['location'])
+            except OSError as e:
+                # If the file is NOT found, just ignore it and delete the record from the DB.
+                print(f"INFO -- could not delete file '{backup_dct['location']}', deleting the record from the DB")
+            
+            # Delete the backup from the DB
+            self.db.delete_backups_table(backup_id)
+            print(f"INFO -- backup with comment '{backup_dct['comment']}' deleted successfully, Host: {backup_dct['host']} , Target: {backup_dct['target']}")
+            exit(0)
+
+        if backup_dct['target'] == 's3':
+            print("Deleting S3 backups is not supported yet.")
+            exit(0)
 
 
     def take_config_backup(self, host, comment, privileged_mode_password="", exit_on_fail=False, target='local'):
