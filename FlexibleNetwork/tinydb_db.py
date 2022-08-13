@@ -140,8 +140,9 @@ class TinyDB_db:
             # if wide:
             #     row = [task['id'], task_name, task['format'], task['n_of_backups'], task['date'], task['time'], task['full_devices_n'], task['authenticated_devices_n']]
             tasks.append(row)
-        if not all:
-            tasks = tasks[-10:]
+        if len(tasks) > 10:
+            if not all:
+                tasks = tasks[-10:]
         table = [['id', 'name', 'format', 'n_of_backups', 'date', 'time']]
         tasks.insert(0, table[0])
         out = tabulate(tasks, headers='firstrow', tablefmt='grid', showindex=False)
@@ -158,8 +159,9 @@ class TinyDB_db:
                 status = '🔴 failed'
             row = [task['id'], comment, task['host'], task['target'], status, task['date'], task['time']]
             backups.append(row)
-        if not all:
-            backups = backups[-10:]
+        if len(backups) > 10:
+            if not all:
+                backups = backups[-10:]
         table = [['id', 'comment', 'host', 'target', 'status','date', 'time']]
         backups.insert(0, table[0])
         out = tabulate(backups, headers='firstrow', tablefmt='grid', showindex=False)
