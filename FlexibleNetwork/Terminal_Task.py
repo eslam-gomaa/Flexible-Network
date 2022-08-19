@@ -634,7 +634,7 @@ The command exited with exit_code of {result['exit_code']}
         if len(tasks) > number_to_list:
             if not all:
                 tasks = tasks[-number_to_list:]
-        table = [['id', 'name', 'format', 'n_of_backups', 'n_of_hosts', 'n_of_connected_hosts', 'date', 'time']]
+        table = [['id', 'name', 'log format', 'n_of_backups', 'n_of_hosts', 'n_of_connected_hosts', 'date', 'time']]
         tasks.insert(0, table[0])
         out = tabulate(tasks, headers='firstrow', tablefmt='grid', showindex=False)
         return out
