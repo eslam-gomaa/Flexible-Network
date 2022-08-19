@@ -634,7 +634,7 @@ The command exited with exit_code of {result['exit_code']}
         if len(tasks) > number_to_list:
             if not all:
                 tasks = tasks[-number_to_list:]
-        table = [['id', 'name', 'format', 'n_of_backups', 'n_of_hosts', 'n_of_connected_hosts', 'date', 'time']]
+        table = [['id', 'name', 'log format', 'n_of_backups', 'n_of_hosts', 'n_of_connected_hosts', 'date', 'time']]
         tasks.insert(0, table[0])
         out = tabulate(tasks, headers='firstrow', tablefmt='grid', showindex=False)
         return out
@@ -751,7 +751,7 @@ The command exited with exit_code of {result['exit_code']}
                         else:
                             rich.print("INFO -- Entering Privileged mode   [ [red]failed[/red] ]")
 
-        if not privileged_mode_password:
+        if not self.hosts_dct['hosts'][host]['privileged_mode_password']:
             print("WARNING -- No 'privileged_mode_password' provided, skipping taking the backup")
             output.exit_code = 1
             output.stderr = "No 'privileged_mode_password' provided, skipping taking the backup"
