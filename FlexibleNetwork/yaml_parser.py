@@ -105,10 +105,12 @@ class YamlParser:
                                         'password_from_env': {
                                             'type': 'dict',
                                             'required': False,
+                                            'default': {},
                                             'schema' : {
                                                 'key': {
                                                     'type': 'string',
-                                                    'required': True
+                                                    'required': False,
+                                                    'default': ""
                                                 }
                                             }
                                         }
@@ -117,15 +119,17 @@ class YamlParser:
                                 'configBackup': {
                                     'type': 'dict',
                                     'required': False,
+                                    'default': {},
                                     'schema': {
                                         'comment': {
                                             'type': 'string',
                                             'required': True,
+                                            'default': ""
                                         },
-                                        'after_commands': {
+                                        'exit_on_fail': {
                                             'type': 'boolean',
                                             'required': False,
-                                            'default': False
+                                            'default': True
                                         },
                                         'target': {
                                             'type': 'string',
