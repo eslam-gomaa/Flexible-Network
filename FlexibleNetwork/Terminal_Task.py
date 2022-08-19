@@ -827,10 +827,8 @@ The command exited with exit_code of {result['exit_code']}
             if self.log_output:
                 out = '\n'.join(backup_cmd_result.stdout)
                 error = '\n'.join(backup_cmd_result.stderr)
-                data = f"""\n@ {host}
-[[ backup_config ]]
-@ {host}
-Time: {datetime.today().strftime('%d-%m-%Y %H:%M:%S')}
+                data_text = f"""
+[ {datetime.today().strftime('%d-%m-%Y %H:%M:%S')} ] [[ backup_config ]] on {host}
 Execution Time: {float("{:.2f}".format(duration))} seconds
 The backup taken successfully
 Backup Comment: {comment}
@@ -838,8 +836,20 @@ Backup ID: {self.backup_id}
 
 --------------------------------------------------------
 """
-                self.update_log_file(data)
 
+                data_md = f"""
+- [ {datetime.today().strftime('%d-%m-%Y %H:%M:%S')} ] [[ backup_config ]] on {host}
+    - Execution Time: {float("{:.2f}".format(duration))} seconds
+    - The backup taken successfully
+    - Backup Comment: {comment}
+    - Backup ID: {self.backup_id}
+
+--------------------------------------------------------
+"""
+                if self.task_log_format == 'txt':
+                    self.update_log_file(data_text)
+                elif self.task_log_format == 'markdown':
+                    self.update_log_file(data_md)
 
             def save_backup_locally(b_dir=self.log_and_backup_dir, b_file=backup_file):
                 try:
