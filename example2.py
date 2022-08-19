@@ -28,6 +28,8 @@ for host in auth.hosts_connected:
     backup = task.take_config_backup(host, "Test", target='local')
 
     task.execute(host, "sho ip int br")
+    task.execute(host, "sho vlan br")
+    task.execute(host, "sho ip int br")
     task.take_config_backup(host, "test backup")
 
     # print(backup.exit_code)

@@ -16,7 +16,7 @@ Task:
         reconnect: false
       configBackup:
         comment: "Test backup"
-        after_commands: false
+        exit_on_fail: True
         target: local
         skip:
           - 192.168.1.11
