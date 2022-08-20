@@ -11,7 +11,9 @@ Task:
         group: works
         port: 1113
         username: orange
-        password: cisco
+        password:
+          value_from_env:
+            key: my_password
         privileged_mode_password: cisco
         reconnect: false
       configBackup:

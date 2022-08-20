@@ -193,9 +193,20 @@ class Terminal_Task(SSH_Authentication):
                     self.vendor = Huawei
                 # Running each sub-task
                 for subtask in doc.get('Task').get('subTask'):
-                    # print(subtask.get('name'))
-                    self.sub_task(name=subtask.get('name'), group=subtask.get('authenticate').get('group'), username=subtask.get('authenticate').get('username'), password=subtask.get('authenticate').get('password'), privileged_mode_password=subtask.get('authenticate').get('privileged_mode_password'), port=subtask.get('authenticate').get('port'), cmds=subtask.get('commands'), reconnect=subtask.get('authenticate').get('reconnect'))
-            # exit(0)
+                    # Getting the password
+                    password = None
+                    if subtask.get('authenticate').get('password').get('value'):
+                        password = subtask.get('authenticate').get('password').get('value')
+                    elif subtask.get('authenticate').get('password').get('value_from_env').get('key'):
+                        # Reading the password from ENV
+                        password = self.read_env_key(subtask.get('authenticate').get('password').get('value_from_env').get('key'))
+                    else:
+                        print("ERROR -- can NOT find the password !")
+                        exit(1)
+                    
+                    self.sub_task(name=subtask.get('name'), group=subtask.get('authenticate').get('group'), username=subtask.get('authenticate').get('username'), password=password, privileged_mode_password=subtask.get('authenticate').get('privileged_mode_password'), port=subtask.get('authenticate').get('port'), cmds=subtask.get('commands'), reconnect=subtask.get('authenticate').get('reconnect'))
+            # Exit after running the Yaml manifest
+            exit(0)
 
         if ReadCliOptions.authenticate_group:
             # Get the IPs of the section to the 'self.inventory' attribute
@@ -967,6 +978,20 @@ Backup ID: {self.backup_id}
     #                     rich.print(f"\nDEBUG -- [bold]HOST:[/bold] {host} skip_hostsped, [bold]REASON[/bold]: [bright_red]{self.hosts_dct['hosts'][host]['fail_reason']}[/bright_red]")
     #                     rich.print(self.hosts_dct['hosts'][host])
 
+
+    def read_env_key(self, key):
+        """
+        Read Environment Variable
+        INPUT:
+            - Key (string)
+        Return:
+            - Key's Value
+        """
+        try:
+            value = os.environ[key]
+            return value
+        except KeyError as e:
+            raise SystemExit(f"ERROR -- Env Key '{key}' does NOT exist")
     
     def sub_task(self, group, username, password, privileged_mode_password, port=22,reconnect=False, cmds=[], name="", vendor='cisco', parallel=False):
         """
