@@ -1,10 +1,9 @@
-from FlexibleNetwork.Vendors import Cisco
-from FlexibleNetwork.Vendors import Huawei
+import FlexibleNetwork.Vendors as supported_vendors
 from FlexibleNetwork.Flexible_Network import ReadCliOptions
 from FlexibleNetwork.Flexible_Network import CLI
 from FlexibleNetwork.Flexible_Network import Config
 from FlexibleNetwork.Flexible_Network import Inventory
-from FlexibleNetwork.Flexible_Network import SSH_connection
+# from FlexibleNetwork.Flexible_Network import SSH_connection -> Deprecated, to be removed
 from FlexibleNetwork.Flexible_Network import SSH_Authentication
 from FlexibleNetwork.Integrations import RocketChat_API
 from FlexibleNetwork.Integrations import S3_APIs
@@ -94,7 +93,7 @@ class Terminal_Task(SSH_Authentication):
         # Need to organize
         self.validate_integrations()
         self.inventory = Inventory()
-        self.vendor = Cisco() # Default vendor class should exist in the config
+        self.vendor = supported_vendors.Cisco() # Default vendor class should exist in the config
         # self.ssh = SSH_connection()
         # self.ssh.vendor = self.vendor
 
@@ -180,7 +179,7 @@ class Terminal_Task(SSH_Authentication):
             for doc in validated_docs:
                 self.task_name = doc.get('Task').get('name')
                 self.task_log_format = doc.get('Task').get('log_format')
-                # Update the DB
+                # Update the DB (task name & log format)
                 self.db.update_tasks_table(task_id=self.task_id, 
                                            dct={
                                             'name': self.task_name,
@@ -188,24 +187,13 @@ class Terminal_Task(SSH_Authentication):
                                             })
                 # Setting the choosen vendor
                 if doc.get('Task').get('vendor') == 'cisco':
-                    self.vendor = Cisco
+                    self.vendor = supported_vendors.Cisco
                 elif doc.get('Task').get('vendor') == 'huawei':
-                    self.vendor = Huawei
-                # Running each sub-task
+                    self.vendor = supported_vendors.Huawei
+                # Run each sub-task
                 for subtask in doc.get('Task').get('subTask'):
-                    # Getting the password
-                    password = None
-                    if subtask.get('authenticate').get('password').get('value'):
-                        password = subtask.get('authenticate').get('password').get('value')
-                    elif subtask.get('authenticate').get('password').get('value_from_env').get('key'):
-                        # Reading the password from ENV
-                        password = self.read_env_key(subtask.get('authenticate').get('password').get('value_from_env').get('key'))
-                    else:
-                        print("ERROR -- can NOT find the password !")
-                        exit(1)
-                    
-                    self.sub_task(name=subtask.get('name'), group=subtask.get('authenticate').get('group'), username=subtask.get('authenticate').get('username'), password=password, privileged_mode_password=subtask.get('authenticate').get('privileged_mode_password'), port=subtask.get('authenticate').get('port'), cmds=subtask.get('commands'), reconnect=subtask.get('authenticate').get('reconnect'))
-            # Exit after running the Yaml file
+                    self.sub_task(name=subtask.get('name'), group=subtask.get('authenticate').get('group'), username=subtask.get('authenticate').get('username'), password=subtask.get('authenticate').get('password'), privileged_mode_password=subtask.get('authenticate').get('privileged_mode_password'), port=subtask.get('authenticate').get('port'), cmds=subtask.get('commands'), reconnect=subtask.get('authenticate').get('reconnect'), take_config_backup_dct=subtask.get('configBackup'))
+            # Exit after finishing the YAML file.
             exit(0)
 
         if ReadCliOptions.authenticate_group:
@@ -645,7 +633,7 @@ The command exited with exit_code of {result['exit_code']}
         if len(tasks) > number_to_list:
             if not all:
                 tasks = tasks[-number_to_list:]
-        table = [['id', 'name', 'format', 'n_of_backups', 'n_of_hosts', 'n_of_connected_hosts', 'date', 'time']]
+        table = [['id', 'name', 'log format', 'n_of_backups', 'n_of_hosts', 'n_of_connected_hosts', 'date', 'time']]
         tasks.insert(0, table[0])
         out = tabulate(tasks, headers='firstrow', tablefmt='grid', showindex=False)
         return out
@@ -731,7 +719,7 @@ The command exited with exit_code of {result['exit_code']}
             exit(0)
 
 
-    def take_config_backup(self, host, comment, exit_on_fail=False, target='local'):
+    def take_config_backup(self, host, comment, privileged_mode_password="", exit_on_fail=False, target='local'):
         """
         Take full configurations backup of the device
         """
@@ -838,10 +826,8 @@ The command exited with exit_code of {result['exit_code']}
             if self.log_output:
                 out = '\n'.join(backup_cmd_result.stdout)
                 error = '\n'.join(backup_cmd_result.stderr)
-                data = f"""\n@ {host}
-[[ backup_config ]]
-@ {host}
-Time: {datetime.today().strftime('%d-%m-%Y %H:%M:%S')}
+                data_text = f"""
+[ {datetime.today().strftime('%d-%m-%Y %H:%M:%S')} ] [[ backup_config ]] on {host}
 Execution Time: {float("{:.2f}".format(duration))} seconds
 The backup taken successfully
 Backup Comment: {comment}
@@ -849,8 +835,20 @@ Backup ID: {self.backup_id}
 
 --------------------------------------------------------
 """
-                self.update_log_file(data)
 
+                data_md = f"""
+- [ {datetime.today().strftime('%d-%m-%Y %H:%M:%S')} ] [[ backup_config ]] on {host}
+    - Execution Time: {float("{:.2f}".format(duration))} seconds
+    - The backup taken successfully
+    - Backup Comment: {comment}
+    - Backup ID: {self.backup_id}
+
+--------------------------------------------------------
+"""
+                if self.task_log_format == 'txt':
+                    self.update_log_file(data_text)
+                elif self.task_log_format == 'markdown':
+                    self.update_log_file(data_md)
 
             def save_backup_locally(b_dir=self.log_and_backup_dir, b_file=backup_file):
                 try:
@@ -866,7 +864,8 @@ Backup ID: {self.backup_id}
                 except FileNotFoundError as e:
                     rich.print("ERROR -- Failed to backup config with comment [ {} ]".format(comment))
                     print("ERROR -- Failed to write backup to file \n> {}".format(e))
-                    exit(1)
+                    if exit_on_fail:
+                        exit(1)
             if target == 'local':
                 save_backup_locally(b_dir=self.log_and_backup_dir)
                 # Updating the loaction key with the backup location
@@ -978,22 +977,8 @@ Backup ID: {self.backup_id}
     #                     rich.print(f"\nDEBUG -- [bold]HOST:[/bold] {host} skip_hostsped, [bold]REASON[/bold]: [bright_red]{self.hosts_dct['hosts'][host]['fail_reason']}[/bright_red]")
     #                     rich.print(self.hosts_dct['hosts'][host])
 
-
-    def read_env_key(self, key):
-        """
-        Read Environment Variable
-        INPUT:
-            - Key (string)
-        Return:
-            - Key's Value
-        """
-        try:
-            value = os.environ[key]
-            return value
-        except KeyError as e:
-            raise SystemExit(f"ERROR -- Env Key '{key}' does NOT exist")
     
-    def sub_task(self, group, username, password, privileged_mode_password, port=22,reconnect=False, cmds=[], name="", vendor='cisco', parallel=False):
+    def sub_task(self, group, username, password, privileged_mode_password, port=22,reconnect=False, cmds=[], name="", vendor='cisco', parallel=False, take_config_backup_dct={}):
         """
         Testing
         INPUT:
@@ -1008,7 +993,7 @@ Backup ID: {self.backup_id}
 
         if not isinstance(cmds, list):
             cmds = [cmds]
-        
+
         # Abort of there is no commands to execute
         if len(cmds) < 1:
             rich.print("INFO -- No commands to execute")
@@ -1022,6 +1007,11 @@ Backup ID: {self.backup_id}
         if not parallel:
             # Execute with a loop
             for host in self.hosts_dct['hosts'].keys():
+
+                # Take config backup
+                if take_config_backup_dct.get('comment'):
+                    self.take_config_backup(host=host, comment=take_config_backup_dct.get('comment'), privileged_mode_password=privileged_mode_password, exit_on_fail=False, target=take_config_backup_dct.get('target'))
+
                 # Execute on only the authenticated devices
                 if self.hosts_dct['hosts'][host]['is_connected']:
                     # Test close the connection
