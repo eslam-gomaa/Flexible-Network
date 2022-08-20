@@ -69,8 +69,29 @@ class YamlParser:
                                             'default': 22
                                         },
                                         'username': {
-                                            'type': 'string',
-                                            'required': True
+                                            'type': 'dict',
+                                            'required': False,
+                                            'default': {},
+                                            'schema' : {
+                                                "value": {
+                                                    'type': 'string',
+                                                    'required': False,
+                                                    'default': ""
+                                                    
+                                                },
+                                                "value_from_env": {
+                                                    'type': 'dict',
+                                                    'required': False,
+                                                    'default': {},
+                                                    'schema': {
+                                                        "key": {
+                                                            'type': 'string',
+                                                            'required': True,
+                                                            'default': ""
+                                                        }
+                                                    }
+                                                }                                               
+                                            }
                                         },
                                         'password': {
                                             'type': 'dict',
@@ -98,9 +119,29 @@ class YamlParser:
                                             }
                                         },
                                         'privileged_mode_password': {
-                                            'type': 'string',
+                                            'type': 'dict',
                                             'required': False,
-                                            'default': ''
+                                            'default': {},
+                                            'schema' : {
+                                                "value": {
+                                                    'type': 'string',
+                                                    'required': False,
+                                                    'default': ""
+                                                    
+                                                },
+                                                "value_from_env": {
+                                                    'type': 'dict',
+                                                    'required': False,
+                                                    'default': {},
+                                                    'schema': {
+                                                        "key": {
+                                                            'type': 'string',
+                                                            'required': True,
+                                                            'default': ""
+                                                        }
+                                                    }
+                                                }                                               
+                                            }
                                         },
                                         'reconnect': {
                                             'type': 'boolean',
