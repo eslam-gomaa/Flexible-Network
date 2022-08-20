@@ -731,7 +731,7 @@ The command exited with exit_code of {result['exit_code']}
             exit(0)
 
 
-    def take_config_backup(self, host, comment, privileged_mode_password="", exit_on_fail=False, target='local'):
+    def take_config_backup(self, host, comment, exit_on_fail=False, target='local'):
         """
         Take full configurations backup of the device
         """
@@ -762,7 +762,7 @@ The command exited with exit_code of {result['exit_code']}
                         else:
                             rich.print("INFO -- Entering Privileged mode   [ [red]failed[/red] ]")
 
-        if not privileged_mode_password:
+        if not self.hosts_dct['hosts'][host]['privileged_mode_password']:
             print("WARNING -- No 'privileged_mode_password' provided, skipping taking the backup")
             output.exit_code = 1
             output.stderr = "No 'privileged_mode_password' provided, skipping taking the backup"
