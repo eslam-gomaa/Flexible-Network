@@ -205,7 +205,7 @@ class Terminal_Task(SSH_Authentication):
                         exit(1)
                     
                     self.sub_task(name=subtask.get('name'), group=subtask.get('authenticate').get('group'), username=subtask.get('authenticate').get('username'), password=password, privileged_mode_password=subtask.get('authenticate').get('privileged_mode_password'), port=subtask.get('authenticate').get('port'), cmds=subtask.get('commands'), reconnect=subtask.get('authenticate').get('reconnect'))
-            # Exit after running the Yaml manifest
+            # Exit after running the Yaml file
             exit(0)
 
         if ReadCliOptions.authenticate_group:
