@@ -174,7 +174,6 @@ class Terminal_Task(SSH_Authentication):
 
             # Validate the YAML file and parse it
             validated_docs = yamlParser.validate_yaml()
-            # Run it
             for doc in validated_docs:
                 self.task_name = doc.get('Task').get('name')
                 self.task_log_format = doc.get('Task').get('log_format')
@@ -191,18 +190,50 @@ class Terminal_Task(SSH_Authentication):
                     self.vendor = supported_vendors.Huawei
                 # Run each sub-task
                 for subtask in doc.get('Task').get('subTask'):
-                    # Getting the password
                     password = None
+                    privileged_mode_password = None
+                    username = None
+
+                    # Getting password
                     if subtask.get('authenticate').get('password').get('value'):
                         password = subtask.get('authenticate').get('password').get('value')
                     elif subtask.get('authenticate').get('password').get('value_from_env').get('key'):
-                        # Reading the password from ENV
+                        # Reading password from ENV
                         password = self.read_env_key(subtask.get('authenticate').get('password').get('value_from_env').get('key'))
                     else:
-                        print("ERROR -- can NOT find the password !")
+                        print("ERROR -- can NOT find 'password' !")
+                        exit(1)
+                
+                    # Getting privileged_mode_password
+                    if subtask.get('authenticate').get('privileged_mode_password').get('value'):
+                        privileged_mode_password = subtask.get('authenticate').get('privileged_mode_password').get('value')
+                    elif subtask.get('authenticate').get('privileged_mode_password').get('value_from_env').get('key'):
+                        # Reading password from ENV
+                        privileged_mode_password = self.read_env_key(subtask.get('authenticate').get('privileged_mode_password').get('value_from_env').get('key'))
+                    else:
+                        print("ERROR -- can NOT find 'privileged_mode_password' !")
                         exit(1)
 
-                    self.sub_task(name=subtask.get('name'), group=subtask.get('authenticate').get('group'), username=subtask.get('authenticate').get('username'), password=password, privileged_mode_password=subtask.get('authenticate').get('privileged_mode_password'), port=subtask.get('authenticate').get('port'), cmds=subtask.get('commands'), reconnect=subtask.get('authenticate').get('reconnect'))
+                    # Getting username
+                    if subtask.get('authenticate').get('username').get('value'):
+                        username = subtask.get('authenticate').get('username').get('value')
+                    elif subtask.get('authenticate').get('username').get('value_from_env').get('key'):
+                        # Reading username from ENV
+                        username = self.read_env_key(subtask.get('authenticate').get('username').get('value_from_env').get('key'))
+                    else:
+                        print("ERROR -- can NOT find 'username' !")
+                        exit(1)
+
+                    # Run it
+                    self.sub_task(name=subtask.get('name'),
+                                  group=subtask.get('authenticate').get('group'),
+                                  username=username,
+                                  password=password,
+                                  privileged_mode_password=privileged_mode_password,
+                                  port=subtask.get('authenticate').get('port'),
+                                  cmds=subtask.get('commands'),
+                                  reconnect=subtask.get('authenticate').get('reconnect'))
+            
             # Exit after running the Yaml manifest
             exit(0)
 
