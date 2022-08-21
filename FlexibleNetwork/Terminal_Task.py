@@ -232,7 +232,8 @@ class Terminal_Task(SSH_Authentication):
                                   privileged_mode_password=privileged_mode_password,
                                   port=subtask.get('authenticate').get('port'),
                                   cmds=subtask.get('commands'),
-                                  reconnect=subtask.get('authenticate').get('reconnect'))
+                                  reconnect=subtask.get('authenticate').get('reconnect'),
+                                  take_config_backup_dct=subtask.get('configBackup'))
             
             # Exit after running the Yaml manifest
             exit(0)
@@ -1063,6 +1064,7 @@ Backup ID: {self.backup_id}
             for host in self.hosts_dct['hosts'].keys():
 
                 # Take config backup
+                rich.print(take_config_backup_dct)
                 if take_config_backup_dct.get('comment'):
                     self.take_config_backup(host=host, comment=take_config_backup_dct.get('comment'), privileged_mode_password=privileged_mode_password, exit_on_fail=False, target=take_config_backup_dct.get('target'))
 
