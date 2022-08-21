@@ -26,6 +26,8 @@ jtd.addEvent(toggleDarkMode, 'click', function(){
 });
 </script>
 
+<link rel="stylesheet" href="{{ site.baseurl }}/css/custom.css">
+
 # Usage _ Python Library
 {: .fs-9 }
 
@@ -59,14 +61,18 @@ vi /etc/flexible_network/hosts
 vi my_script.py
 ```
 
-<link rel="stylesheet" href="{{ site.baseurl }}/css/custom.css">
-
-
-<script src="https://gist.github.com/eslam-gomaa/e965313db0ddbfcc21f095bea6603e91.js"></script>
+<script src="https://gist.github.com/eslam-gomaa/0294b7c1a8d624341e7842732e1941e3.js"></script>
 
 
 ```bash
-python3 my_script.py --name "Test task"
+vi test.yaml
+```
+
+<script src="https://gist.github.com/eslam-gomaa/10b729e7ce499f2cbebd4c688529b812.js"></script>
+
+
+```bash
+python3 my_script.py --file test.yaml
 ```
 
 
