@@ -1,7 +1,7 @@
 ---
 layout: default
-nav_order: 3
-parent: Home
+nav_order: 2
+# parent: Home
 title: Usage
 markdown: Kramdown
 has_children: true
@@ -30,8 +30,7 @@ jtd.addEvent(toggleDarkMode, 'click', function(){
 # Usage
 {: .fs-9 }
 
-1. TOC
-{:toc}
+{: .no_toc }
 
 There are 2 ways to use Flexible Network:
 {: .fs-9 }
