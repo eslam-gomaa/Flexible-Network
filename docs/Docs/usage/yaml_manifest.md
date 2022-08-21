@@ -26,7 +26,7 @@ jtd.addEvent(toggleDarkMode, 'click', function(){
 });
 </script>
 
-<link rel="stylesheet" href="{{ site.baseurl }}/css/custom.css">
+<!-- <link rel="stylesheet" href="{{ site.baseurl }}/css/custom.css"> -->
 
 # Usage _ YAML Manifest Input
 {: .fs-9 }
