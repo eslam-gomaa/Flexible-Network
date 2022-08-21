@@ -10,38 +10,10 @@ class Cisco:
             show run
             term no len 0
             """
-        self.backup_command_config_mode = """
-            do terminal length 0
-            do show run
-            do term no len 0
-            """
         self.priviliged_mode_command = "enable"
         self.configure_mode_command = "configure terminal"
-
-
-    # @property
-    # def stderr_search_keyword(self):
-    #     return self._stderr_search_keyword
-
-    # @stderr_search_keyword.setter
-    # def stderr_search_keyword(self, keyword):
-    #     self._stderr_search_keyword = keyword
-
-    # @property
-    # def clean_output_search_keywords(self):
-    #     return self._clean_output_search_keywords
-    
-    # @clean_output_search_keywords.setter
-    # def clean_output_search_keywords(self, keyword):
-    #     self._clean_output_search_keywords = keyword
-
-    # @property
-    # def backup_command(self):
-    #     return self._backup_command
-
-    # @backup_command.setter
-    # def backup_command(self, keyword):
-    #     self._stderr_search_keyword = keyword
+        self.back_command = "exit"
+        
 
 
 
