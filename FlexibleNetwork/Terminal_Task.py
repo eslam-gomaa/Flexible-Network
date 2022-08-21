@@ -503,7 +503,7 @@ class Terminal_Task(SSH_Authentication):
                         # Test to enter the "config mode" to test if entering the "Privileged mode" was successful
                         test_config_mode = self.exec(host=host, cmd=f"{self.vendor.configure_mode_command}\n", vendor=vendor_,reconnect_closed_socket=reconnect_closed_socket)
                         # Exit config mode
-                        self.exec(host=host, cmd="exit", vendor=vendor_,reconnect_closed_socket=reconnect_closed_socket)
+                        self.exec(host=host, cmd=self.vendor.back_command, vendor=vendor_,reconnect_closed_socket=reconnect_closed_socket)
                         if test_config_mode['exit_code'] == 0:
                             self.hosts_dct['hosts'][host]['privileged_mode'] = True
                             rich.print("INFO -- Entering Privileged mode   [ [green]success[/green] ]")

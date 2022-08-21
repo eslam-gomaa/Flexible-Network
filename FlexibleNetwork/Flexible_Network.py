@@ -1,5 +1,5 @@
 # The following order matters.
-from FlexibleNetwork.ssh import SSH_connection
+# from FlexibleNetwork.ssh import SSH_connection
 from FlexibleNetwork.ssh_authentication import SSH_Authentication
 from FlexibleNetwork.read_cli_options import ReadCliOptions
 from FlexibleNetwork.read_config import Config
@@ -14,7 +14,7 @@ class Flexible_Network(
     Terminal_Task,
     ReadCliOptions,
     CLI,
-    SSH_connection,
+    # SSH_connection,
     SSH_Authentication,
     Inventory,
     Config,
