@@ -4,6 +4,7 @@ nav_order: 3
 parent: Home
 title: Usage
 markdown: Kramdown
+has_children: true
 kramdown:
   parse_block_html: true
   auto_ids: true
@@ -35,7 +36,7 @@ jtd.addEvent(toggleDarkMode, 'click', function(){
 There are 2 ways to use Flexible Network:
 {: .fs-9 }
 - As a Python Library (Use its functions within your Python script)
-- Use YAML manifests as Input to Flexible Network (Use almost the same functions provided by the library)
+- Use YAML manifests as Input (No coding is required) 
 
 
 
