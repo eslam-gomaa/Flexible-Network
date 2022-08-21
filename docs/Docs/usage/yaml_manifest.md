@@ -1,8 +1,8 @@
 ---
 layout: default
-nav_order: 1
+nav_order: 2
 parent: Usage
-title: Python Library
+title: YAML Manifest
 markdown: Kramdown
 kramdown:
   parse_block_html: true
@@ -26,23 +26,23 @@ jtd.addEvent(toggleDarkMode, 'click', function(){
 });
 </script>
 
-# Usage | Library
+# Usage _ Python Library
 {: .fs-9 }
 
 
 Getting started with the Flexible-Network Library is simple:
-{: .fs-9 }
+{: .fs-6 .fw-300 }
 
-- Import it within your Python script
+- Import `Flexible-Network` library in your Python script
 - Make sure that you've added the hosts in the inventory file
 - Use `.authenticate()` method to connect to the choosen group of devices
-  - It returns an object with few attributes, we need to use `hosts_connected` attribute (as it contains the devices that were connected successfully (List) )
-- Loop through `hosts_connected` list and use methods you need
-- Use cli to run your script
+  - It returns an object with few attributes, we need to use `hosts_connected` **(List)** attribute (as it contains the devices that were connected successfully)
+- Loop through `hosts_connected` list and use the methods you need
+- Use cli options to run your script
 
 
 ### Getting started Example
-{: .fs-9 }
+{: .fs-6 .fw-300 }
 
 
 ```
@@ -59,29 +59,11 @@ vi /etc/flexible_network/hosts
 vi my_script.py
 ```
 
-```python
-from FlexibleNetwork.Flexible_Network import Terminal_Task
-from FlexibleNetwork.Vendors import Cisco
-
-# This will initialize the class .. Create a DB record, use cli, read config, etc.
-task = Terminal_Task()
-
-# That's the default vendor
-task.vendor = Cisco()
-
-auth = task.authenticate(groups='switches',
-                         user='my_user',
-                         password='my_password',
-                         privileged_mode_password='my_password',
-                         port=22)
+<link rel="stylesheet" href="{{ site.baseurl }}/css/custom.css">
 
 
-for host in auth.hosts_connected:
-  # Take a config backup, target local will save the backup on the disk
-    task.take_config_backup(host, "Test", target='local')
-    task.execute(host, "sho ip int br")
-    task.execute(host, "sho vlan br") 
-```
+<script src="https://gist.github.com/eslam-gomaa/e965313db0ddbfcc21f095bea6603e91.js"></script>
+
 
 ```bash
 python3 my_script.py --name "Test task"
