@@ -19,7 +19,7 @@ Task:
             key: my_password
         reconnect: True
       configBackup:
-        comment: "Test backup"
+        comment: Test backup
         exit_on_fail: True
         target: local
         skip:
