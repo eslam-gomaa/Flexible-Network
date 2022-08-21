@@ -28,19 +28,16 @@ jtd.addEvent(toggleDarkMode, 'click', function(){
 
 <link rel="stylesheet" href="{{ site.baseurl }}/css/custom.css">
 
-# Usage _ Python Library
+# Usage _ YAML Manifest Input
 {: .fs-9 }
 
 
-Getting started with the Flexible-Network Library is simple:
+Using Yaml is a simple appreach and does NOT require coding knowledge, the steps are simple:
 {: .fs-6 .fw-300 }
 
 - Import `Flexible-Network` library in your Python script
-- Make sure that you've added the hosts in the inventory file
-- Use `.authenticate()` method to connect to the choosen group of devices
-  - It returns an object with few attributes, we need to use `hosts_connected` **(List)** attribute (as it contains the devices that were connected successfully)
-- Loop through `hosts_connected` list and use the methods you need
-- Use cli options to run your script
+- Write your Yaml manifest
+- Run your script !
 
 
 ### Getting started Example
