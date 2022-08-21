@@ -164,11 +164,11 @@ class SSH_Authentication():
 
         if new_host_dct['task_finished']:
             if new_host_dct['is_reconnected']:
-                rich.print(f"[bold]🟢 Reconnected successfully to {host}")
+                rich.print(f"🟢 Reconnected successfully to {host}")
                 print(self.connection_report_Table({host: self.hosts_dct['hosts'][host]}))
                 print("INFO -- Entering privileged mode")
             else:
-                rich.print(f"[bold]🔴 FAILED to reconnect to {host}")
+                rich.print(f"🔴 FAILED to reconnect to {host}")
                 # In case I want to print a table
                 print(self.connection_report_Table({host: self.hosts_dct['hosts'][host]}))
                 # rich.print("print markdown here.")
