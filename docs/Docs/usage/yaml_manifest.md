@@ -32,8 +32,10 @@ jtd.addEvent(toggleDarkMode, 'click', function(){
 {: .fs-9 }
 
 
-Using Yaml is a simple appreach and does NOT require coding knowledge, the steps are simple:
+Using Yaml is a simple appreach and does NOT require coding
 {: .fs-6 .fw-300 }
+
+> the steps are simple:
 
 - Import `Flexible-Network` library in your Python script
 - Write your Yaml manifest
