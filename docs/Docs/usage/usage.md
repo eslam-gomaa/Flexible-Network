@@ -29,7 +29,6 @@ jtd.addEvent(toggleDarkMode, 'click', function(){
 
 # Usage
 {: .fs-9 }
-
 {: .no_toc }
 
 There are 2 ways to use Flexible Network:
