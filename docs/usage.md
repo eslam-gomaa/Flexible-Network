@@ -29,6 +29,19 @@ jtd.addEvent(toggleDarkMode, 'click', function(){
 # Usage
 {: .fs-9 }
 
+
+There are 2 ways to use Flexible Network:
+{: .fs-9 }
+- As a Python Library (Use its functions within your Python script)
+- Use YAML manifests as Input to Flexible Network (Use almost the same functions provided by the library)
+
+
+
+
+
+
+---
+
 1. Create a new directory with a new Python script in it.
 
 > The directory contains your python script is the project directory
