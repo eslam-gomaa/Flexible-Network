@@ -33,8 +33,8 @@ jtd.addEvent(toggleDarkMode, 'click', function(){
 
 There are 2 ways to use Flexible Network:
 {: .fs-9 }
-- As a Python Library (Use its functions within your Python script)
-- Use YAML manifests as Input (No coding is required) 
+- [As a Python Library](./library.md) (Use its functions within your Python script)
+- [Use YAML manifests as Input](./yaml_manifest.md) (No coding is required) 
 
 
 
