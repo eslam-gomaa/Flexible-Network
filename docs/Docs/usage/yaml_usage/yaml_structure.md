@@ -123,6 +123,49 @@ username:
 * Providing values from Secret managers like Vault & Cyberark, will be considered in [0.4.0 release](https://github.com/eslam-gomaa/Flexible-Network/milestone/2)
 
 
+### Task.subTask.configBackup
+
+```yaml
+Task:
+  name: New Task
+  log_format: markdown
+  subTask:
+    - name: Love forever
+      vendor: cisco
+      parallel: false
+      authenticate:
+        group: switches
+        port: 22
+        username:
+          value_from_env:
+            key: my_username
+        password:
+          value_from_env:
+            key: my_password
+        privileged_mode_password:
+          value_from_env:
+            key: my_password
+        reconnect: True
+      configBackup:
+        comment: "Test backup"
+        exit_on_fail: True
+        target: local
+        skip:
+          - 192.168.1.11
+          - 192.168.1.12
+```
+
+| Input          | Type    | Description                               | Options       | Default |
+| -------------- | ------- | ----------------------------------------- | ------------- | ------- |
+| `comment`      | String  | Comment describes the backup reason       |               |         |
+| `exit_on_fail` | Boolean |                                           | True, False   | True    |
+| target         | String  | Where to save the backup                  | `local`, `s3` | `local` |
+| skip           | List    | List of hosts to skip                     |               |         |
+| OnlyOn         | List    | List of hosts to backup and ignore others |               |         |
+
+
+
+
 
 
 <br>
