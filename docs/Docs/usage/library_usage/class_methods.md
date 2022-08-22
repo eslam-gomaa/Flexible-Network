@@ -38,10 +38,6 @@ jtd.addEvent(toggleDarkMode, 'click', function(){
 from Flexible_Network import Terminal_Task
 ```
 
-- authetnicate
-- execute
-- execute_from_file
-- 
 
 <details markdown="1" id="authenticate">
   <summary markdown='span'> 
@@ -105,23 +101,27 @@ OUTPUT
 INPUT
 {: .fs-6 .fw-300 }
 
-|  Input      | Type       | Description                                                  |
-| ----------- | ------     | ------------------------------------------------------------ |
-| `hos_dct`   | dictionary | The host dictionary => is key of the  `connected_devices_dct` attribute  (And contains information about the device including the `ssh channel` to use for the command execution )   |
-| `cmd`       | string     | The command to run on the remote device                |
+| Input  | Type   | Description                                                  |
+| ------ | ------ | ------------------------------------------------------------ |
+| `host` | string | Host to execute commands on ([The host needs to be authenticated first](#authenticate)) |
+| `cmd`  | string | The command to execute                                       |
+
 
 <br>
 
 OUTPUT
 {: .fs-6 .fw-300 }
 
-> Returns a dictionary
+> Returns an objects with the following attributes
 
-|  Key           | Type   | Description                                                  |
-| ----------- | ------ | ------------------------------------------------------------ |
-| `stdout`    | List   | List of lines [ The output of the command ( If any ) ]           |
-| `stderr`    | List   | List of lines [ The error of the command ( If any ) ]                  |
-| `exit_code` | Int    | - `0` The command executed successfully<br />- `1` The command executed with an error <br />- `-1` If the ssh channel was interrupted during excution. 
+| Input     | Type    | Description                                                  |
+| --------- | ------- | ------------------------------------------------------------ |
+| `host`    | string  | Host to execute commands on (The host needs to be authenticated first) |
+| `cmd`     | List    | command (list of lines)                                      |
+| stdout    | List    | STDOUT output (list of lines)                                |
+| stderr    | List    | STDERR output (list of lines)                                |
+| exit_code | Integer | `0` executed without Errors.     `1` Executed with Errors.     `-1` Connection inturrupted before or during execution |
+|           |         |                                                              |
 
 
 
