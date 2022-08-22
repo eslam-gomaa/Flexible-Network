@@ -71,13 +71,17 @@ INPUT
 OUTPUT
 {: .fs-6 .fw-300 }
 
-> Returns a dictionary
+> Returns an object with the following attributes
 
-|  Key           | Type   | Description                                                  |
-| ----------- | ------ | ------------------------------------------------------------ |
-| `stdout`    | List   | List of lines [ The output of the command ( If any ) ]           |
-| `stderr`    | List   | List of lines [ The error of the command ( If any ) ]                  |
-| `exit_code` | Int    | - `0` The command executed successfully<br />- `1` The command executed with an error <br />- `-1` If the ssh channel was interrupted during excution. 
+| Input                    | Type    | Description                                                  |
+| ------------------------ | ------- | ------------------------------------------------------------ |
+| `hosts_total`            | list    | List of the total hosts (of the inventory group) provided for authentication |
+| `hosts_connected`        | list    | List the hosts were connected successfully                   |
+| `hosts_failed`           | list    | List the hosts failed to connect                             |
+| `hosts_total_number`     | integer | Number of total hosts                                        |
+| `hosts_connected_number` | integer | Number of connected hosts                                    |
+| `hosts_failed_number`    | integer | Number of failed hosts                                       |
+|                          |         |                                                              |
 
 
    ---
