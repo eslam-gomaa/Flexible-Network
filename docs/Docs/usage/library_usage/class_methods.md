@@ -62,6 +62,7 @@ INPUT
 | `port`                     | integer | Port for authentication                                      |
 |                            |         |                                                              |
 
+
 <br>
 
 OUTPUT
@@ -77,8 +78,7 @@ OUTPUT
 | `hosts_total_number`     | integer | Number of total hosts                                        |
 | `hosts_connected_number` | integer | Number of connected hosts                                    |
 | `hosts_failed_number`    | integer | Number of failed hosts                                       |
-|                          |         |                                                              |
-
+| connection_report_table  | string  | Structured table displays connection report of the hosts     |
 
    ---
 
@@ -209,7 +209,6 @@ OUTPUT
 | ask_for_confirmation    | Boolean | If **True**,  I will ask for confirmation before executing the command,  *Default: False* |
 | exit_on_fail            | Boolean | If **True**, the script will exit if the command exit with an Error,  *Default: True* |
 | reconnect_closed_socket | Boolean | If **True**, Try to reconnect to the host if connection was inturrupted (Instead of considering it an error),  *Default: True* |
-|                         |         |                                                              |
 
 
    <br>
@@ -224,12 +223,12 @@ OUTPUT
 </details>
 
 
-<details markdown="1" id="backup_config">
+<details markdown="1" id="take_config_backup">
   <summary markdown='span'> 
   <b style="font-size:20px"> <code>backup_config()</code></b>
   </summary>
 
-  Backup running configuration from the remote device & store them in the local directory by default, for other backup storage options check [supported backup targets]
+  Backup running configuration from the remote device & store them in the local directory by default, for other [backup storage options](../../ConfigBackup-storage/backup_config-storage.md)
 
    <br>
 
@@ -240,11 +239,13 @@ OUTPUT
    INPUT
 {: .fs-6 .fw-300 }
 
-   | Input     | Type | Description                                                  | Options        | Default |
-   | --------- | ---- | ------------------------------------------------------------ | -------------- | ------- |
-   | `hos_dct` | dct  | The host dictionary => is key of the  `connected_devices_dct` attribute  (And contains information about the device including the `ssh channel` to use for the command execution ) |                |         |
-   | `comment` | str  | A comment indicates the purpose of the backup                |                |         |
-   | `target`  | str  | Print the ouput \|\| error to the terminal                   | 'local',  's3' | 'local' |
+| Input     | Type   | Description                                   | Options        | Default |
+| --------- | ------ | --------------------------------------------- | -------------- | ------- |
+| `host`    | string | host to backup its config                     |                |         |
+| `comment` | string | A comment indicates the purpose of the backup |                |         |
+| `target`  | string | Where to save the backup                      | 'local',  's3' | 'local' |
+
+
 
 
    > **NOTE:** targets other than 'local' requires you to add the credentials in the config file
@@ -255,8 +256,62 @@ OUTPUT
    OUTPUT
 {: .fs-6 .fw-300 }
 
-   > does NOT return
+   > Returns an object with the following attributes
+   
+| Input       | Type    | Description                                                  |
+| ----------- | ------- | ------------------------------------------------------------ |
+| `exit_code` | Integer | `0` Got backup successfully.      `1` Failed to return backup |
+| stderr      | String  | STDERR output                                                |
+| stdout      | String  | STDOUT output                                                |
+| location    | String  | location, where the backup exists                            |
+| id          | String  | The backup string                                            |
 
+---
+
+</details>
+
+
+<details markdown="1" id="get_config_backup">
+  <summary markdown='span'> 
+  <b style="font-size:20px"> <code>backup_config()</code></b>
+  </summary>
+
+    Return a pre-taken config backup
+
+   <br>
+
+  > **Note:** This method prints the output to the terminal.
+   
+   <br>
+
+   INPUT
+{: .fs-6 .fw-300 }
+
+| Input       | Type   | Description                    | Options | Default |
+| ----------- | ------ | ------------------------------ | ------- | ------- |
+| `backup id` | string | The ID of the pre-taken backup |         |         |
+
+
+
+
+   > **NOTE:** targets other than 'local' requires you to add the credentials in the config file
+   
+
+   <br>
+
+   OUTPUT
+{: .fs-6 .fw-300 }
+
+   > Returns an object with the following attributes
+   
+| Input       | Type    | Description                                                  |
+| ----------- | ------- | ------------------------------------------------------------ |
+| `exit_code` | Integer | `0` Got backup successfully.      `1` Failed to return backup |
+| stderr      | String  | STDERR output                                                |
+| stdout      | String  | STDOUT output                                                |
+| target      | String  | indicates where the backup is located                        |
+| location    | String  | location, where the backup exists                            |
+| text        | String  | The backup string                                            |
 
 ---
 
@@ -267,15 +322,5 @@ OUTPUT
 <br>
 
 ---
-
-<br>
-
-
-### `Terminal_Task` class Attributes
-
-* devices_dct
-* connected_devices_dct
-* inventory_groups
-* *To be ogranized ...*
 
 <br>
