@@ -4,6 +4,7 @@ nav_order: 1
 parent: Usage
 title: Python Library
 markdown: Kramdown
+has_children: true
 kramdown:
   parse_block_html: true
   auto_ids: true
