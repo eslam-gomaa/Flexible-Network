@@ -32,7 +32,7 @@ jtd.addEvent(toggleDarkMode, 'click', function(){
 
 ## Install with `pip`
 
-> **Note** At least Python3.6 is needed (_Dependencies constrains_)
+> **Note** At least **Python3.6** is needed (_Dependencies constrains_)
 {: .fs-4 .fw-300 }
 
 
@@ -64,8 +64,6 @@ wget -O /etc/flexible_network/flexible_network.cfg https://raw.githubusercontent
 
 
 ## Build from source
-
-
 
 Run unit tests
 ```bash
