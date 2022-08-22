@@ -49,17 +49,36 @@ from Flexible_Network import Terminal_Task
   <br>
    Authenticate with an [inventory](../../inventory.md) group
 
-  ***Note:*** You can access the inventory through the `inventory_groups` attribute.
-  > **`inventory_groups`** is a dictionary where its keys are the inventory groups
+   > The `authenticate()` method, esablishes an SSH conenection with all the hosts of the inventory group (In parallel) 
 
-  Example on authenticating with the `all` group which contains all the hosts from all the groups
-  ```python
-  task.authenticate(hosts=task.inventory_groups['all'], user='orange', password='cisco', port='1113')
-  ```
+<br>
 
-  * The `authentication` method will update the `devices_dct` & `connected_devices_dct` attributes
-    * `devices_dct` `->` A dictionary, contains all the hosts of the authenticated group including the ones that failed to authenticate [ each key is the host IP & the value is the host info ]
-    * `connected_devices_dct` -> the same as `devices_dct` but only contains the authenticated hosts.
+INPUT
+{: .fs-6 .fw-300 }
+
+| Input                    | Type    | Description                                                  |
+| ------------------------ | ------- | ------------------------------------------------------------ |
+| `groups`                 | list    | List of group names eg. ['switches', 'test_switches']        |
+| `user`                   | string  | Username for authentication                                  |
+| password                 | string  | Password for authentication                                  |
+| privileged_mode_password | String  | Password of the Privileged mode  (eg. `enable` in Cisco & `super` in Huawei) |
+| port                     | integer | Port for authentication                                      |
+|                          |         |                                                              |
+|                          |         |                                                              |
+
+<br>
+
+OUTPUT
+{: .fs-6 .fw-300 }
+
+> Returns a dictionary
+
+|  Key           | Type   | Description                                                  |
+| ----------- | ------ | ------------------------------------------------------------ |
+| `stdout`    | List   | List of lines [ The output of the command ( If any ) ]           |
+| `stderr`    | List   | List of lines [ The error of the command ( If any ) ]                  |
+| `exit_code` | Int    | - `0` The command executed successfully<br />- `1` The command executed with an error <br />- `-1` If the ssh channel was interrupted during excution. 
+
 
    ---
 
