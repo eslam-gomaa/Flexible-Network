@@ -200,13 +200,16 @@ OUTPUT
 {: .fs-6 .fw-300 }
 
 
-   | Input                  | Type  | Description                                                  | Options            | Default   |
-   | ---------------------- | ----- | ------------------------------------------------------------ | ------------------ | --------- |
-   | `hos_dct`              | dct   | The host dictionary => is key of the  `connected_devices_dct` attribute  (And contains information about the device including the `ssh channel` to use for the command execution ) |                    |           |
-   | `file`                 | str   | The file to load the commands from                      |                    |           |
-   | `terminal_print`       | str   | Print the ouput \|\| error to the terminal                   | 'default',  'json' | 'default' |
-   | `ask_for_confirmation` | bool  | Ask for confirmation before executing a command,             |                    | False     |
-   | `exit_on_fail`         | boola | Exit the script with code of `1` if the command executed with errors |                    | True      |
+
+
+| Input                   | Type    | Description                                                  |
+| ----------------------- | ------- | ------------------------------------------------------------ |
+| `host`                  | string  | Host to execute commands on ([The host needs to be authenticated first](#authenticate)) |
+| `file`                  | string  | File with commands to execute                                |
+| ask_for_confirmation    | Boolean | If **True**,  I will ask for confirmation before executing the command,  *Default: False* |
+| exit_on_fail            | Boolean | If **True**, the script will exit if the command exit with an Error,  *Default: True* |
+| reconnect_closed_socket | Boolean | If **True**, Try to reconnect to the host if connection was inturrupted (Instead of considering it an error),  *Default: True* |
+|                         |         |                                                              |
 
 
    <br>
@@ -217,67 +220,6 @@ OUTPUT
    > does NOT return
 
    ---
-
-</details>
-
-
-<details markdown="1" id="connection_report_Table">
-  <summary markdown='span'> 
-  <b style="font-size:20px"> <code>connection_report_Table()</code></b>
-  </summary>
-   Return a structured table describes the authentication status of the selected devices
-
-* Input
-   1. Is the `devices_dct` attribute (Which is a dictionary that is populated when you called the `authenticate()` methd and contains the authentication info of each device) 
-
-> **Note:** the method does NOT print the output to the terminal by default, but you're able to print the variable as the following example.
-
-```python
-report = task.connection_report_Table(task.devices_dct)
-print(report)
-```
-
-> You can also send it as a message
-> * Check out the RocketChat Integration
-
-```python
-rocket_msg = rocket.send_message(['eslam.gomaa'], "``` {} ```".format(report))
-# print(rocket_msg)
-```
-
-<br>
-<br>
-
-
-
-**Sample Output**
-
-```
-+----------------+---------------------+-----------------+--------------+---------------+-------------------------+------------------------+
-| Host           | Connection Status   | Comment         |   N of tries |   Max Retries |   Time tring in seconds | Fail Reason            |
-+================+=====================+=================+==============+===============+=========================+========================+
-| 90.84.41.239   | 🟢                  | connected       |            1 |             3 |                       1 |                        |
-+----------------+---------------------+-----------------+--------------+---------------+-------------------------+------------------------+
-| 90.84.41.2     | 🔴                  | Fail to connect |            3 |             3 |                      16 | NOT able to establish  |
-|                |                     |                 |              |               |                         | an ssh connection with |
-|                |                     |                 |              |               |                         | 90.84.41.2 on port     |
-|                |                     |                 |              |               |                         | 1113 >> timed out      |
-+----------------+---------------------+-----------------+--------------+---------------+-------------------------+------------------------+
-| 192.168.1.241  | 🔴                  | Fail to connect |            3 |             3 |                      16 | NOT able to establish  |
-|                |                     |                 |              |               |                         | an ssh connection with |
-|                |                     |                 |              |               |                         | 192.168.1.241 on port  |
-|                |                     |                 |              |               |                         | 1113 >> timed out      |
-+----------------+---------------------+-----------------+--------------+---------------+-------------------------+------------------------+
-| 192.168.1.2452 | 🔴                  | Fail to connect |            1 |             3 |                       0 | Could NOT resolve      |
-|                |                     |                 |              |               |                         | hostname               |
-|                |                     |                 |              |               |                         | 192.168.1.2452 Name or |
-|                |                     |                 |              |               |                         | service not known >>   |
-|                |                     |                 |              |               |                         | [Errno -2] Name or     |
-|                |                     |                 |              |               |                         | service not known      |
-+----------------+---------------------+-----------------+--------------+---------------+-------------------------+------------------------+
-```
-
----
 
 </details>
 
