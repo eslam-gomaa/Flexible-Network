@@ -75,7 +75,7 @@ OUTPUT
 
 | Input                    | Type    | Description                                                  |
 | ------------------------ | ------- | ------------------------------------------------------------ |
-| `hosts_total`            | list    | List of the total hosts (of the inventory group) provided for authentication |
+| `hosts_total`            | list    | List of the total hosts (of the inventory group/groups) provided for authentication |
 | `hosts_connected`        | list    | List the hosts were connected successfully                   |
 | `hosts_failed`           | list    | List the hosts failed to connect                             |
 | `hosts_total_number`     | integer | Number of total hosts                                        |
