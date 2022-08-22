@@ -42,5 +42,5 @@ There are 2 ways to use Flexible Network:
 
 #### General
 {: .fs-6 .fw-300 }
-- You need the add the hosts you'll automate in an [inentory file](Docs/inventory.md)
-- If you plan to use any of the external APIs, make sure you put their connection options in the [config file](Docs/config_file.md)
+- You need the add the hosts you'll automate in an [inentory file](../inventory.md)
+- If you plan to use any of the external APIs, make sure you put their connection options in the [config file](../config_file.md)
