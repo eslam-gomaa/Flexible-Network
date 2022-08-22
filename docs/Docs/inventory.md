@@ -28,6 +28,8 @@ jtd.addEvent(toggleDarkMode, 'click', function(){
 
 # Inventory
 
+<br>
+
 We use the same inventory concept as Ansible, Here is an example of an inventory file
 {: .fs-6 .fw-300 }
 
