@@ -35,7 +35,8 @@ jtd.addEvent(toggleDarkMode, 'click', function(){
 
 
 ```python
-from Flexible_Network import Terminal_Task
+from FlexibleNetwork.Flexible_Network import Terminal_Task
+task = Terminal_Task()
 ```
 
 
