@@ -58,7 +58,7 @@ INPUT
 | `groups`                   | list    | List of group names eg. ['switches', 'test_switches']        |
 | `user`                     | string  | Username for authentication                                  |
 | `password`                 | string  | Password for authentication                                  |
-| `privileged_mode_password` | String  | Password of the Privileged mode  (eg. `enable` in Cisco & `super` in Huawei) [ _**If Provided, the device login to `privileged_mode` after authentication.**_ ] |
+| `privileged_mode_password` | String  | Password of the Privileged mode  (eg. `enable` in Cisco & `super` in Huawei) [ _If Provided, the device login to `privileged_mode` after authentication._ ] |
 | `port`                     | integer | Port for authentication                                      |
 |                            |         |                                                              |
 
@@ -127,72 +127,6 @@ OUTPUT
 
 <br>
 
-**Sample Output**
-
-Sample of a successful command
-
-```json
-{
-   "cmd":[
-      "sh ip int br"
-   ],
-   "stdout":[
-      "Interface              IP-Address      OK? Method Status                Protocol",
-      "Ethernet0/0            unassigned      YES unset  up                    up      ",
-      "Ethernet0/1            unassigned      YES unset  up                    up      ",
-      "Ethernet0/2            unassigned      YES unset  up                    up      ",
-      "Ethernet0/3            unassigned      YES unset  up                    up      ",
-      "Ethernet1/0            unassigned      YES unset  up                    up      ",
-      "Ethernet1/1            unassigned      YES unset  up                    up      ",
-      "Ethernet1/2            unassigned      YES unset  up                    up      ",
-      "Ethernet1/3            unassigned      YES unset  up                    up      ",
-      "Vlan1                  unassigned      YES unset  administratively down down    ",
-      "Vlan11                 192.168.11.2    YES NVRAM  up                    up      "
-   ],
-   "stderr":[],
-   "exit_code":0
-}
-```
-
-Sample of an unsuccessful command
-
-```json
-{
-   "cmd":[
-      "sh ip int br Typo"
-   ],
-   "stdout":[
-      "                      ^",
-      "% Invalid input detected at '^' marker."
-   ],
-   "stderr":[
-      "sh ip int br Typo",
-      "                      ^",
-      "% Invalid input detected at '^' marker.",
-      "mgmt_sw>",
-      "mgmt_sw>",
-      "mgmt_sw>"
-   ],
-   "exit_code":1
-}
-```
-
-Sample of an unsuccessful command ( Connection closed before or during the execution )
-
-
-```json
-{
-   "cmd":[
-      "sh ip int br Typo"
-   ],
-   "stdout":[],
-   "stderr":[
-      "Socket is closed"
-   ],
-   "exit_code":-1
-}
-```
-
 ---
 
 </details>
@@ -215,26 +149,34 @@ Sample of an unsuccessful command ( Connection closed before or during the execu
    {: .fs-6 .fw-300 }
 
 
-   | Input                  | Type  | Description                                                  | Options            | Default   |
-   | ---------------------- | ----- | ------------------------------------------------------------ | ------------------ | --------- |
-   | `hos_dct`              | dct   | The host dictionary => is key of the  `connected_devices_dct` attribute  (And contains information about the device including the `ssh channel` to use for the command execution ) |                    |           |
-   | `cmd`                  | str   | The command to run on the remote device                      |                    |           |
-   | `terminal_print`       | str   | Print the ouput \|\| error to the terminal                   | 'default',  'json' | 'default' |
-   | `ask_for_confirmation` | bool  | Ask for confirmation before executing a command,             |                    | False     |
-   | `exit_on_fail`         | boola | Exit the script with code of `1` if the command executed with errors |                    | True      |
+    | Input     | Type    | Description                                                  |
+    | --------- | ------- | ------------------------------------------------------------ |
+    | `host`    | string  | Host to execute commands on (The host needs to be authenticated first) |
+    | `cmd`     | List    | command (list of lines)                                      |
+    | stdout    | List    | STDOUT output (list of lines)                                |
+    | stderr    | List    | STDERR output (list of lines)                                |
+    | exit_code | Integer | `0` executed without Errors.     `1` Executed with Errors.     `-1` Connection inturrupted before or during execution |
+    |           |         |                                                              |
 
    <br>
 
    OUTPUT
    {: .fs-6 .fw-300 }
 
-   > Returns a dictionary
+   > Returns an object with the following attributes
 
-   |  Key           | Type   | Description                                                  |
-   | ----------- | ------ | ------------------------------------------------------------ |
-   | `stdout`    | List   | List of lines [ The output of the command ( If any ) ]           |
-   | `stderr`    | List   | List of lines [ The error of the command ( If any ) ]                  |
-   | `exit_code` | Int    | - `0` The command executed successfully<br />- `1` The command executed with an error <br />- `-1` If the ssh channel was interrupted during excution. 
+    | Input                   | Type    | Description                                                  |
+    | ----------------------- | ------- | ------------------------------------------------------------ |
+    | `host`                  | string  | Host to execute commands on ([The host needs to be authenticated first](#authenticate)) |
+    | `cmd`                   | string  | The command to execute                                       |
+    | only_on_hosts           | List    | **A condition** (List of hosts to execute only on)           |
+    | skip_hosts              | List    | **A condition** (List of hosts to Skip execution on)         |
+    | ask_for_confirmation    | Boolean | If **True**,  I will ask for confirmation before executing the command,  *Default: False* |
+    | exit_on_fail            | Boolean | If **True**, the script will exit if the command exit with an Error,  *Default: True* |
+    | reconnect_closed_socket | Boolean | If **True**, Try to reconnect to the host if connection was inturrupted (Instead of considering it an error),  *Default: True* |
+    |                         |         |                                                              |
+
+
 
 ### Sample Output
 
