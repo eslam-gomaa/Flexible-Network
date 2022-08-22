@@ -31,9 +31,10 @@ jtd.addEvent(toggleDarkMode, 'click', function(){
 # Usage _ YAML Manifest Input
 {: .fs-9 }
 
+<br>
 
-Using Yaml is a simple appreach and does NOT require coding
-{: .fs-6 .fw-300 }
+- As an alternative to write Python code, you can use a Yaml manifest file as input
+- This is a simple appreach and does NOT require coding
 
 > the steps are simple:
 

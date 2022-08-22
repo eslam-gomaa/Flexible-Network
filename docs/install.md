@@ -89,7 +89,9 @@ pip3.6 install dist/FlexibleNetwork-*.whl
 
 <br>
 
-After you have the library installed, you're ready to [use it](#_usage) !
+After you have the library installed, you're ready to use it
+[Usage](./Docs/usage/usage.md){: .btn }
+
 
 
 <br>
