@@ -1,6 +1,6 @@
 ---
 layout: default
-nav_order: 99
+nav_order: 5
 title: backup_config Storage options
 has_children: true
 markdown: Kramdown

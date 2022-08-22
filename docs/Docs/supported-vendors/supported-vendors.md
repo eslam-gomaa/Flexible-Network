@@ -1,6 +1,6 @@
 ---
 layout: default
-nav_order: 100
+nav_order: 6
 title: Supported Vendors
 has_children: true
 markdown: Kramdown

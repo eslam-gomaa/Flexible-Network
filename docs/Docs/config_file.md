@@ -1,6 +1,6 @@
 ---
 layout: default
-nav_order: 2
+nav_order: 3
 permalink: /config_file
 title: Config file
 markdown: Kramdown
