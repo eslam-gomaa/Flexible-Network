@@ -4,6 +4,7 @@ nav_order: 2
 parent: Usage
 title: YAML Manifest
 markdown: Kramdown
+has_children: true
 kramdown:
   parse_block_html: true
   auto_ids: true
