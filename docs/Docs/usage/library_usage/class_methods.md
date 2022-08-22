@@ -225,7 +225,7 @@ OUTPUT
 
 <details markdown="1" id="take_config_backup">
   <summary markdown='span'> 
-  <b style="font-size:20px"> <code>backup_config()</code></b>
+  <b style="font-size:20px"> <code>take_config_backup()</code></b>
   </summary>
 
   Backup running configuration from the remote device & store them in the local directory by default, for other [backup storage options](../../ConfigBackup-storage/backup_config-storage.md)
@@ -243,12 +243,12 @@ OUTPUT
 | --------- | ------ | --------------------------------------------- | -------------- | ------- |
 | `host`    | string | host to backup its config                     |                |         |
 | `comment` | string | A comment indicates the purpose of the backup |                |         |
-| `target`  | string | Where to save the backup                      | 'local',  's3' | 'local' |
+| `target`  | string | Where to save the backup                      | `local`,  `s3` | `local` |
 
 
 
 
-   > **NOTE:** targets other than 'local' requires you to add the credentials in the config file
+   > **NOTE:** targets other than `local` requires you to add the credentials in the [config file](../../config_file.md)
    
 
    <br>
@@ -260,7 +260,7 @@ OUTPUT
    
 | Input       | Type    | Description                                                  |
 | ----------- | ------- | ------------------------------------------------------------ |
-| `exit_code` | Integer | `0` Got backup successfully.      `1` Failed to return backup |
+| `exit_code` | Integer | `0` backup taken successfully.      `1` Failed to take backup |
 | stderr      | String  | STDERR output                                                |
 | stdout      | String  | STDOUT output                                                |
 | location    | String  | location, where the backup exists                            |
@@ -273,10 +273,10 @@ OUTPUT
 
 <details markdown="1" id="get_config_backup">
   <summary markdown='span'> 
-  <b style="font-size:20px"> <code>backup_config()</code></b>
+  <b style="font-size:20px"> <code>get_config_backup()</code></b>
   </summary>
 
-    Return a pre-taken config backup
+Return a pre-taken config backup
 
    <br>
 
