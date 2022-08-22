@@ -54,14 +54,6 @@ A Python library / cli-tool to achieve advanced network automation scenarios wit
 1. TOC
 {:toc}
 
-<br>
-A Refactored Version of [Flexible_Network  ((Proof of concept))  ](https://github.com/eslam-gomaa/Flexible_Network)
-
-
-[ Under development ]
-
-[**BackLog**](https://shiny-pruner-f62.notion.site/Flexible-Network-Project-8a037585793a4405acf892e66e6a4132){: .btn }
-
 
 <br>
 
