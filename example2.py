@@ -1,7 +1,7 @@
 from FlexibleNetwork.Flexible_Network import Terminal_Task
 from FlexibleNetwork.Vendors import Cisco
 
-task = Terminal_Task()
+task = Terminal_Task(task_log_format="txt", task_name="Test task")
 task.vendor = Cisco()
 
 auth = task.authenticate(groups='works', user='orange', password='cisco', privileged_mode_password='cisco', port=1113)
