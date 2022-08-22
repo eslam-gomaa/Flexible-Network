@@ -42,7 +42,7 @@ jtd.addEvent(toggleDarkMode, 'click', function(){
 | ----------------- | ------ | -------------------- | ------------------ | ---------- |
 | `task_log_formate` | String | Task log file format | `markdown`,  `txt` | `markdown` |
 
-> **Note:** Markdown format provides a pretty looking for Task log, but it may be a put some extra load for the Terminal app to display it, if log looking doesn't matter to you, you can use the "txt" log format.
+> **Note:** "Markdown" format provides a pretty looking for Task log, but it may be  put some extra load for the Terminal app to display it, if log looking doesn't matter to you, you can use the "txt" log format.
 
 
 ```python
@@ -51,7 +51,6 @@ from FlexibleNetwork.Vendors import Cisco
 
 task = Terminal_Task(task_log_format="txt")
 ```
-
 
 
 ---
