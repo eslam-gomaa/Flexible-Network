@@ -35,6 +35,8 @@ jtd.addEvent(toggleDarkMode, 'click', function(){
 
 
 #### task_log_formate
+{: .fs-6 .fw-300 }
+
 
 | Input             | Type   | Description          | Options            | Default    |
 | ----------------- | ------ | -------------------- | ------------------ | ---------- |
