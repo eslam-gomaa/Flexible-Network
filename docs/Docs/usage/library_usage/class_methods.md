@@ -62,7 +62,7 @@ INPUT
 | `groups`                   | list    | List of group names eg. ['switches', 'test_switches']        |
 | `user`                     | string  | Username for authentication                                  |
 | `password`                 | string  | Password for authentication                                  |
-| `privileged_mode_password` | String  | Password of the Privileged mode  (eg. `enable` in Cisco & `super` in Huawei)<br /<br />If Provided, the device login to `privileged_mode` after authentication. |
+| `privileged_mode_password` | String  | Password of the Privileged mode  (eg. `enable` in Cisco & `super` in Huawei) [ _**If Provided, the device login to `privileged_mode` after authentication.**_ ] |
 | `port`                     | integer | Port for authentication                                      |
 |                            |         |                                                              |
 
