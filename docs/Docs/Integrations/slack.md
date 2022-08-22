@@ -38,4 +38,4 @@ Allows you to send messages & attachments to Slack users & channels
 
 <br>
 
-To be supported in [0.4.0 release](https://github.com/users/eslam-gomaa/projects/2/views/1)
+To be supported in [0.4.0 release](https://github.com/eslam-gomaa/Flexible-Network/milestone/2)
