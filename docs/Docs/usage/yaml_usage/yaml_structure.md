@@ -67,28 +67,62 @@ Task:
 | Task.subTask.parallel | Boolan | Wheather to execute the sub-task on the devices in Parallel, _Currently not supported, will be supported in an upcoming release_ | `True`, `False`     | False      |
 |                       |        |                                                              |                     |            |
 
-### subTask
 
+### Task.subTask.authenticate
 
-
-
-
-
-Alternative to set the task name as a class Parameter, is to provid it as a CLI argument
-
-```bash
-python3 <your script>.py --name "Test task 2"
+```yaml
+Task:
+  name: New Task
+  log_format: markdown
+  subTask:
+    - name: Love forever
+      vendor: cisco
+      parallel: false
+      authenticate:
+        group: switches
+        port: 22
+        username:
+          value_from_env:
+            key: my_username
+        password:
+          value_from_env:
+            key: my_password
+        privileged_mode_password:
+          value_from_env:
+            key: my_password
+        reconnect: True
 ```
 
-> **NOTE** The cli provided task name takes effect if both ways are used together.
+| Input                      | Type    | Description                                                  | Options         | Default |
+| -------------------------- | ------- | ------------------------------------------------------------ | --------------- | ------- |
+| `group`                    | String  | Inventory group to authenticate                              |                 |         |
+| `port`                     | Integer |                                                              |                 | 22      |
+| username                   | dct     | Username for authentication                                  |                 |         |
+| password                   | dct     | Password for authentication                                  |                 |         |
+| `privileged_mode_password` | dct     | Password of the Privileged mode (eg. `enable` in Cisco & `super` in Huawei) [ *If Provided, the device login to `privileged_mode` after authentication.* ] |                 |         |
+| reconnect                  | Boolan  | Wheather to reconnect if the SSH connection is interupted    | `True`, `False` | False   |
+|                            |         |                                                              |                 |         |
 
+> For options with `dct` type
 
-```python
-from FlexibleNetwork.Flexible_Network import Terminal_Task
-from FlexibleNetwork.Vendors import Cisco
+#### Provide value directly
 
-task = Terminal_Task(task_log_format="txt")
+```yaml
+username:
+  value: Trump
 ```
+
+#### Provide value from ENV
+
+```yaml
+username:
+  value_from_env:
+    key: my_username
+```
+
+* Providing values from Secret managers like Vault & Cyberark, will be considered in [0.4.0 release](https://github.com/eslam-gomaa/Flexible-Network/milestone/2)
+
+
 
 
 <br>
