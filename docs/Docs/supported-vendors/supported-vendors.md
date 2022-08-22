@@ -14,6 +14,7 @@ kramdown:
 {: .fs-9 }
 {: .no_toc }
 
+> More vendors support will be added in the upcoming releases.
 
 More supported vendors can be added within a few minutes ... to be documented
 
