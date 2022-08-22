@@ -120,7 +120,7 @@ OUTPUT
 | `cmd`     | List    | command (list of lines)                                      |
 | stdout    | List    | STDOUT output (list of lines)                                |
 | stderr    | List    | STDERR output (list of lines)                                |
-| exit_code | Integer | `0` executed without Errors.     `1` Executed with Errors.     `-1` Connection inturrupted before or during execution |
+| exit_code | Integer | `0` Executed without Errors.     `1` Executed with Errors.     `-1` Connection inturrupted before or during execution |
 |           |         |                                                              |
 
 
@@ -149,14 +149,14 @@ OUTPUT
    {: .fs-6 .fw-300 }
 
 
-    | Input     | Type    | Description                                                  |
-    | --------- | ------- | ------------------------------------------------------------ |
-    | `host`    | string  | Host to execute commands on (The host needs to be authenticated first) |
-    | `cmd`     | List    | command (list of lines)                                      |
-    | stdout    | List    | STDOUT output (list of lines)                                |
-    | stderr    | List    | STDERR output (list of lines)                                |
-    | exit_code | Integer | `0` executed without Errors.     `1` Executed with Errors.     `-1` Connection inturrupted before or during execution |
-    |           |         |                                                              |
+| Input     | Type    | Description                                                  |
+| --------- | ------- | ------------------------------------------------------------ |
+| `host`    | string  | Host to execute commands on (The host needs to be authenticated first) |
+| `cmd`     | List    | command (list of lines)                                      |
+| stdout    | List    | STDOUT output (list of lines)                                |
+| stderr    | List    | STDERR output (list of lines)                                |
+| exit_code | Integer | `0` executed without Errors.     `1` Executed with Errors.     `-1` Connection inturrupted before or during execution |
+|           |         |                                                              |
 
    <br>
 
@@ -165,16 +165,16 @@ OUTPUT
 
    > Returns an object with the following attributes
 
-    | Input                   | Type    | Description                                                  |
-    | ----------------------- | ------- | ------------------------------------------------------------ |
-    | `host`                  | string  | Host to execute commands on ([The host needs to be authenticated first](#authenticate)) |
-    | `cmd`                   | string  | The command to execute                                       |
-    | only_on_hosts           | List    | **A condition** (List of hosts to execute only on)           |
-    | skip_hosts              | List    | **A condition** (List of hosts to Skip execution on)         |
-    | ask_for_confirmation    | Boolean | If **True**,  I will ask for confirmation before executing the command,  *Default: False* |
-    | exit_on_fail            | Boolean | If **True**, the script will exit if the command exit with an Error,  *Default: True* |
-    | reconnect_closed_socket | Boolean | If **True**, Try to reconnect to the host if connection was inturrupted (Instead of considering it an error),  *Default: True* |
-    |                         |         |                                                              |
+| Input                   | Type    | Description                                                  |
+| ----------------------- | ------- | ------------------------------------------------------------ |
+| `host`                  | string  | Host to execute commands on ([The host needs to be authenticated first](#authenticate)) |
+| `cmd`                   | string  | The command to execute                                       |
+| only_on_hosts           | List    | **A condition** (List of hosts to execute only on)           |
+| skip_hosts              | List    | **A condition** (List of hosts to Skip execution on)         |
+| ask_for_confirmation    | Boolean | If **True**,  I will ask for confirmation before executing the command,  *Default: False* |
+| exit_on_fail            | Boolean | If **True**, the script will exit if the command exit with an Error,  *Default: True* |
+| reconnect_closed_socket | Boolean | If **True**, Try to reconnect to the host if connection was inturrupted (Instead of considering it an error),  *Default: True* |
+|                         |         |                                                              |
 
 
 
