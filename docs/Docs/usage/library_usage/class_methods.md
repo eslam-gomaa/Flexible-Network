@@ -1,7 +1,8 @@
 ---
 layout: default
-nav_order: 2
+nav_order: 1
 parent: Python Library
+grand_parent: Usage
 title: Terminal_Class methods
 markdown: Kramdown
 kramdown:
