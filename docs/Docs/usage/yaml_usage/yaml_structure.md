@@ -41,7 +41,7 @@ jtd.addEvent(toggleDarkMode, 'click', function(){
 
 
 
-#### 1. Create a new Task
+#### Create a new Task
 {: .fs-6 .fw-300 }
 
 
@@ -162,6 +162,84 @@ Task:
 | target         | String  | Where to save the backup                  | `local`, `s3` | `local` |
 | skip           | List    | List of hosts to skip                     |               |         |
 | OnlyOn         | List    | List of hosts to backup and ignore others |               |         |
+
+
+### Task.subTask.commands
+
+```yaml
+Task:
+  name: New Task
+  log_format: markdown
+  subTask:
+    - name: Love forever
+      vendor: cisco
+      parallel: false
+      authenticate:
+        group: switches
+        port: 22
+        username:
+          value_from_env:
+            key: my_username
+        password:
+          value_from_env:
+            key: my_password
+        privileged_mode_password:
+          value_from_env:
+            key: my_password
+        reconnect: True
+      configBackup:
+        comment: "Test backup"
+        exit_on_fail: True
+        target: local
+        skip:
+          - 192.168.1.11
+          - 192.168.1.12
+      commands:
+        - command: show ip int br
+          tag: show1
+          ask_for_confirmation: false
+          exit_on_fail: false
+          onlyOn:
+            - 90.84.41.239            
+        - command: |
+            show vlan br
+            show version
+          when:
+            tag: show1
+            operator: is
+            exit_code: 0
+```
+
+
+
+| Input      | Type | Description                            | Options | Default |
+| ---------- | ---- | -------------------------------------- | ------- | ------- |
+| `commands` | List | List of commands to execute (In order) |         |         |
+
+
+> **Command** options
+
+| Input                  | Type    | Description                                                  | Options     | Default |
+| ---------------------- | ------- | ------------------------------------------------------------ | ----------- | ------- |
+| `command`              | String  | Command to execute                                           |             |         |
+| `tag`                  | String  | A tag given to the command, allows us to refer to this commnd in other commands conditions |             |         |
+| `ask_for_confirmation` | Boolean | If **True**, I will ask for confirmation before executing the command, *Default: False* |             |         |
+| `exit_on_fail`         | Boolean | If **True**, the script will exit if the command exit with an Error, *Default: True* | True, False | True    |
+| `onlyOn`               | List    | **A condition** (List of hosts to execute only on)           |             |         |
+| `skip`                 | List    | **A condition** (List of hosts to Skip execution on)         |             |         |
+| `when`                 | dct     | a condition that determins whether the command will be executed or not (based on another command output) |             |         |
+
+
+> **when** options
+
+| Input     | Type    | Description                                | Options        | Default |
+| --------- | ------- | ------------------------------------------ | -------------- | ------- |
+| `tag`     | String  | the tag of the previously executed command |                |         |
+| operator  | String  |                                            | `is`, `is_not` |         |
+| exit_code | Integer | Exit code of the condition command         | 0, `1`, `-1`   |         |
+
+
+
 
 
 
