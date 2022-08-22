@@ -54,7 +54,7 @@ We use the same inventory concept as Ansible, Here is an example of an inventory
 
 <br>
 
-> **Note:** _Custom inventory parameters_ will be considered in the next milestone.
+> **Note:** _Custom inventory parameters_ will be considered in upcomming releases.
 
 
 <br>
