@@ -19,6 +19,8 @@ kramdown:
 Integrate your scripts with external APIs easily
 {: .fs-6 .fw-300 }
 
+- Having integration with other systems, make our scripts more productive
+
 
 1. TOC
 {:toc}

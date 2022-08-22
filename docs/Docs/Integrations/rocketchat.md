@@ -81,7 +81,7 @@ rocket = RocketChat_API()
    | Key     | Type | Description                                                  | Options        | Default |
    | --------- | ---- | ------------------------------------------------------------ | -------------- | ------- |
    | `success` | Boolean  | Whether the message was sent successfully or not.     |                |         |
-   | `fail_reason` | String  | Message to send                |                |         |
+   | `fail_reason` | String  | failure reason                |                |         |
 
 
 

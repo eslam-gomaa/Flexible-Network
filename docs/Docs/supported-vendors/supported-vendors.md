@@ -15,7 +15,7 @@ kramdown:
 {: .no_toc }
 
 
-More supported vendors can be added within a few minutes (But we need your collaboration !)
+More supported vendors can be added within a few minutes ... to be documented
 
 
 1. TOC
