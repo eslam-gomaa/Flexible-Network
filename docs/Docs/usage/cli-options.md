@@ -1,7 +1,7 @@
 ---
 layout: default
-nav_order: 4
-parent: Home
+nav_order: 3
+parent: Usage
 title: Cli Options
 markdown: Kramdown
 kramdown:
