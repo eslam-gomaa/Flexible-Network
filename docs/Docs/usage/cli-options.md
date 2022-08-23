@@ -32,24 +32,8 @@ jtd.addEvent(toggleDarkMode, 'click', function(){
 
 <br>
 
-#### Run a task  [ [Python Script](./library_usage/library.md) ]
+#### General
 {: .fs-6 .fw-300 }
-
-<details markdown="1" id="--name">
-  <summary markdown='span'> 
-  <b style="font-size:20px"> <code>--name</code></b>
-  </summary>
-   The task name
-
-   Optional
-   {: .label .label-yellow }
-   
-   > Each script run represents a task, Tasks state are stored in the local directory (small local DB)
-
-   ---
-
-</details>
-
 
 <details markdown="1" id="--inventory">
   <summary markdown="span"> 
@@ -99,6 +83,45 @@ jtd.addEvent(toggleDarkMode, 'click', function(){
 
 </details>
 
+<br>
+
+#### Run a task  [ [Python Script](./library_usage/library.md) ]
+{: .fs-6 .fw-300 }
+
+<details markdown="1" id="--name">
+  <summary markdown='span'> 
+  <b style="font-size:20px"> <code>--name</code></b>
+  </summary>
+   The task name
+
+   Optional
+   {: .label .label-yellow }
+   
+   > Each script run represents a task, Tasks state are stored in the local directory (small local DB)
+
+   ---
+
+</details>
+
+
+<br>
+
+#### Run a task  [ [Yaml file](./yaml_usage/yaml_manifest.md) ]
+{: .fs-6 .fw-300 }
+
+
+<details markdown="1" id="--file">
+  <summary markdown='span'> 
+  <b style="font-size:20px"> <code>--file</code></b>
+  </summary>
+  Pass a yaml file as input
+  
+  Optional
+  {: .label .label-yellow }
+
+  ---
+
+</details>
 
 <br>
 
@@ -148,25 +171,6 @@ jtd.addEvent(toggleDarkMode, 'click', function(){
 
 </details>
 
-
-<br>
-
-#### Run a task  [ [Yaml file](./yaml_usage/yaml_manifest.md) ]
-{: .fs-6 .fw-300 }
-
-
-<details markdown="1" id="--file">
-  <summary markdown='span'> 
-  <b style="font-size:20px"> <code>--file</code></b>
-  </summary>
-  Pass a yaml file as input
-  
-  Optional
-  {: .label .label-yellow }
-
-  ---
-
-</details>
 
 
 <br>
