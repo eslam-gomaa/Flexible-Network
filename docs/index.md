@@ -107,7 +107,7 @@ Before reading the features you need to know that the network devices are "dump"
   - Flexible-Network focuses on powering the network automation with Python, allows you to make productive network automation scripts with simple python code.
     - Use the same automation method for different types of vendors
     - Just use the commands you use for automation !  (no need different Modules syntax)
-    - Focues on Network automation simplicy and productivity, [supported backup storage](./Docs/ConfigBackup-storage/backup_config-storage.md)  [ [Supported integrations] ](./Docs/Integrations/integrations.md) [Usage](./Docs/usage/usage.md)
+    - Focues on Network automation simplicy and productivity, See [supported backup storage](./Docs/ConfigBackup-storage/backup_config-storage.md) ...  [Supported integrations](./Docs/Integrations/integrations.md) ... [Usage](./Docs/usage/usage.md)
 
 
 </details>
