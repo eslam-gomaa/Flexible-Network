@@ -31,7 +31,7 @@ jtd.addEvent(toggleDarkMode, 'click', function(){
 
 
 - This project provides you with a **Python Library** that you import to your Python script which gives you a lot of features and integrations out of the box
-- After importing the library you can treat your script as a cli tool that that you use to run network automation tasks
+- After importing the library you can treat your script as a cli tool that you use to run network automation tasks
 - The library gives you a lot of useful functions for network automation, besides saving each automation task & backups in a local DB, and with CLi options you retrieve task logs or config backups
 - The library gives you out of the box [integration](./Docs/Integrations/integrations.md) with external APIs, for example saving config backups on remote locations like [object storage](./Docs/ConfigBackup-storage/s3.md) (eg. any compatable s3 object storage) or getting credentials from a secret manager like Vault or Cyberark
 
@@ -68,7 +68,7 @@ This version of Flexible-Network is designed to be used as a **Python library / 
 
 ### 3. Error Detection
 
-One of the core features in [Flexible-Network](https://github.com/eslam-gomaa/Flexible-Network#features) is the ability to detect error when executing commands on network devices, _So here is how that is done behind the scene:_
+One of the core features in [Flexible-Network](https://github.com/eslam-gomaa/Flexible-Network#features) is the ability to detect errors when executing commands on network devices, _So here is how that is done behind the scene:_
 
 * When a command is executed on a network device, fist the library reads the command's output & parse it to see if there is an error
   - And based of that information, we're able to return `exit_code`, `stderr`, and `stdout`
