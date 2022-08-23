@@ -32,7 +32,7 @@ jtd.addEvent(toggleDarkMode, 'click', function(){
 
 <br>
 
-#### Run a task
+#### Run a task  [ [Python Script](./library_usage/library.md) ]
 {: .fs-6 .fw-300 }
 
 <details markdown="1" id="--name">
@@ -41,10 +41,10 @@ jtd.addEvent(toggleDarkMode, 'click', function(){
   </summary>
    The task name
 
-   Required
+   Optional
    {: .label .label-yellow }
    
-   > Each script run represents a task, Tasks state are stored.
+   > Each script run represents a task, Tasks state are stored in the local directory (small local DB)
 
    ---
 
@@ -70,49 +70,6 @@ jtd.addEvent(toggleDarkMode, 'click', function(){
 
 </details>
 
-<details markdown="1" id="--authenticate-group">
-  <summary markdown="span"> 
-  <b style="font-size:20px"> <code>--authenticate-group</code></b>
-  </summary>
-   Provide an inventory group to authenticate
-   
-   Optional
-   {: .label .label-green }
-
-
-
-> **Note:** this option requires to specify the [`--user`](#--user) & [`--password`](#--password)  arguments 
-
-> Example
-```java
-python3.6 test1.py -n task1 \
-   --config user/flexible_network.cfg \
-   --inventory user/hosts \
-   --authenticate-group works \
-   --user orange --password cisco1 --port 1113
-```
-
-
-<br>
-
-<br>
-
--> This will update the `devices_dct` & `connected_devices_dct` attributes in the `Terminal_Task` class (Which you can access after you instantiate an instance of the class)
-
-```python
-task = Terminal_Task()
-
-# A dict that contains ONLY the connected devices
-task.connected_devices_dct
-
-# A dict that contails ALL the devices (including ones that failed to authenticate)
-task.devices_dct
-```
-
----
-
-</details>
-
 
 <details markdown="1" id="--no-confirm-auth">
   <summary markdown="span"> 
@@ -126,49 +83,6 @@ task.devices_dct
   > The dfault Behavior is to ask you for confirmation before proceeding if failed to authenticate to some devices.
 </details>
 
-
-<details markdown="1" id="--user">
-  <summary markdown='span'> 
-  <b style="font-size:20px"> <code>--user</code></b>
-  </summary>
-  The user to authenticate the group with
-
-  Optional
-  {: .label .label-green }
-
-  ---
-
-</details>
-
-
-<details markdown="1" id="--password">
-  <summary markdown='span'> 
-  <b style="font-size:20px"> <code>--password</code></b>
-  </summary>
-  The password to authenticate the group with
-
-  Optional
-  {: .label .label-green }
-
-  ---
-
-</details>
-
-
-<details markdown="1" id="--port">
-  <summary markdown='span'>
-  <b style="font-size:20px"> <code>--port</code></b>
-  </summary>
-  The port to use to connect to the group.
-
-  Optional
-  {: .label .label-green }
-
-  > default port is `22`
-
-  ---
-
-</details>
 
 <details markdown="1" id="--config">
   <summary markdown='span'>
@@ -231,6 +145,26 @@ task.devices_dct
 {: .label .label-green }
 
 ---
+
+</details>
+
+
+<br>
+
+#### Run a task  [ [Yaml file](./yaml_usage/yaml_manifest.md) ]
+{: .fs-6 .fw-300 }
+
+
+<details markdown="1" id="--file">
+  <summary markdown='span'> 
+  <b style="font-size:20px"> <code>--file</code></b>
+  </summary>
+  Pass a yaml file as input
+  
+  Optional
+  {: .label .label-yellow }
+
+  ---
 
 </details>
 
@@ -324,3 +258,97 @@ python3.6 <script.py> -c ~/flexible_network.cfg  --validate-integration s3 rocke
 +---------------+----------+-----------+
 ```
 
+
+<br>
+
+<br>
+
+## Deprecated (To be refactored in the next release)
+
+
+<details markdown="1" id="--authenticate-group">
+  <summary markdown="span"> 
+  <b style="font-size:20px"> <code>--authenticate-group</code></b>
+  </summary>
+   Provide an inventory group to authenticate
+   
+   Optional
+   {: .label .label-green }
+
+
+
+> **Note:** this option requires to specify the [`--user`](#--user) & [`--password`](#--password)  arguments 
+
+> Example
+```java
+python3.6 test1.py -n task1 \
+   --config user/flexible_network.cfg \
+   --inventory user/hosts \
+   --authenticate-group works \
+   --user orange --password cisco1 --port 1113
+```
+
+
+<br>
+
+<br>
+
+-> This will update the `devices_dct` & `connected_devices_dct` attributes in the `Terminal_Task` class (Which you can access after you instantiate an instance of the class)
+
+```python
+task = Terminal_Task()
+
+# A dict that contains ONLY the connected devices
+task.connected_devices_dct
+
+# A dict that contails ALL the devices (including ones that failed to authenticate)
+task.devices_dct
+```
+
+---
+
+</details>
+
+
+<details markdown="1" id="--user">
+  <summary markdown='span'> 
+  <b style="font-size:20px"> <code>--user</code></b>
+  </summary>
+  The user to authenticate the group with
+
+  Optional
+  {: .label .label-green }
+
+  ---
+
+</details>
+
+
+<details markdown="1" id="--password">
+  <summary markdown='span'> 
+  <b style="font-size:20px"> <code>--password</code></b>
+  </summary>
+  The password to authenticate the group with
+
+  Optional
+  {: .label .label-green }
+
+  ---
+
+</details>
+
+
+<details markdown="1" id="--port">
+  <summary markdown='span'>
+  <b style="font-size:20px"> <code>--port</code></b>
+  </summary>
+  The port to use to connect to the group.
+
+  Optional
+  {: .label .label-green }
+
+  > default port is `22`
+
+  ---
+
+</details>
