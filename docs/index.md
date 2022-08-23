@@ -67,17 +67,17 @@ Before reading the features you need to know that the network devices are "dump"
 # Features
 
 * Ability to detect errors when executing commands on network devices
-   * When executing commands you get a `dict` of output similar to what you get when executing commands on Linux machines [check the `execute` method](terminal_class_methods.md#execute)
+   * When [executing commands](./Docs/usage/library_usage/class_methods.md#execute) you get output similar to what you get when executing commands on Linux machines
    * Which gives you the power to use ***Python conditionals*** when automating network devices. 
 
 ![image](https://user-images.githubusercontent.com/33789516/159186029-8f377b31-f839-40b6-96f6-33a6a42d5317.png)
 
 * Multi-Vendor
-   * Use a unified way to automate different types of devices from different vendors [ Check the list of supported vendors (_to be documented_) ]
+   * Use a unified way to automate different types of devices from different vendors [ [Suppoerted vendors](./Docs/supported-vendors/supported-vendors.md) ]
 
-* Backup config, with different storage options including `local storage` & `S3` (_including_ Openstack object storage) [[ Check the list of supported backup storage ]](Docs/ConfigBackup-storage/config-backup-storage.md)
+* Backup config, with different storage options including `local storage` & `S3` (any S3 compatable object storage) [ [supported backup storage] ](./Docs/ConfigBackup-storage/backup_config-storage.md)
 
-* Integrations with different external APIs that gives more flexibility & efficiency to your scripts  [[ Check the list of supported integrations ]](Docs/Integrations/integrations.md)
+* Integrations with different external APIs that gives more flexibility & efficiency to your scripts  [ [Supported integrations] ](./Docs/Integrations/integrations.md)
 
 
 ![image](https://user-images.githubusercontent.com/33789516/159433445-d040ce1a-752c-408b-b38e-1ea3ecb1e450.png)
@@ -101,25 +101,14 @@ Before reading the features you need to know that the network devices are "dump"
   <summary markdown='span'> 
   <b style="font-size:20px"> <code>Why to use <b>Flexible-Network</b> while we can use Ansible for Network automation ?</code></b>
   </summary>
-  Ansible & Python have different ways for doing network automation
 
-  > _**How Ansible works for Network Automation**_
-  > * Ansible uses modules, each vendor has different modules
-    * At the begining of the automation task, Ansible gathers the running config of each device and parse, Hence when you tell it to create a VLAN for example, it first takes a look at the configuration it parsed before, and if the vlan does not exist, will create it.
+  Ansible and Flexible-Network have different ways of work
+  - Ansible requires you to use Modules for the vendor you want to automate, and just running commands with ansible will not give you any fancy feature (no error detection).
+  - Flexible-Network focuses on powering the network automation with Python, allows you to make productive network automation scripts with simple python code.
+    - Use the same automation method for different types of vendors
+    - Just use the commands you use for automation !  (no need different Modules syntax)
+    - Focues on Network automation simplicy and productivity, [supported backup storage](./Docs/ConfigBackup-storage/backup_config-storage.md)  [ [Supported integrations] ](./Docs/Integrations/integrations.md) [Usage](./Docs/usage/usage.md)
 
-  But despite the different modules & features that ansible provides, many network engineers still prefer to use regular network commands for automation, and In fact Python is used extensively for network automation, **But the problem here** is that we can NOT easily achieve idempotency because network devices are DUMP!
-
-  <br>
-
-  And that's where the [Flexible-Network](https://github.com/eslam-gomaa/Flexible-Network#features) Project come into play.
-
-  The most basic feature that our project gives you is the ability to deal with network devices the same way you used to deal with Linux machines  <sup>[1. Featues](https://github.com/eslam-gomaa/Flexible-Network#features)</sup>    <sup>[2. execute()](https://github.com/eslam-gomaa/Flexible-Network#execute)</sup>
-
-   And that is not the only feature
-
-  <br>
-
-  **In short** [Flexible-Network](https://github.com/eslam-gomaa/Flexible-Network#features) `=>` (`simplicity` & `flexibility`) + `The Power of Python!` 💪
 
 </details>
 
