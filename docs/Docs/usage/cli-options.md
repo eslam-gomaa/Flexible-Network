@@ -221,6 +221,20 @@ jtd.addEvent(toggleDarkMode, 'click', function(){
 
 </details>
 
+<br>
+
+<details markdown="1" id="--all">
+  <summary markdown='span'> 
+  <b style="font-size:20px"> <code>--all</code></b>
+  </summary>
+  When listing tasks or backups, it lists the last 15 item by default, to list all use `--all` or `-A` option
+  
+  Optional
+  {: .label .label-green }
+
+---
+
+</details>
 
 <br>
 
