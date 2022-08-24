@@ -148,7 +148,7 @@ OUTPUT
 
 | Input                     | Type    | Description                                                  |
 | ------------------------- | ------- | ------------------------------------------------------------ |
-| `host`                    | string  | Host                                                         |
+| `host`                    | string  | Host to execute commands on ([The host needs to be authenticated first](#authenticate))   |
 | `cmd`                     | string  | The command to execute                                       |
 | `only_on_hosts`           | List    | **A condition** (List of hosts to execute only on)           |
 | `skip_hosts`              | List    | **A condition** (List of hosts to Skip execution on)         |
@@ -166,7 +166,7 @@ OUTPUT
 
 | Input       | Type    | Description                                                  |
 | ----------- | ------- | ------------------------------------------------------------ |
-| `host`      | string  | Host to execute commands on ([The host needs to be authenticated first](#authenticate)) |
+| `host`      | string  | Host                                                         |
 | `cmd`       | List    | command (list of lines)                                      |
 | `stdout`    | List    | STDOUT output (list of lines)                                |
 | `stderr`    | List    | STDERR output (list of lines)                                |
