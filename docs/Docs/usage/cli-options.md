@@ -236,7 +236,6 @@ jtd.addEvent(toggleDarkMode, 'click', function(){
 
 </details>
 
-<br>
 
 <details markdown="1" id="--delete">
   <summary markdown='span'> 
