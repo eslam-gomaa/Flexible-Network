@@ -5,7 +5,7 @@ A Python library / cli-tool to achieve advanced network automation scenarios wit
 ## Features
 
 * Ability to detect errors when executing commands on network devices
-   * When executing commands you get a `dict` of output similar to what you get when executing commands on Linux machines [check the `execute` method](https://eslam-gomaa.github.io/Flexible-Network/terminal_class_methods/#execute)
+   * When executing commands you get output similar to what you get when executing commands on Linux machines [check the `execute` method](https://eslam-gomaa.github.io/Flexible-Network/Docs/usage/library_usage/class_methods/#execute)
    * Which gives you the power to use ***Python conditionals*** when automating network devices. 
 
 ![image](https://user-images.githubusercontent.com/33789516/159186029-8f377b31-f839-40b6-96f6-33a6a42d5317.png)
@@ -13,7 +13,7 @@ A Python library / cli-tool to achieve advanced network automation scenarios wit
 * Multi-Vendor
    * Use a unified way to automate different types of devices from different vendors [ Check the list of [supported vendors](https://eslam-gomaa.github.io/Flexible-Network/Docs/supported-vendors/supported-vendors) ]
 
-* Backup config, with different storage options including `local storage` & `S3` (_including_ Openstack object storage) [ Check the list of the [supported backup storage](https://eslam-gomaa.github.io/Flexible-Network/Docs/ConfigBackup-storage/backup_config-storage) ]
+* Backup config, with different storage options including `local storage` & `object storage` (_including_ any S3 compatible object storage eg. Openstack) [ Check the list of the [supported backup storage](https://eslam-gomaa.github.io/Flexible-Network/Docs/ConfigBackup-storage/backup_config-storage) ]
 
 * Integrations with different external APIs that gives more flexibility & efficiency to your scripts  [  Check the list of [supported integrations ](https://eslam-gomaa.github.io/Flexible-Network/integrations) ]
 
@@ -37,6 +37,6 @@ A Python library / cli-tool to achieve advanced network automation scenarios wit
 
 <br>
 
-👉 I happily accept advices / recommendations, you can help by opening an issue or contact directly via [Linkedin](https://www.linkedin.com/in/eslam-gomaa)
+👉 I happily accept advices / recommendations, you can help by opening an issue or contact directly on [Linkedin](https://www.linkedin.com/in/eslam-gomaa)
 
 <br>
